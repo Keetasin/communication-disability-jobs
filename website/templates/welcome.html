@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Communication Disability Jobs
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="../static/style/welcome.css">
+    <br><br><br><br><br>
+
+    {% if user.is_authenticated %}
+        <h1>Hello {{user.first_name}}</h1>
+        <h2>Welcome To Communication Disability Jobs</h2>
+        <br><br>
+
+        <p>
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        </p>
+        <br><br><br>
+
+    {% else %}
+        <h1>Welcome To Communication Disability Jobs</h1>
+        <br><br>
+        <p>
+            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        </p>
+
+        <br><br><br>
+
+        <div class="btn-container">
+            <a href="/login" class="btn">Login</a>
+            <a href="/sign-up" class="btn">Sign Up</a>
+        </div>
+    {% endif %}
+{% endblock %}
