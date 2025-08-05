@@ -38,3 +38,18 @@ class User(db.Model, UserMixin):
     company_website = db.Column(db.String(255))
     company_description = db.Column(db.Text)
     verified_employer = db.Column(db.Boolean, default=False)
+
+
+class Job(db.Model):
+    __tablename__ = 'jobs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    location = db.Column(db.String(100))
+    salary = db.Column(db.String(100))
+    posted_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # ความสัมพันธ์กับ User
+    employer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    employer = db.relationship('User', backref='jobs')

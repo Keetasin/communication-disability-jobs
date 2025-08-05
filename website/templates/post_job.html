@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Post Job{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>📝 โพสต์งานใหม่</h2>
+  <form method="POST">
+    <div class="form-group">
+      <label for="title">ชื่องาน</label>
+      <input type="text" class="form-control" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="description">รายละเอียดงาน</label>
+      <textarea class="form-control" name="description" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="location">สถานที่ทำงาน</label>
+      <input type="text" class="form-control" name="location">
+    </div>
+    <div class="form-group">
+      <label for="salary">เงินเดือน</label>
+      <input type="text" class="form-control" name="salary">
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">โพสต์งาน</button>
+  </form>
+</div>
+{% endblock %}

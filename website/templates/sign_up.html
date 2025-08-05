@@ -48,12 +48,12 @@
           </div>
         </div>
 
-        <!-- ฟิลด์สำหรับผู้พิการ -->
+        <!-- ✅ ฟิลด์ disabled -->
         <div id="disabledFields" style="display: none;" class="form-border mt-3">
           <h5>ข้อมูลผู้พิการทางการสื่อสาร</h5>
           <div class="form-group">
             <label>ประเภทความพิการ</label>
-            <select class="form-control" name="disability_type" required>
+            <select class="form-control" name="disability_type">
               <option value="">-- เลือกประเภทความพิการ --</option>
               <option value="hearing">การได้ยิน</option>
               <option value="communication">การสื่อสาร</option>
@@ -63,51 +63,51 @@
 
           <div class="form-group">
             <label>ทักษะที่มี</label>
-            <textarea class="form-control" name="skills" placeholder="เช่น งานกราฟิก, แปลภาษามือ"></textarea>
+            <textarea class="form-control" name="skills"></textarea>
           </div>
 
           <div class="form-group">
             <label>เรซูเม่ (ข้อความ)</label>
-            <textarea class="form-control" name="resume_text" placeholder="เขียนประวัติการศึกษา/การทำงาน"></textarea>
+            <textarea class="form-control" name="resume_text"></textarea>
           </div>
 
           <div class="form-group">
             <label>ลิงก์วิดีโอแนะนำตัว</label>
-            <input type="text" class="form-control" name="resume_video_url" placeholder="เช่น YouTube URL">
+            <input type="text" class="form-control" name="resume_video_url">
           </div>
 
           <div class="form-group">
             <label>ที่อยู่ (จังหวัด)</label>
-            <input type="text" class="form-control" name="location" placeholder="เช่น กรุงเทพมหานคร">
+            <input type="text" class="form-control" name="location">
           </div>
         </div>
 
-        <!-- ฟิลด์สำหรับผู้ว่าจ้าง -->
+        <!-- ✅ ฟิลด์ employer -->
         <div id="employerFields" style="display: none;" class="form-border mt-3">
           <h5>ข้อมูลผู้ว่าจ้าง</h5>
           <div class="form-group">
             <label>ชื่อบริษัท</label>
-            <input type="text" class="form-control" name="company_name" placeholder="เช่น บริษัท ABC จำกัด">
+            <input type="text" class="form-control" name="company_name">
           </div>
 
           <div class="form-group">
             <label>ชื่อผู้ติดต่อ</label>
-            <input type="text" class="form-control" name="contact_person" placeholder="เช่น คุณสมชาย ผู้จัดการ">
+            <input type="text" class="form-control" name="contact_person">
           </div>
 
           <div class="form-group">
             <label>เบอร์โทรติดต่อ</label>
-            <input type="text" class="form-control" name="contact_phone" placeholder="เช่น 0812345678">
+            <input type="text" class="form-control" name="contact_phone">
           </div>
 
           <div class="form-group">
             <label>อีเมลติดต่อ</label>
-            <input type="email" class="form-control" name="contact_email" placeholder="เช่น contact@company.com">
+            <input type="email" class="form-control" name="contact_email">
           </div>
 
           <div class="form-group">
             <label>ที่อยู่บริษัท</label>
-            <input type="text" class="form-control" name="address" placeholder="เช่น 123 ถนนสุขุมวิท กรุงเทพฯ">
+            <input type="text" class="form-control" name="address">
           </div>
         </div>
 

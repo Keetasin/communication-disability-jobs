@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
-from flask import current_app
 from . import db
 import pytz
-from collections import Counter
+from .models import Job
 
 
 views = Blueprint('views', __name__)
@@ -61,3 +60,40 @@ def edit_profile():
         return redirect(url_for('views.account'))
 
     return render_template('edit_profile.html', user=current_user)
+
+
+@views.route('/post-job', methods=['GET', 'POST'])
+@login_required
+def post_job():
+    if current_user.role != 'employer':
+        flash('Only employers can post jobs.', 'error')
+        return redirect(url_for('views.home'))
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        location = request.form.get('location')
+        salary = request.form.get('salary')
+
+        new_job = Job(
+            title=title,
+            description=description,
+            location=location,
+            salary=salary,
+            employer=current_user
+        )
+        db.session.add(new_job)
+        db.session.commit()
+        flash('Job posted successfully!', 'success')
+        return redirect(url_for('job.all_jobs'))
+
+    # ✅ FIX: ส่ง user ไปด้วยเพื่อให้ base.html ไม่ error
+    return render_template('post_job.html', user=current_user)
+
+
+
+@views.route('/jobs')
+def all_jobs():
+    jobs = Job.query.order_by(Job.posted_at.desc()).all()
+    return render_template('all_jobs.html', jobs=jobs, user=current_user)
+

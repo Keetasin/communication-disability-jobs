@@ -17,6 +17,11 @@ def create_app():
     
     db.init_app(app)
 
+    @app.context_processor
+    def inject_user():
+        from flask_login import current_user
+        return dict(user=current_user)
+
     from .views import views
     from .auth import auth
 
