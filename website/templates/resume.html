@@ -1,235 +1,425 @@
 <!-- templates/resume.html -->
-{% extends "base.html" %}
-{% block content %}
-<div class="container mt-4">
-    <h2>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h2>
-    <p class="text-muted">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสร้างโปรไฟล์ที่สมบูรณ์</p>
-    
-    <form method="POST">
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .card {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .card-header {
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+        .btn-lg {
+            padding: 12px 30px;
+            font-size: 18px;
+        }
+
+        .upload-area {
+            border: 2px dashed #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .upload-area:hover {
+            background-color: #e9ecef;
+            border-color: #20c997;
+        }
+        .upload-area.dragover {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            display: none;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <h2>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h2>
+        <p class="text-muted">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสร้างโปรไฟล์ที่สมบูรณ์</p>
         
-        <!-- ข้อมูลส่วนตัว -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">ข้อมูลส่วนตัว</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="first_name" class="form-label"><strong>ชื่อ:</strong></label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ current_user.first_name or '' }}" required>
+        <form method="POST">
+            
+            <!-- ข้อมูลส่วนตัว -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">ข้อมูลส่วนตัว</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="first_name" class="form-label"><strong>ชื่อ:</strong></label>
+                                <input type="text" class="form-control" id="first_name" name="first_name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="last_name" class="form-label"><strong>นามสกุล:</strong></label>
+                                <input type="text" class="form-control" id="last_name" name="last_name" required>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="last_name" class="form-label"><strong>นามสกุล:</strong></label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ current_user.last_name or '' }}" required>
+                    
+                    <div class="form-group mb-3">
+                        <label for="birth_date" class="form-label"><strong>วัน/เดือน/ปีเกิด:</strong></label>
+                        <input type="date" class="form-control" id="birth_date" name="birth_date">
+                        <small class="form-text text-muted">ข้อมูลนี้จะแสดงในหน้าโปรไฟล์</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="location" class="form-label"><strong>ที่อยู่ปัจจุบัน:</strong></label>
+                        <textarea class="form-control" id="location" name="location" rows="2" placeholder="ที่อยู่ปัจจุบันเพื่อพิจารณาตำแหน่งงาน"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ข้อมูลด้านความพิการและประเภทความพิการ -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-wheelchair me-2"></i>ข้อมูลด้านความพิการและประเภทความพิการ</h4>
+                </div>
+                <div class="card-body">
+                    <!-- ประเภทความพิการ -->
+                    <div class="form-group mb-4">
+                        <label for="disability_type" class="form-label"><strong>ประเภทความพิการ:</strong></label>
+                        <select class="form-control" id="disability_type" name="disability_type" required>
+                            <option value="">เลือกประเภทความพิการ</option>
+                            <option value="ความพิการทางการเคลื่อนไหว">ความพิการทางการเคลื่อนไหว</option>
+                            <option value="ความพิการทางการมองเห็น">ความพิการทางการมองเห็น</option>
+                            <option value="ความพิการทางการได้ยิน">ความพิการทางการได้ยิน</option>
+                            <option value="ความพิการทางสติปัญญา">ความพิการทางสติปัญญา</option>
+                            <option value="ความพิการทางจิตใจ">ความพิการทางจิตใจ</option>
+                            <option value="ความพิการทางการเรียนรู้">ความพิการทางการเรียนรู้</option>
+                            <option value="ความพิการทางออทิสติก">ความพิการทางออทิสติก</option>
+                            <option value="ความพิการหลายประเภท">ความพิการหลายประเภท</option>
+                        </select>
+                        <small class="form-text text-muted">เลือกประเภทความพิการที่ตรงกับสถานการณ์ของคุณ</small>
+                    </div>
+
+                    <!-- อัพโหลดบัตรประจำตัวผู้พิการ -->
+                    <div class="form-group mb-4">
+                        <label class="form-label"><strong>บัตรประจำตัวผู้พิการ:</strong></label>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
+                            <h5 class="text-muted">อัพโหลดภาพบัตรประจำตัวผู้พิการ</h5>
+                            <p class="text-muted mb-3">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
+                            <input type="file" id="disabilityCard" name="disability_card" accept="image/*,.pdf" class="form-control d-none">
+                            <small class="text-muted">รองรับไฟล์: JPG, PNG, PDF (ขนาดไม่เกิน 5MB)</small>
+                        </div>
+                        <div class="file-preview" id="filePreview">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-file-image text-success me-2"></i>
+                                <span id="fileName"></span>
+                                <button type="button" class="btn btn-sm btn-outline-danger ms-auto" id="removeFile">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ระดับความรุนแรงของความพิการ -->
+                    <div class="form-group mb-4">
+                        <label class="form-label"><strong>ระดับความรุนแรงของความพิการ:</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="disability_level" value="เล็กน้อย" id="level1">
+                            <label class="form-check-label" for="level1">
+                                เล็กน้อย
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="disability_level" value="ปานกลาง" id="level2">
+                            <label class="form-check-label" for="level2">
+                                ปานกลาง
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="disability_level" value="รุนแรง" id="level3">
+                            <label class="form-check-label" for="level3">
+                                รุนแรง
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="disability_level" value="รุนแรงมาก" id="level4">
+                            <label class="form-check-label" for="level4">
+                                รุนแรงมาก
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="assistive_technology" class="form-label"><strong>อุปกรณ์ช่วยเหลือที่ใช้:</strong></label>
+                        <textarea class="form-control" id="assistive_technology" name="assistive_technology" rows="2" placeholder="อุปกรณ์ที่ใช้ช่วยในการทำงาน เช่น แว่นตา เครื่องช่วยฟัง รถเข็น"></textarea>
+                        <small class="form-text text-muted">อุปกรณ์ที่ใช้ช่วยในการทำงาน</small>
+                    </div>
+
+                    <!-- ความต้องการความช่วยเหลือ -->
+                    <div class="form-group mb-4">
+                        <label class="form-label"><strong>ความต้องการความช่วยเหลือ:</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="support_needs" value="การเคลื่อนไหว" id="support1">
+                            <label class="form-check-label" for="support1">
+                                ช่วยเหลือในการเคลื่อนไหว
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="support_needs" value="การสื่อสาร" id="support2">
+                            <label class="form-check-label" for="support2">
+                                ช่วยเหลือในการสื่อสาร
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="support_needs" value="กิจวัตรประจำวัน" id="support3">
+                            <label class="form-check-label" for="support3">
+                                ช่วยเหลือในกิจวัตรประจำวัน
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="support_needs" value="การเรียนรู้" id="support4">
+                            <label class="form-check-label" for="support4">
+                                ช่วยเหลือในการเรียนรู้
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ยืนยันความถูกต้อง -->
+                    <div class="form-group mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="confirm" value="confirm" id="confirm" required>
+                            <label class="form-check-label" for="confirm">
+                                <strong>ฉันยืนยันว่าข้อมูลที่กรอกเป็นข้อมูลที่ถูกต้องและเป็นจริง</strong>
+                            </label>
                         </div>
                     </div>
                 </div>
-                
-                <div class="form-group mb-3">
-                    <label for="birth_date" class="form-label"><strong>วัน/เดือน/ปีเกิด:</strong></label>
-                    <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ current_user.birth_date or '' }}">
-                    <small class="form-text text-muted">ข้อมูลนี้จะแสดงในหน้าโปรไฟล์</small>
-                </div>
-                
-                <div class="form-group mb-3">
-                    <label for="location" class="form-label"><strong>ที่อยู่ปัจจุบัน:</strong></label>
-                    <textarea class="form-control" id="location" name="location" rows="2" placeholder="ที่อยู่ปัจจุบันเพื่อพิจารณาตำแหน่งงาน">{{ current_user.location or '' }}</textarea>
-                </div>
             </div>
-        </div>
 
-        <!-- ข้อมูลด้านความพิการ -->
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h4 class="mb-0">ข้อมูลด้านความพิการ</h4>
-            </div>
-            <div class="card-body">
-                <div class="form-group mb-3">
-                    <label for="disability_type" class="form-label"><strong>ประเภทความพิการ:</strong></label>
-                    <select class="form-control" id="disability_type" name="disability_type" required>
-                        <option value="">เลือกประเภทความพิการ</option>
-                        <option value="ความพิการทางการมองเห็น" {% if current_user.disability_type == 'ความพิการทางการมองเห็น' %}selected{% endif %}>ความพิการทางการมองเห็น</option>
-                        <option value="ความพิการทางการได้ยิน" {% if current_user.disability_type == 'ความพิการทางการได้ยิน' %}selected{% endif %}>ความพิการทางการได้ยิน</option>
-                        <option value="ความพิการทางการเคลื่อนไหว" {% if current_user.disability_type == 'ความพิการทางการเคลื่อนไหว' %}selected{% endif %}>ความพิการทางการเคลื่อนไหว</option>
-                        <option value="ความพิการทางสติปัญญา" {% if current_user.disability_type == 'ความพิการทางสติปัญญา' %}selected{% endif %}>ความพิการทางสติปัญญา</option>
-                        <option value="ความพิการทางจิตใจ" {% if current_user.disability_type == 'ความพิการทางจิตใจ' %}selected{% endif %}>ความพิการทางจิตใจ</option>
-                        <option value="ความพิการทางการเรียนรู้" {% if current_user.disability_type == 'ความพิการทางการเรียนรู้' %}selected{% endif %}>ความพิการทางการเรียนรู้</option>
-                        <option value="ความพิการทางออทิสติก" {% if current_user.disability_type == 'ความพิการทางออทิสติก' %}selected{% endif %}>ความพิการทางออทิสติก</option>
-                        <option value="อื่นๆ" {% if current_user.disability_type == 'อื่นๆ' %}selected{% endif %}>อื่นๆ</option>
-                    </select>
-                    <small class="form-text text-muted">เป็นทางการคัดสรองให้งาน, ทางสายอาชีพ, ทางการใช้อุปกรณ์</small>
+            <!-- ข้อมูลการศึกษาและประสบการณ์ทำงาน -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">ข้อมูลการศึกษาและประสบการณ์ทำงาน</h4>
                 </div>
-                
-                <div class="form-group mb-3">
-                    <label for="assistive_technology" class="form-label"><strong>อุปกรณ์ช่วยเหลือที่ใช้:</strong></label>
-                    <textarea class="form-control" id="assistive_technology" name="assistive_technology" rows="2" placeholder="อุปกรณ์ที่ใช้ช่วยในการทำงาน เช่น แว่นตา เครื่องช่วยฟัง รถเข็น">{{ current_user.assistive_technology or '' }}</textarea>
-                    <small class="form-text text-muted">อรุณเป็นอุปกรณ์หาครื่องหรืออื่นสำหรับงานนี้ให้น้อยนั่นด้วย</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- ข้อมูลการสื่อสารและเหล่านี่โครงการปัจจัย -->
-        <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">ข้อมูลการสื่อสารและกรรมการปรับปรุงด้วยบ้านและห้าง</h4>
-            </div>
-            <div class="card-body">
-                <div class="form-group mb-3">
-                    <label class="form-label"><strong>สิ่งที่ต้องการความช่วยเหลือพิเศษ:</strong></label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="support_needs" value="ช่วยอาการใช้ซ่ำหาบัมปิโรหรับใครอื่น" id="support1">
-                        <label class="form-check-label" for="support1">
-                            ช่วยอาการใช้ซ่ำหาบัมปิโรหรับใครอื่น, ข้อกราฟตรวลรับ
-                        </label>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="education" class="form-label"><strong>วุฒิการศึกษา:</strong></label>
+                        <select class="form-control" id="education" name="education">
+                            <option value="">เลือกระดับการศึกษา</option>
+                            <option value="ประถมศึกษา">ประถมศึกษา</option>
+                            <option value="มัธยมศึกษาตอนต้น">มัธยมศึกษาตอนต้น</option>
+                            <option value="มัธยมศึกษาตอนปลาย">มัธยมศึกษาตอนปลาย</option>
+                            <option value="ปวช.">ปวช.</option>
+                            <option value="ปวส.">ปวส.</option>
+                            <option value="ปริญญาตรี">ปริญญาตรี</option>
+                            <option value="ปริญญาโท">ปริญญาโท</option>
+                            <option value="ปริญญาเอก">ปริญญาเอก</option>
+                        </select>
+                        <small class="form-text text-muted">ระดับการศึกษาและสาขาวิชา</small>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="support_needs" value="ช่วยหากำกึกหาจำหนากร้อม" id="support2">
-                        <label class="form-check-label" for="support2">
-                            ช่วยหากำกึกหาจำหนากร้อม, ท้องงาขงอร่มุการแปกการปอื่เกิด
-                        </label>
-                    </div>
-                    <small class="form-text text-muted">เป็น, ข้อกำขมใช้พ่าห์มาเย่ที่ขขปิษยุนเหวไม่, ข้อการปรปจราสรียืนั่ยุด้วยใอง
-ช่วงขทำ, ท้องงาฃาล็ปปการกกจำำหนากล้าง</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- ข้อมูลการศึกษาและประสบการณ์ทำงาน -->
-        <div class="card mb-4">
-            <div class="card-header bg-warning text-dark">
-                <h4 class="mb-0">ข้อมูลการศึกษาและประสบการณ์ทำงาน</h4>
-            </div>
-            <div class="card-body">
-                <div class="form-group mb-3">
-                    <label for="education" class="form-label"><strong>วุฒิการศึกษา:</strong></label>
-                    <select class="form-control" id="education" name="education">
-                        <option value="">เลือกระดับการศึกษา</option>
-                        <option value="ประถมศึกษา" {% if current_user.education == 'ประถมศึกษา' %}selected{% endif %}>ประถมศึกษา</option>
-                        <option value="มัธยมศึกษาตอนต้น" {% if current_user.education == 'มัธยมศึกษาตอนต้น' %}selected{% endif %}>มัธยมศึกษาตอนต้น</option>
-                        <option value="มัธยมศึกษาตอนปลาย" {% if current_user.education == 'มัธยมศึกษาตอนปลาย' %}selected{% endif %}>มัธยมศึกษาตอนปลาย</option>
-                        <option value="ปวช." {% if current_user.education == 'ปวช.' %}selected{% endif %}>ปวช.</option>
-                        <option value="ปวส." {% if current_user.education == 'ปวส.' %}selected{% endif %}>ปวส.</option>
-                        <option value="ปริญญาตรี" {% if current_user.education == 'ปริญญาตรี' %}selected{% endif %}>ปริญญาตรี</option>
-                        <option value="ปริญญาโท" {% if current_user.education == 'ปริญญาโท' %}selected{% endif %}>ปริญญาโท</option>
-                        <option value="ปริญญาเอก" {% if current_user.education == 'ปริญญาเอก' %}selected{% endif %}>ปริญญาเอก</option>
-                    </select>
-                    <small class="form-text text-muted">ระดับการศึกษาและสาขาวิชา</small>
-                </div>
-                
-                <div class="form-group mb-3">
-                    <label for="work_experience" class="form-label"><strong>ประสบการณ์ทำงาน:</strong></label>
-                    <textarea class="form-control" id="work_experience" name="work_experience" rows="4" placeholder="ตำแหน่ง, ชื่อบริษัท, ระยะเวลา, หน้าที่ความรับผิดชอบ">{{ current_user.work_experience or '' }}</textarea>
-                </div>
-            </div>
-        </div>
-
-        <!-- ทักษะและความสามารถ -->
-        <div class="card mb-4">
-            <div class="card-header bg-secondary text-white">
-                <h4 class="mb-0">ทักษะและความสามารถ</h4>
-            </div>
-            <div class="card-body">
-                <div class="form-group mb-3">
-                    <label for="skills" class="form-label"><strong>ทักษะที่เกี่ยวข้องกับงาน:</strong></label>
-                    <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="เป็น การใช้โปรแกรมคอมพิวเตอร์, ภาษาต่างประเทศ, ทักษะเฉพาะทาง">{{ current_user.skills or '' }}</textarea>
-                    <small class="form-text text-muted">เฉพาะทาง</small>
-                </div>
-                
-                <div class="form-group mb-3">
-                    <label for="digital_skill_level" class="form-label"><strong>ผลงาน (Portfolio):</strong></label>
-                    <textarea class="form-control" id="portfolio" name="portfolio" rows="3" placeholder="หากมี อาจเขียนแนบให้ดูให้ตัวอย่างพึ่งให้ให้แผนผลหางคน">{{ current_user.portfolio or '' }}</textarea>
-                </div>
-                
-                <div class="form-group mb-3">
-                    <label for="digital_skill_level" class="form-label"><strong>ระดับทักษะดิจิทัล:</strong></label>
-                    <select class="form-control" id="digital_skill_level" name="digital_skill_level" required>
-                        <option value="">เลือกระดับทักษะ</option>
-                        <option value="เริ่มต้น" {% if current_user.digital_skill_level == 'เริ่มต้น' %}selected{% endif %}>เริ่มต้น</option>
-                        <option value="ปานกลาง" {% if current_user.digital_skill_level == 'ปานกลาง' %}selected{% endif %}>ปานกลาง</option>
-                        <option value="ดี" {% if current_user.digital_skill_level == 'ดี' %}selected{% endif %}>ดี</option>
-                        <option value="ดีมาก" {% if current_user.digital_skill_level == 'ดีมาก' %}selected{% endif %}>ดีมาก</option>
-                        <option value="เชี่ยวชาญ" {% if current_user.digital_skill_level == 'เชี่ยวชาญ' %}selected{% endif %}>เชี่ยวชาญ</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- ข้อมูลเพิ่มเติม -->
-        <div class="card mb-4">
-            <div class="card-header bg-dark text-white">
-                <h4 class="mb-0">ข้อมูลเพิ่มเติม</h4>
-            </div>
-            <div class="card-body">
-                <div class="form-group mb-3">
-                    <label class="form-label"><strong>ผ่านการฝึกอบรม:</strong></label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="training_completed" id="training_yes" value="true" {% if current_user.training_completed %}checked{% endif %}>
-                        <label class="form-check-label" for="training_yes">
-                            ใช่
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="training_completed" id="training_no" value="false" {% if not current_user.training_completed %}checked{% endif %}>
-                        <label class="form-check-label" for="training_no">
-                            ไม่ใช่
-                        </label>
+                    
+                    <div class="form-group mb-3">
+                        <label for="work_experience" class="form-label"><strong>ประสบการณ์ทำงาน:</strong></label>
+                        <textarea class="form-control" id="work_experience" name="work_experience" rows="4" placeholder="ตำแหน่ง, ชื่อบริษัท, ระยะเวลา, หน้าที่ความรับผิดชอบ"></textarea>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group mb-4">
-                    <label for="resume_text" class="form-label"><strong>รายละเอียดเรซูเม่เพิ่มเติม:</strong></label>
-                    <textarea class="form-control" id="resume_text" name="resume_text" rows="5" placeholder="กรุณาระบุรายละเอียดเรซูเม่ของคุณ เป้าหมายในการทำงาน หรือข้อมูลอื่นๆ ที่ต้องการแจ้ง">{{ current_user.resume_text or '' }}</textarea>
+            <!-- ทักษะและความสามารถ -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">ทักษะและความสามารถ</h4>
                 </div>
-
-                <div class="form-group mb-4">
-                    <label for="resume_video_url" class="form-label"><strong>URL วิดีโอเรซูเม่:</strong></label>
-                    <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" value="{{ current_user.resume_video_url or '' }}" placeholder="https://www.youtube.com/embed/...">
-                    <small class="form-text text-muted">กรุณาใส่ URL ของวิดีโอเรซูเม่ (ถ้ามี)</small>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="skills" class="form-label"><strong>ทักษะที่เกี่ยวข้องกับงาน:</strong></label>
+                        <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="เช่น การใช้โปรแกรมคอมพิวเตอร์, ภาษาต่างประเทศ, ทักษะเฉพาะทาง"></textarea>
+                        <small class="form-text text-muted">ทักษะเฉพาะทาง</small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="portfolio" class="form-label"><strong>ผลงาน (Portfolio):</strong></label>
+                        <textarea class="form-control" id="portfolio" name="portfolio" rows="3" placeholder="หากมี กรุณาแนบ URL หรือรายละเอียดผลงานที่ต้องการแสดง"></textarea>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="digital_skill_level" class="form-label"><strong>ระดับทักษะดิจิทัล:</strong></label>
+                        <select class="form-control" id="digital_skill_level" name="digital_skill_level" required>
+                            <option value="">เลือกระดับทักษะ</option>
+                            <option value="เริ่มต้น">เริ่มต้น</option>
+                            <option value="ปานกลาง">ปานกลาง</option>
+                            <option value="ดี">ดี</option>
+                            <option value="ดีมาก">ดีมาก</option>
+                            <option value="เชี่ยวชาญ">เชี่ยวชาญ</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="text-center mb-4">
-            <button type="submit" class="btn btn-success btn-lg px-5">บันทึกข้อมูล</button>
-            <a href="{{ url_for('views.home') }}" class="btn btn-secondary btn-lg ml-3 px-5">ยกเลิก</a>
-        </div>
-    </form>
+            <!-- ข้อมูลเพิ่มเติม -->
+            <div class="card mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0">ข้อมูลเพิ่มเติม</h4>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label class="form-label"><strong>ผ่านการฝึกอบรม:</strong></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="training_completed" id="training_yes" value="true">
+                            <label class="form-check-label" for="training_yes">
+                                ใช่
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="training_completed" id="training_no" value="false">
+                            <label class="form-check-label" for="training_no">
+                                ไม่ใช่
+                            </label>
+                        </div>
+                    </div>
 
-    {% if current_user.resume_video_url %}
-        <div class="card mt-4">
-            <div class="card-header">
-                <h4>ตัวอย่างวิดีโอเรซูเม่</h4>
-            </div>
-            <div class="card-body">
-                <div class="embed-responsive embed-responsive-16by9">
-                    <iframe class="embed-responsive-item" src="{{ current_user.resume_video_url }}" allowfullscreen></iframe>
+                    <div class="form-group mb-4">
+                        <label for="resume_text" class="form-label"><strong>รายละเอียดเรซูเม่เพิ่มเติม:</strong></label>
+                        <textarea class="form-control" id="resume_text" name="resume_text" rows="5" placeholder="กรุณาระบุรายละเอียดเรซูเม่ของคุณ เป้าหมายในการทำงาน หรือข้อมูลอื่นๆ ที่ต้องการแจ้ง"></textarea>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="resume_video_url" class="form-label"><strong>URL วิดีโอเรซูเม่:</strong></label>
+                        <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" placeholder="https://www.youtube.com/embed/...">
+                        <small class="form-text text-muted">กรุณาใส่ URL ของวิดีโอเรซูเม่ (ถ้ามี)</small>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
-</div>
 
-<style>
-.card {
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border: none;
-}
+            <div class="text-center mb-4">
+                <button type="submit" class="btn btn-success btn-lg px-5">บันทึกข้อมูล</button>
+                <button type="button" class="btn btn-secondary btn-lg ml-3 px-5">ยกเลิก</button>
+            </div>
+        </form>
+    </div>
 
-.card-header {
-    border-bottom: 2px solid rgba(255,255,255,0.2);
-}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // File upload functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('disabilityCard');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
+        const removeFile = document.getElementById('removeFile');
 
-.form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
+        // Click to upload
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
 
-.btn-lg {
-    padding: 12px 30px;
-    font-size: 18px;
-}
-</style>
-{% endblock %}
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Validate file type
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('กรุณาอัพโหลดไฟล์ภาพ (JPG, PNG) หรือ PDF เท่านั้น');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('ขนาดไฟล์ต้องไม่เกิน 5MB');
+                return;
+            }
+
+            // Show file preview
+            fileName.textContent = file.name;
+            filePreview.style.display = 'block';
+            uploadArea.style.display = 'none';
+        }
+
+        // Remove file
+        removeFile.addEventListener('click', () => {
+            fileInput.value = '';
+            filePreview.style.display = 'none';
+            uploadArea.style.display = 'block';
+        });
+
+        // Form validation
+        document.querySelector('.btn-success').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Check if at least one disability type is selected
+            const disabilityTypes = document.querySelectorAll('input[name="disability_type"]:checked');
+            if (disabilityTypes.length === 0) {
+                alert('กรุณาเลือกประเภทความพิการอย่างน้อย 1 ประเภท');
+                return;
+            }
+
+            // Check if disability level is selected
+            const disabilityLevel = document.querySelector('input[name="disability_level"]:checked');
+            if (!disabilityLevel) {
+                alert('กรุณาเลือกระดับความรุนแรงของความพิการ');
+                return;
+            }
+
+            // Check if file is uploaded
+            if (!fileInput.files.length) {
+                alert('กรุณาอัพโหลดภาพบัตรประจำตัวผู้พิการ');
+                return;
+            }
+
+            // Check confirmation
+            const confirm = document.getElementById('confirm');
+            if (!confirm.checked) {
+                alert('กรุณายืนยันความถูกต้องของข้อมูل');
+                return;
+            }
+
+            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+        });
+    </script>
+</body>
+</html>
