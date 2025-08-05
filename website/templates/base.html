@@ -76,35 +76,38 @@
 <body>
 
   <!-- Navigation bar -->
-  <nav class="navbar navbar-expand-lg navbar-light glassmorphism">
-    <a class="navbar-brand" href="/">
-        <i class="fa fa-book" aria-hidden="true"></i> Communication Disability Jobs
-    </a>
+<nav class="navbar navbar-expand-lg navbar-light glassmorphism">
+  <a class="navbar-brand" href="/">
+      <i class="fa fa-book" aria-hidden="true"></i> Communication Disability Jobs
+  </a>
 
-    <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="navbar-nav ml-auto">
-        {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/jobs">Jobs</a></li>
-            
-            {% if user.role == 'employer' %}
-                <li class="nav-item"><a class="nav-link" href="/post-job">Post Job</a></li>
-                <li class="nav-item"><a class="nav-link" href="/employer/jobs">My Jobs</a></li>
-            {% endif %}
-            
-            <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
-        {% else %}
-            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="/sign-up">Sign Up</a></li>
-        {% endif %}
-      </ul>
+  <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+      <span class="navbar-toggler-icon"></span>
+  </button>
 
-    </div>
-  </nav>
+  <div class="collapse navbar-collapse" id="navbar">
+    <ul class="navbar-nav ml-auto">
+      {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/jobs">Jobs</a></li>
+
+          {% if user.role == 'employer' %}
+              <li class="nav-item"><a class="nav-link" href="/post-job">Post Job</a></li>
+              <li class="nav-item"><a class="nav-link" href="/employer/jobs">My Jobs</a></li>
+          {% endif %}
+
+          {% if user.role == 'disabled' %}
+              <li class="nav-item"><a class="nav-link" href="/resume">Resume</a></li>
+          {% endif %}
+
+          <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
+      {% else %}
+          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="/sign-up">Sign Up</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
 
     <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %} 

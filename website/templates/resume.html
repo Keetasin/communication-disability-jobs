@@ -1,0 +1,23 @@
+<!-- templates/resume.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Resume ของ {{ user.first_name }} {{ user.last_name }}</h2>
+
+    <p><strong>ประเภทความพิการ:</strong> {{ user.disability_type }}</p>
+    <p><strong>ทักษะ:</strong> {{ user.skills }}</p>
+    <p><strong>ที่อยู่:</strong> {{ user.location }}</p>
+    <p><strong>ระดับทักษะดิจิทัล:</strong> {{ user.digital_skill_level }}</p>
+    <p><strong>ผ่านการฝึกอบรม:</strong> {{ 'ใช่' if user.training_completed else 'ไม่ใช่' }}</p>
+
+    <h4 class="mt-4">รายละเอียดเรซูเม่ (Text)</h4>
+    <p>{{ user.resume_text }}</p>
+
+    {% if user.resume_video_url %}
+        <h4 class="mt-4">วิดีโอเรซูเม่</h4>
+        <div class="embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" src="{{ user.resume_video_url }}" allowfullscreen></iframe>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

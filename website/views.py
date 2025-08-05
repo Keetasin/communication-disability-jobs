@@ -105,7 +105,6 @@ def post_job(job_id=None):
 
     return render_template('post_job.html', job=job, user=current_user)
 
-
 @views.route('/jobs')
 def all_jobs():
     jobs = Job.query.order_by(Job.posted_at.desc()).all()
@@ -159,6 +158,12 @@ def view_applicant(application_id):
         return redirect(url_for('views.employer_jobs'))
 
     return render_template('view_applicant.html', application=application, user=current_user)
+
+@views.route('/resume')
+@login_required
+def resume():
+    return render_template('resume.html', user=current_user)
+
 
 
 @views.route('/chat/<int:application_id>', methods=['GET', 'POST'])

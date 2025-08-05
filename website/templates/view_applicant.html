@@ -16,5 +16,6 @@
   </p>
   <a href="{{ url_for('views.chat', application_id=application.id) }}" class="btn btn-info mt-2">💬 พูดคุยกับผู้สมัคร</a>
   <a href="{{ url_for('views.employer_jobs') }}" class="btn btn-secondary mt-3">กลับ</a>
+  <a href="{{ url_for('views.view_resume', user_id=application.applicant.id) }}" class="btn btn-primary mt-3">ดูเรซูเม่</a>
 </div>
 {% endblock %}
