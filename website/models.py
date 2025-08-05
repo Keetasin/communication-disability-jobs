@@ -65,3 +65,15 @@ class JobApplication(db.Model):
     # ความสัมพันธ์
     job = db.relationship('Job', backref=db.backref('applications', lazy=True))
     applicant = db.relationship('User', backref=db.backref('applications', lazy=True))
+
+
+class ChatMessage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('job_applications.id'), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    sender = db.relationship('User', backref='sent_messages')
+    application = db.relationship('JobApplication', backref='chat_messages')
+

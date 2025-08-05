@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from datetime import datetime
 from . import db
 import pytz
-from .models import Job, JobApplication, User
+from .models import Job, JobApplication, ChatMessage
 
 
 views = Blueprint('views', __name__)
@@ -160,3 +160,28 @@ def view_applicant(application_id):
 
     return render_template('view_applicant.html', application=application, user=current_user)
 
+
+@views.route('/chat/<int:application_id>', methods=['GET', 'POST'])
+@login_required
+def chat(application_id):
+    application = JobApplication.query.get_or_404(application_id)
+
+    # ตรวจสอบสิทธิ์
+    if current_user.id not in [application.applicant_id, application.job.employer_id]:
+        flash('คุณไม่มีสิทธิ์เข้าถึงการแชทนี้', 'error')
+        return redirect(url_for('views.home'))
+
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            new_msg = ChatMessage(
+                application_id=application_id,
+                sender_id=current_user.id,
+                content=message
+            )
+            db.session.add(new_msg)
+            db.session.commit()
+            return redirect(url_for('views.chat', application_id=application_id))
+
+    chat_history = ChatMessage.query.filter_by(application_id=application_id).order_by(ChatMessage.timestamp).all()
+    return render_template('chat.html', chat_history=chat_history, application=application, user=current_user)

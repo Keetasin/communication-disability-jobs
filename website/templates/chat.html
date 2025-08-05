@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}แชท{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h3>💬 แชทระหว่าง {{ application.job.title }}</h3>
+
+  <div class="border p-3 mb-3" style="height: 300px; overflow-y: scroll; background-color: #fff;">
+    {% for msg in chat_history %}
+      <div class="{% if msg.sender_id == user.id %}text-right{% else %}text-left{% endif %}">
+        <small><strong>{{ msg.sender.first_name or msg.sender.email }}</strong></small><br>
+        <span class="badge badge-light">{{ msg.content }}</span><br>
+        <small class="text-muted">{{ msg.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+        <hr>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form method="POST">
+    <div class="form-group">
+      <textarea name="message" class="form-control" rows="3" placeholder="พิมพ์ข้อความ..." required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">ส่ง</button>
+    <a href="{{ url_for('views.view_applicant', application_id=application.id) }}" class="btn btn-secondary">⬅ กลับ</a>
+  </form>
+</div>
+{% endblock %}
