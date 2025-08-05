@@ -296,265 +296,266 @@
 </head>
 <body>
     <div class="container mt-4">
-        <div class="main-header">
-            <h1><i class="fas fa-user-circle me-3"></i>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h1>
-            <p class="text-muted mb-0">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสร้างโปรไฟล์ที่สมบูรณ์</p>
-        </div>
-        
-        <div class="progress-indicator">
-            <div class="progress-step active" id="step1">
-                <i class="fas fa-user"></i><br>ข้อมูลส่วนตัว
+        <form method="POST" class="form_">
+            <div class="main-header">
+                <h1><i class="fas fa-user-circle me-3"></i>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h1>
+                <p class="text-muted mb-0">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสร้างโปรไฟล์ที่สมบูรณ์</p>
             </div>
-            <div class="progress-step" id="step2">
-                <i class="fas fa-wheelchair"></i><br>ข้อมูลความพิการ
-            </div>
-            <div class="progress-step" id="step3">
-                <i class="fas fa-graduation-cap"></i><br>การศึกษา
-            </div>
-            <div class="progress-step" id="step4">
-                <i class="fas fa-tools"></i><br>ทักษะ
-            </div>
-        </div>
-        
-        <form id="mainForm" method="POST" enctype="multipart/form-data">
             
-            <!-- ข้อมูลส่วนตัว -->
-            <div class="card" data-step="1">
-                <div class="card-header bg-primary text-white">
-                    <div class="floating-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="section-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h4 class="d-inline-block">ข้อมูลส่วนตัว</h4>
+            <div class="progress-indicator">
+                <div class="progress-step active" id="step1">
+                    <i class="fas fa-user"></i><br>ข้อมูลส่วนตัว
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="first_name" class="form-label"><i class="fas fa-user me-2 text-primary"></i><strong>ชื่อ:</strong></label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" required>
-                                <div class="invalid-feedback">กรุณากรอกชื่อ</div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label for="last_name" class="form-label"><i class="fas fa-user me-2 text-primary"></i><strong>นามสกุล:</strong></label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" required>
-                                <div class="invalid-feedback">กรุณากรอกนามสกุล</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="birth_date" class="form-label"><i class="fas fa-calendar me-2 text-primary"></i><strong>วัน/เดือน/ปีเกิด:</strong></label>
-                        <input type="date" class="form-control" id="birth_date" name="birth_date">
-                        <small class="form-text text-muted">ข้อมูลนี้จะแสดงในหน้าโปรไฟล์</small>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="location" class="form-label"><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>ที่อยู่ปัจจุบัน:</strong></label>
-                        <textarea class="form-control" id="location" name="location" rows="2" placeholder="ที่อยู่ปัจจุบันเพื่อพิจารณาตำแหน่งงาน"></textarea>
-                    </div>
+                <div class="progress-step" id="step2">
+                    <i class="fas fa-wheelchair"></i><br>ข้อมูลความพิการ
+                </div>
+                <div class="progress-step" id="step3">
+                    <i class="fas fa-graduation-cap"></i><br>การศึกษา
+                </div>
+                <div class="progress-step" id="step4">
+                    <i class="fas fa-tools"></i><br>ทักษะ
                 </div>
             </div>
-
-            <!-- ข้อมูลด้านความพิการและประเภทความพิการ -->
-            <div class="card" data-step="2">
-                <div class="card-header bg-success text-white">
-                    <div class="floating-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <div class="section-icon">
-                        <i class="fas fa-wheelchair"></i>
-                    </div>
-                    <h4 class="d-inline-block">ข้อมูลด้านความพิการและประเภทความพิการ</h4>
-                </div>
-                <div class="card-body">
-                    <div class="form-group mb-4">
-                        <label for="disability_type" class="form-label"><i class="fas fa-list me-2 text-success"></i><strong>ประเภทความพิการ:</strong></label>
-                        <select class="form-control form-select" id="disability_type" name="disability_type" required>
-                            <option value="">เลือกประเภทความพิการ</option>
-                            <option value="ความพิการทางการเคลื่อนไหว">ความพิการทางการเคลื่อนไหว</option>
-                            <option value="ความพิการทางการมองเห็น">ความพิการทางการมองเห็น</option>
-                            <option value="ความพิการทางการได้ยิน">ความพิการทางการได้ยิน</option>
-                            <option value="ความพิการทางสติปัญญา">ความพิการทางสติปัญญา</option>
-                            <option value="ความพิการทางจิตใจ">ความพิการทางจิตใจ</option>
-                            <option value="ความพิการทางการเรียนรู้">ความพิการทางการเรียนรู้</option>
-                            <option value="ความพิการทางออทิสติก">ความพิการทางออทิสติก</option>
-                            <option value="ความพิการหลายประเภท">ความพิการหลายประเภท</option>
-                        </select>
-                        <div class="invalid-feedback">กรุณาเลือกประเภทความพิการ</div>
-                        <small class="form-text text-muted">เลือกประเภทความพิการที่ตรงกับสถานการณ์ของคุณ</small>
-                    </div>
             
-                    <!-- อัพโหลดบัตรประจำตัวผู้พิการ -->
-                    <div class="form-group mb-4">
-                        <label class="form-label"><i class="fas fa-id-card me-2 text-success"></i><strong>บัตรประจำตัวผู้พิการ:</strong></label>
-                        <div class="upload-area" id="uploadArea">
-                            <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
-                            <h5 class="text-muted">อัพโหลดภาพบัตรประจำตัวผู้พิการ</h5>
-                            <p class="text-muted mb-3">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
-                            <input type="file" id="disabilityCard" name="disability_card" accept="image/*,.pdf" class="form-control d-none">
-                            <small class="text-muted">รองรับไฟล์: JPG, PNG, PDF (ขนาดไม่เกิน 5MB)</small>
+            
+                
+                <!-- ข้อมูลส่วนตัว -->
+                <div class="card" data-step="1">
+                    <div class="card-header bg-primary text-white">
+                        <div class="floating-icon">
+                            <i class="fas fa-star"></i>
                         </div>
-                        <div class="file-preview" id="filePreview" style="display: none;">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-file-image text-success me-2"></i>
-                                <span id="fileName"></span>
-                                <button type="button" class="btn btn-sm btn-outline-danger ms-auto" id="removeFile">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
+                        <div class="section-icon">
+                            <i class="fas fa-user"></i>
                         </div>
-                        <div class="invalid-feedback" id="fileError" style="display: none;">กรุณาอัพโหลดภาพบัตรประจำตัวผู้พิการ</div>
+                        <h4 class="d-inline-block">ข้อมูลส่วนตัว</h4>
                     </div>
-
-                    <!-- ระดับความรุนแรงของความพิการ -->
-                    <div class="form-group mb-4">
-                        <label class="form-label"><i class="fas fa-chart-bar me-2 text-success"></i><strong>ระดับความรุนแรงของความพิการ:</strong></label>
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="disability_level" value="เล็กน้อย" id="level1">
-                                    <label class="form-check-label" for="level1">เล็กน้อย</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="disability_level" value="ปานกลาง" id="level2">
-                                    <label class="form-check-label" for="level2">ปานกลาง</label>
+                                <div class="form-group mb-3">
+                                    <label for="first_name" class="form-label"><i class="fas fa-user me-2 text-primary"></i><strong>ชื่อ:</strong></label>
+                                    <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                    <div class="invalid-feedback">กรุณากรอกชื่อ</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="disability_level" value="รุนแรง" id="level3">
-                                    <label class="form-check-label" for="level3">รุนแรง</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="disability_level" value="รุนแรงมาก" id="level4">
-                                    <label class="form-check-label" for="level4">รุนแรงมาก</label>
+                                <div class="form-group mb-3">
+                                    <label for="last_name" class="form-label"><i class="fas fa-user me-2 text-primary"></i><strong>นามสกุล:</strong></label>
+                                    <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                    <div class="invalid-feedback">กรุณากรอกนามสกุล</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="invalid-feedback" id="levelError" style="display: none;">กรุณาเลือกระดับความรุนแรงของความพิการ</div>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="assistive_technology" class="form-label"><i class="fas fa-cogs me-2 text-success"></i><strong>อุปกรณ์ช่วยเหลือที่ใช้:</strong></label>
-                        <textarea class="form-control" id="assistive_technology" name="assistive_technology" rows="2" placeholder="อุปกรณ์ที่ใช้ช่วยในการทำงาน เช่น แว่นตา เครื่องช่วยฟัง รถเข็น"></textarea>
-                        <small class="form-text text-muted">อุปกรณ์ที่ใช้ช่วยในการทำงาน</small>
-                    </div>
-
-                    <!-- ความต้องการความช่วยเหลือ -->
-                    <div class="form-group mb-4">
-                        <label class="form-label"><i class="fas fa-hands-helping me-2 text-success"></i><strong>ความต้องการความช่วยเหลือ:</strong></label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="support_needs" value="การเคลื่อนไหว" id="support1">
-                                    <label class="form-check-label" for="support1">ช่วยเหลือในการเคลื่อนไหว</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="support_needs" value="การสื่อสาร" id="support2">
-                                    <label class="form-check-label" for="support2">ช่วยเหลือในการสื่อสาร</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="support_needs" value="กิจวัตรประจำวัน" id="support3">
-                                    <label class="form-check-label" for="support3">ช่วยเหลือในกิจวัตรประจำวัน</label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="checkbox" name="support_needs" value="การเรียนรู้" id="support4">
-                                    <label class="form-check-label" for="support4">ช่วยเหลือในการเรียนรู้</label>
-                                </div>
-                            </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="birth_date" class="form-label"><i class="fas fa-calendar me-2 text-primary"></i><strong>วัน/เดือน/ปีเกิด:</strong></label>
+                            <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+                            <small class="form-text text-muted">ข้อมูลนี้จะแสดงในหน้าโปรไฟล์</small>
                         </div>
-                    </div>
-
-                    <!-- ยืนยันความถูกต้อง -->
-                    <div class="form-group mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="confirm" value="confirm" id="confirm" required>
-                            <label class="form-check-label" for="confirm">
-                                <strong><i class="fas fa-check-circle me-2 text-success"></i>ฉันยืนยันว่าข้อมูลที่กรอกเป็นข้อมูลที่ถูกต้องและเป็นจริง</strong>
-                            </label>
-                            <div class="invalid-feedback">กรุณายืนยันความถูกต้องของข้อมูล</div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="location" class="form-label"><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>ที่อยู่ปัจจุบัน:</strong></label>
+                            <textarea class="form-control" id="location" name="location" rows="2" placeholder="ที่อยู่ปัจจุบันเพื่อพิจารณาตำแหน่งงาน" required></textarea>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- ข้อมูลการศึกษาและประสบการณ์ทำงาน -->
-            <div class="card" data-step="3">
-                <div class="card-header bg-warning text-dark">
-                    <div class="floating-icon">
-                        <i class="fas fa-trophy"></i>
+                <!-- ข้อมูลด้านความพิการและประเภทความพิการ -->
+                <div class="card" data-step="2">
+                    <div class="card-header bg-success text-white">
+                        <div class="floating-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="section-icon">
+                            <i class="fas fa-wheelchair"></i>
+                        </div>
+                        <h4 class="d-inline-block">ข้อมูลด้านความพิการและประเภทความพิการ</h4>
                     </div>
-                    <div class="section-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h4 class="d-inline-block">ข้อมูลการศึกษาและประสบการณ์ทำงาน</h4>
-                </div>
-                <div class="card-body">
-                    <div class="form-group mb-3">
-                        <label for="education" class="form-label"><i class="fas fa-university me-2 text-warning"></i><strong>วุฒิการศึกษา:</strong></label>
-                        <select class="form-control form-select" id="education" name="education">
-                            <option value="">เลือกระดับการศึกษา</option>
-                            <option value="ประถมศึกษา">ประถมศึกษา</option>
-                            <option value="มัธยมศึกษาตอนต้น">มัธยมศึกษาตอนต้น</option>
-                            <option value="มัธยมศึกษาตอนปลาย">มัธยมศึกษาตอนปลาย</option>
-                            <option value="ปวช.">ปวช.</option>
-                            <option value="ปวส.">ปวส.</option>
-                            <option value="ปริญญาตรี">ปริญญาตรี</option>
-                            <option value="ปริญญาโท">ปริญญาโท</option>
-                            <option value="ปริญญาเอก">ปริญญาเอก</option>
-                        </select>
-                        <small class="form-text text-muted">ระดับการศึกษาและสาขาวิชา</small>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="work_experience" class="form-label"><i class="fas fa-briefcase me-2 text-warning"></i><strong>ประสบการณ์ทำงาน:</strong></label>
-                        <textarea class="form-control" id="work_experience" name="work_experience" rows="4" placeholder="ตำแหน่ง, ชื่อบริษัท, ระยะเวลา, หน้าที่ความรับผิดชอบ"></textarea>
-                    </div>
-                </div>
-            </div>
+                    <div class="card-body">
+                        <div class="form-group mb-4">
+                            <label for="disability_type" class="form-label"><i class="fas fa-list me-2 text-success"></i><strong>ประเภทความพิการ:</strong></label>
+                            <select class="form-control form-select" id="disability_type" name="disability_type" required>
+                                <option value="">เลือกประเภทความพิการ</option>
+                                <option value="ความพิการทางการเคลื่อนไหว">ความพิการทางการเคลื่อนไหว</option>
+                                <option value="ความพิการทางการมองเห็น">ความพิการทางการมองเห็น</option>
+                                <option value="ความพิการทางการได้ยิน">ความพิการทางการได้ยิน</option>
+                                <option value="ความพิการทางสติปัญญา">ความพิการทางสติปัญญา</option>
+                                <option value="ความพิการทางจิตใจ">ความพิการทางจิตใจ</option>
+                                <option value="ความพิการทางการเรียนรู้">ความพิการทางการเรียนรู้</option>
+                                <option value="ความพิการทางออทิสติก">ความพิการทางออทิสติก</option>
+                                <option value="ความพิการหลายประเภท">ความพิการหลายประเภท</option>
+                            </select>
+                            <div class="invalid-feedback">กรุณาเลือกประเภทความพิการ</div>
+                            <small class="form-text text-muted">เลือกประเภทความพิการที่ตรงกับสถานการณ์ของคุณ</small>
+                        </div>
+                
+                        <!-- อัพโหลดบัตรประจำตัวผู้พิการ -->
+                        <div class="form-group mb-4">
+                            <label class="form-label"><i class="fas fa-id-card me-2 text-success"></i><strong>บัตรประจำตัวผู้พิการ:</strong></label>
+                            <div class="upload-area" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
+                                <h5 class="text-muted">อัพโหลดภาพบัตรประจำตัวผู้พิการ</h5>
+                                <p class="text-muted mb-3">ลากไฟล์มาวางที่นี่ หรือคลิกเพื่อเลือกไฟล์</p>
+                                <input type="file" id="disabilityCard" name="disability_card" accept="image/*,.pdf" class="form-control d-none" required>
+                                <small class="text-muted">รองรับไฟล์: JPG, PNG, PDF (ขนาดไม่เกิน 5MB)</small>
+                            </div>
+                            <div class="file-preview" id="filePreview" style="display: none;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-image text-success me-2"></i>
+                                    <span id="fileName"></span>
+                                    <button type="button" class="btn btn-sm btn-outline-danger ms-auto" id="removeFile">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback" id="fileError" style="display: none;">กรุณาอัพโหลดภาพบัตรประจำตัวผู้พิการ</div>
+                        </div>
 
-            <!-- ทักษะและความสามารถ -->
-            <div class="card" data-step="4">
-                <div class="card-header bg-secondary text-white">
-                    <div class="floating-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <div class="section-icon">
-                        <i class="fas fa-tools"></i>
-                    </div>
-                    <h4 class="d-inline-block">ทักษะและความสามารถ</h4>
-                </div>
-                <div class="card-body">
-                    <div class="form-group mb-3">
-                        <label for="skills" class="form-label"><i class="fas fa-star me-2 text-secondary"></i><strong>ทักษะที่เกี่ยวข้องกับงาน:</strong></label>
-                        <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="เช่น การใช้โปรแกรมคอมพิวเตอร์, ภาษาต่างประเทศ, ทักษะเฉพาะทาง"></textarea>
-                        <small class="form-text text-muted">ทักษะเฉพาะทาง</small>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="portfolio" class="form-label"><i class="fas fa-folder me-2 text-secondary"></i><strong>ผลงาน (Portfolio):</strong></label>
-                        <textarea class="form-control" id="portfolio" name="portfolio" rows="3" placeholder="หากมี กรุณาแนบ URL หรือรายละเอียดผลงานที่ต้องการแสดง"></textarea>
-                    </div>
-                    
-                    <div class="form-group mb-3">
-                        <label for="resume_video_url" class="form-label"><strong>URL วิดีโอเรซูเม่:</strong></label>
-                        <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" placeholder="https://www.youtube.com/embed/...">
-                        <small class="form-text text-muted">กรุณาใส่ URL ของวิดีโอเรซูเม่ (ถ้ามี)</small>
-                    </div>
-                </div>
-            </div>
+                        <!-- ระดับความรุนแรงของความพิการ -->
+                        <div class="form-group mb-4">
+                            <label class="form-label"><i class="fas fa-chart-bar me-2 text-success"></i><strong>ระดับความรุนแรงของความพิการ:</strong></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="disability_level" value="เล็กน้อย" id="level1" required>
+                                        <label class="form-check-label" for="level1">เล็กน้อย</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="disability_level" value="ปานกลาง" id="level2" required>
+                                        <label class="form-check-label" for="level2">ปานกลาง</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="disability_level" value="รุนแรง" id="level3" required>
+                                        <label class="form-check-label" for="level3">รุนแรง</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="disability_level" value="รุนแรงมาก" id="level4" required>
+                                        <label class="form-check-label" for="level4">รุนแรงมาก</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback" id="levelError" style="display: none;">กรุณาเลือกระดับความรุนแรงของความพิการ</div>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="assistive_technology" class="form-label"><i class="fas fa-cogs me-2 text-success"></i><strong>อุปกรณ์ช่วยเหลือที่ใช้:</strong></label>
+                            <textarea class="form-control" id="assistive_technology" name="assistive_technology" rows="2" placeholder="อุปกรณ์ที่ใช้ช่วยในการทำงาน เช่น แว่นตา เครื่องช่วยฟัง รถเข็น" required></textarea>
+                            <small class="form-text text-muted">อุปกรณ์ที่ใช้ช่วยในการทำงาน</small>
+                        </div>
 
-            <div class="text-center mb-4">
-                <button type="submit" class="btn btn-success btn-lg px-5">บันทึกข้อมูล</button>
-                <button type="button" class="btn btn-secondary btn-lg ml-3 px-5">ยกเลิก</button>
-            </div>
+                        <!-- ความต้องการความช่วยเหลือ -->
+                        <div class="form-group mb-4">
+                            <label class="form-label"><i class="fas fa-hands-helping me-2 text-success"></i><strong>ความต้องการความช่วยเหลือ:</strong></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="support_needs" value="การเคลื่อนไหว" id="support1" required>
+                                        <label class="form-check-label" for="support1">ช่วยเหลือในการเคลื่อนไหว</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="support_needs" value="การสื่อสาร" id="support2" required>
+                                        <label class="form-check-label" for="support2">ช่วยเหลือในการสื่อสาร</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="support_needs" value="กิจวัตรประจำวัน" id="support3" required>
+                                        <label class="form-check-label" for="support3">ช่วยเหลือในกิจวัตรประจำวัน</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" name="support_needs" value="การเรียนรู้" id="support4" required>
+                                        <label class="form-check-label" for="support4">ช่วยเหลือในการเรียนรู้</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ยืนยันความถูกต้อง -->
+                        <div class="form-group mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="confirm" value="confirm" id="confirm" required>
+                                <label class="form-check-label" for="confirm">
+                                    <strong><i class="fas fa-check-circle me-2 text-success"></i>ฉันยืนยันว่าข้อมูลที่กรอกเป็นข้อมูลที่ถูกต้องและเป็นจริง</strong>
+                                </label>
+                                <div class="invalid-feedback">กรุณายืนยันความถูกต้องของข้อมูล</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ข้อมูลการศึกษาและประสบการณ์ทำงาน -->
+                <div class="card" data-step="3">
+                    <div class="card-header bg-warning text-dark">
+                        <div class="floating-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="section-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h4 class="d-inline-block">ข้อมูลการศึกษาและประสบการณ์ทำงาน</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="education" class="form-label"><i class="fas fa-university me-2 text-warning"></i><strong>วุฒิการศึกษา:</strong></label>
+                            <select class="form-control form-select" id="education" name="education" required>
+                                <option value="">เลือกระดับการศึกษา</option>
+                                <option value="ประถมศึกษา">ประถมศึกษา</option>
+                                <option value="มัธยมศึกษาตอนต้น">มัธยมศึกษาตอนต้น</option>
+                                <option value="มัธยมศึกษาตอนปลาย">มัธยมศึกษาตอนปลาย</option>
+                                <option value="ปวช.">ปวช.</option>
+                                <option value="ปวส.">ปวส.</option>
+                                <option value="ปริญญาตรี">ปริญญาตรี</option>
+                                <option value="ปริญญาโท">ปริญญาโท</option>
+                                <option value="ปริญญาเอก">ปริญญาเอก</option>
+                            </select>
+                            <small class="form-text text-muted">ระดับการศึกษาและสาขาวิชา</small>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="work_experience" class="form-label"><i class="fas fa-briefcase me-2 text-warning"></i><strong>ประสบการณ์ทำงาน:</strong></label>
+                            <textarea class="form-control" id="work_experience" name="work_experience" rows="4" placeholder="ตำแหน่ง, ชื่อบริษัท, ระยะเวลา, หน้าที่ความรับผิดชอบ" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ทักษะและความสามารถ -->
+                <div class="card" data-step="4">
+                    <div class="card-header bg-secondary text-white">
+                        <div class="floating-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="section-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h4 class="d-inline-block">ทักษะและความสามารถ</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label for="skills" class="form-label"><i class="fas fa-star me-2 text-secondary"></i><strong>ทักษะที่เกี่ยวข้องกับงาน:</strong></label>
+                            <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="เช่น การใช้โปรแกรมคอมพิวเตอร์, ภาษาต่างประเทศ, ทักษะเฉพาะทาง" required></textarea>
+                            <small class="form-text text-muted">ทักษะเฉพาะทาง</small>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="portfolio" class="form-label"><i class="fas fa-folder me-2 text-secondary"></i><strong>ผลงาน (Portfolio):</strong></label>
+                            <textarea class="form-control" id="portfolio" name="portfolio" rows="3" placeholder="หากมี กรุณาแนบ URL หรือรายละเอียดผลงานที่ต้องการแสดง" required></textarea>
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label for="resume_video_url" class="form-label"><strong>URL วิดีโอเรซูเม่:</strong></label>
+                            <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" placeholder="https://www.youtube.com/embed/..." required>
+                            <small class="form-text text-muted">กรุณาใส่ URL ของวิดีโอเรซูเม่ (ถ้ามี)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mb-4">
+                    <button type="submit" class="btn btn-success btn-lg px-5">บันทึกข้อมูล</button>
+                    <button type="button" class="btn btn-secondary btn-lg ml-3 px-5">ยกเลิก</button>
+                </div>
         </form>
     </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -627,7 +628,7 @@
         // Form validation
         document.querySelector('.btn-success').addEventListener('click', (e) => {
             e.preventDefault();
-         
+        
         /* 
             // Check if at least one disability type is selected
             const disabilityTypes = document.querySelectorAll('input[name="disability_type"]:checked');
