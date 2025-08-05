@@ -114,7 +114,9 @@ def all_jobs():
         .filter(~Job.applications.any(JobApplication.status == 'accepted')) \
         .order_by(Job.posted_at.desc()) \
         .all()
+
     return render_template('all_jobs.html', jobs=jobs, user=current_user)
+
 
 
 @views.route('/apply/<int:job_id>', methods=['POST'])
@@ -122,6 +124,12 @@ def all_jobs():
 def apply_job(job_id):
     if current_user.role != 'disabled':
         flash('Only users with disabilities can apply for jobs.', 'error')
+        return redirect(url_for('views.all_jobs'))
+
+    # เช็คว่าผู้ใช้มีงานที่ accepted อยู่หรือไม่
+    accepted_job = JobApplication.query.filter_by(applicant_id=current_user.id, status='accepted').first()
+    if accepted_job:
+        flash('คุณมีงานที่รับแล้ว ไม่สามารถสมัครงานใหม่ได้', 'error')
         return redirect(url_for('views.all_jobs'))
 
     job = Job.query.get_or_404(job_id)
@@ -137,6 +145,7 @@ def apply_job(job_id):
     db.session.commit()
     flash(f'สมัครงาน "{job.title}" เรียบร้อยแล้ว!', 'success')
     return redirect(url_for('views.all_jobs'))
+
 
 @views.route('/employer/jobs')
 @login_required
