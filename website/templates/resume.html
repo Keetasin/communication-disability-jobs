@@ -1,113 +1,390 @@
 {% extends "base.html" %}
 
-{% block title %}Resume{% endblock %}
+{% block title %}
+    เรซูเม่ - Communication Disability Jobs
+{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h2 class="mb-4">แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h2>
-    <form method="POST" enctype="multipart/form-data">
-        {{ get_flashed_messages()|join(', ') }}
-
-        <!-- ข้อมูลส่วนตัว -->
-        <div class="mb-3">
-            <label for="first_name" class="form-label">ชื่อ</label>
-            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ resume.first_name or '' }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="last_name" class="form-label">นามสกุล</label>
-            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ resume.last_name or '' }}" required>
-        </div>
-        <div class="mb-3">
-            <label for="birth_date" class="form-label">วันเกิด</label>
-            <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ resume.birth_date }}">
-        </div>
-        <div class="mb-3">
-            <label for="location" class="form-label">ที่อยู่</label>
-            <textarea class="form-control" id="location" name="location">{{ resume.location or '' }}</textarea>
+    <div class="resume-container fade-in">
+        <!-- Header -->
+        <div class="page-header">
+            <h2><i class="fa fa-file-text"></i> เรซูเม่ของฉัน</h2>
+            <p>สร้างและจัดการเรซูเม่ของคุณ</p>
         </div>
 
-        <!-- ข้อมูลความพิการ -->
-        <div class="mb-3">
-            <label for="disability_type" class="form-label">ประเภทความพิการ</label>
-            <select class="form-select" id="disability_type" name="disability_type">
-                <option value="">เลือก</option>
-                {% for option in ['ความพิการทางการเคลื่อนไหว', 'ความพิการทางการมองเห็น', 'ความพิการทางการได้ยิน',
-                                 'ความพิการทางสติปัญญา', 'ความพิการทางจิตใจ', 'ความพิการทางการเรียนรู้',
-                                 'ความพิการทางออทิสติก', 'ความพิการหลายประเภท'] %}
-                    <option value="{{ option }}" {% if resume.disability_type == option %}selected{% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
-        </div>
+        <!-- Resume Form -->
+        <form method="POST" enctype="multipart/form-data" class="resume-form">
+            <div class="form-grid">
+                <!-- Personal Info -->
+                <div class="form-section">
+                    <h4><i class="fa fa-user"></i> ข้อมูลส่วนตัว</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">ชื่อ *</label>
+                            <input type="text" name="first_name" id="first_name" 
+                                   class="form-control" value="{{ resume.first_name or '' }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">นามสกุล *</label>
+                            <input type="text" name="last_name" id="last_name" 
+                                   class="form-control" value="{{ resume.last_name or '' }}" required>
+                        </div>
+                    </div>
 
-        <div class="mb-3">
-            <label class="form-label">บัตรประจำตัวผู้พิการ</label>
-            <input type="file" class="form-control" name="disability_card">
-            {% if resume.disability_card_url %}
-                <small>อัปโหลดแล้ว: <a href="{{ resume.disability_card_url }}" target="_blank">ดูไฟล์</a></small>
-            {% endif %}
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">ระดับความพิการ</label><br>
-            {% for level in ['เล็กน้อย', 'ปานกลาง', 'รุนแรง', 'รุนแรงมาก'] %}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="disability_level" value="{{ level }}" id="level_{{ loop.index }}" {% if resume.disability_level == level %}checked{% endif %}>
-                    <label class="form-check-label" for="level_{{ loop.index }}">{{ level }}</label>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birth_date">วันเกิด</label>
+                            <input type="date" name="birth_date" id="birth_date" 
+                                   class="form-control" value="{{ resume.birth_date }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="location">ที่อยู่</label>
+                            <input type="text" name="location" id="location" 
+                                   class="form-control" value="{{ resume.location or '' }}" 
+                                   placeholder="จังหวัด, อำเภอ, ตำบล">
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
 
-        <div class="mb-3">
-            <label for="assistive_technology" class="form-label">อุปกรณ์ช่วยเหลือ</label>
-            <textarea class="form-control" id="assistive_technology" name="assistive_technology">{{ resume.assistive_technology or '' }}</textarea>
-        </div>
+                <!-- Disability Info -->
+                <div class="form-section">
+                    <h4><i class="fa fa-info-circle"></i> ข้อมูลความพิการ</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="disability_type">ประเภทความพิการ</label>
+                            <select name="disability_type" id="disability_type" class="form-control">
+                                <option value="">-- เลือกประเภท --</option>
+                                {% for option in ['ความพิการทางการเคลื่อนไหว', 'ความพิการทางการมองเห็น', 'ความพิการทางการได้ยิน', 'ความพิการทางสติปัญญา', 'ความพิการทางจิตใจ', 'ความพิการทางการเรียนรู้', 'ความพิการทางออทิสติก', 'ความพิการหลายประเภท'] %}
+                                    <option value="{{ option }}" {% if resume.disability_type == option %}selected{% endif %}>{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>ระดับความพิการ</label>
+                            <div class="radio-group">
+                                {% for level in ['เล็กน้อย', 'ปานกลาง', 'รุนแรง', 'รุนแรงมาก'] %}
+                                <label class="radio-label">
+                                    <input type="radio" name="disability_level" value="{{ level }}" 
+                                           {% if resume.disability_level == level %}checked{% endif %}>
+                                    <span>{{ level }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="mb-3">
-            <label class="form-label">ความต้องการความช่วยเหลือ</label><br>
-            {% for support in ['การเคลื่อนไหว', 'การสื่อสาร', 'กิจวัตรประจำวัน', 'การเรียนรู้'] %}
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="support_needs" value="{{ support }}" id="support_{{ loop.index }}" {% if support in (resume.support_needs or '').split(',') %}checked{% endif %}>
-                    <label class="form-check-label" for="support_{{ loop.index }}">{{ support }}</label>
+                    <div class="form-group">
+                        <label for="disability_card">บัตรประจำตัวผู้พิการ</label>
+                        <input type="file" name="disability_card" id="disability_card" 
+                               class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+                        {% if resume.disability_card_url %}
+                            <small class="form-text">
+                                ไฟล์ปัจจุบัน: <a href="{{ resume.disability_card_url }}" target="_blank">ดูไฟล์</a>
+                            </small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="assistive_technology">อุปกรณ์ช่วยเหลือ</label>
+                            <textarea name="assistive_technology" id="assistive_technology" 
+                                      class="form-control" rows="2">{{ resume.assistive_technology or '' }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>ความต้องการความช่วยเหลือ</label>
+                            <div class="checkbox-group">
+                                {% for support in ['การเคลื่อนไหว', 'การสื่อสาร', 'กิจวัตรประจำวัน', 'การเรียนรู้'] %}
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="support_needs" value="{{ support }}" 
+                                           {% if support in (resume.support_needs or '').split(',') %}checked{% endif %}>
+                                    <span>{{ support }}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
 
-        <div class="mb-3 form-check">
-            <input class="form-check-input" type="checkbox" name="confirm" id="confirm" value="confirm" {% if resume.confirmation_checked %}checked{% endif %}>
-            <label class="form-check-label" for="confirm">ฉันยืนยันว่าข้อมูลที่กรอกเป็นจริง</label>
-        </div>
+                <!-- Education & Experience -->
+                <div class="form-section">
+                    <h4><i class="fa fa-graduation-cap"></i> การศึกษาและประสบการณ์</h4>
+                    
+                    <div class="form-group">
+                        <label for="education">ระดับการศึกษา</label>
+                        <select name="education" id="education" class="form-control">
+                            <option value="">-- เลือกระดับการศึกษา --</option>
+                            {% for edu in ['ประถมศึกษา', 'มัธยมต้น', 'มัธยมปลาย', 'ปวช.', 'ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก'] %}
+                                <option value="{{ edu }}" {% if resume.education == edu %}selected{% endif %}>{{ edu }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-        <!-- การศึกษา -->
-        <div class="mb-3">
-            <label for="education" class="form-label">ระดับการศึกษา</label>
-            <select class="form-select" id="education" name="education">
-                <option value="">เลือก</option>
-                {% for edu in ['ประถมศึกษา', 'มัธยมต้น', 'มัธยมปลาย', 'ปวช.', 'ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก'] %}
-                    <option value="{{ edu }}" {% if resume.education == edu %}selected{% endif %}>{{ edu }}</option>
-                {% endfor %}
-            </select>
-        </div>
+                    <div class="form-group">
+                        <label for="work_experience">ประสบการณ์ทำงาน</label>
+                        <textarea name="work_experience" id="work_experience" 
+                                  class="form-control" rows="4" 
+                                  placeholder="ระบุประสบการณ์ทำงาน ตำแหน่ง และระยะเวลา...">{{ resume.work_experience or '' }}</textarea>
+                    </div>
 
-        <div class="mb-3">
-            <label for="work_experience" class="form-label">ประสบการณ์ทำงาน</label>
-            <textarea class="form-control" id="work_experience" name="work_experience" rows="4">{{ resume.work_experience or '' }}</textarea>
-        </div>
+                    <div class="form-group">
+                        <label for="skills">ทักษะ</label>
+                        <textarea name="skills" id="skills" 
+                                  class="form-control" rows="3" 
+                                  placeholder="เช่น: ภาษามือ, คอมพิวเตอร์, การออกแบบ...">{{ resume.skills or '' }}</textarea>
+                    </div>
+                </div>
 
-        <!-- ทักษะและ portfolio -->
-        <div class="mb-3">
-            <label for="skills" class="form-label">ทักษะ</label>
-            <textarea class="form-control" id="skills" name="skills">{{ resume.skills or '' }}</textarea>
-        </div>
-        <div class="mb-3">
-            <label for="portfolio" class="form-label">Portfolio</label>
-            <textarea class="form-control" id="portfolio" name="portfolio">{{ resume.portfolio or '' }}</textarea>
-        </div>
-        <div class="mb-3">
-            <label for="resume_video_url" class="form-label">URL วิดีโอเรซูเม่</label>
-            <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" value="{{ resume.resume_video_url or '' }}">
-        </div>
+                <!-- Portfolio & Video -->
+                <div class="form-section">
+                    <h4><i class="fa fa-briefcase"></i> ผลงานและสื่อ</h4>
+                    
+                    <div class="form-group">
+                        <label for="portfolio">ผลงาน/Portfolio</label>
+                        <textarea name="portfolio" id="portfolio" 
+                                  class="form-control" rows="3" 
+                                  placeholder="ลิงก์ผลงาน เว็บไซต์ หรือรายละเอียดผลงาน...">{{ resume.portfolio or '' }}</textarea>
+                    </div>
 
-        <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
-    </form>
+                    <div class="form-group">
+                        <label for="resume_video_url">วิดีโอแนะนำตัว</label>
+                        <input type="url" name="resume_video_url" id="resume_video_url" 
+                               class="form-control" value="{{ resume.resume_video_url or '' }}" 
+                               placeholder="https://www.youtube.com/watch?v=...">
+                        <small class="form-text text-muted">แนะนำ: YouTube, Google Drive หรือ Dropbox</small>
+                    </div>
+                </div>
+
+                <!-- Confirmation -->
+                <div class="form-section">
+                    <div class="form-check-custom">
+                        <input type="checkbox" name="confirm" id="confirm" 
+                               class="form-check-input" value="confirm" 
+                               {% if resume.confirmation_checked %}checked{% endif %} required>
+                        <label class="form-check-label" for="confirm">
+                            <i class="fa fa-check-circle"></i>
+                            ฉันยืนยันว่าข้อมูลที่กรอกเป็นจริงและถูกต้อง
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa fa-save"></i> บันทึกเรซูเม่
+                </button>
+                <a href="{{ url_for('views.account') }}" class="btn btn-secondary btn-lg">
+                    <i class="fa fa-arrow-left"></i> กลับ
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('.resume-form');
+    
+    form.addEventListener('submit', function(e) {
+        const requiredFields = form.querySelectorAll('input[required], select[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('กรุณากรอกข้อมูลในช่องที่จำเป็น');
+        }
+    });
+
+    // File upload preview
+    const fileInput = document.getElementById('disability_card');
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // You can add preview functionality here
+                console.log('File selected:', file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Animation
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+});
+</script>
+
+<style>
+/* Resume Form Styles */
+.resume-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg);
+}
+
+.page-header h2 {
+    color: var(--pure-white);
+    margin-bottom: 0.5rem;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-light);
+}
+
+.form-section h4 {
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(0, 123, 255, 0.2);
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-normal);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.radio-group, .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.radio-label, .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.radio-label input, .checkbox-label input {
+    transform: scale(1.2);
+}
+
+.form-check-custom {
+    background: rgba(0, 123, 255, 0.05);
+    border: 1px solid var(--primary-blue);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-check-custom .form-check-input {
+    transform: scale(1.3);
+}
+
+.form-check-custom .form-check-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--dark-blue);
+    cursor: pointer;
+    margin: 0;
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+    margin-top: 0.25rem;
+}
+
+.form-actions {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.form-actions .btn {
+    min-width: 200px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .radio-group, .checkbox-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+</style>
 {% endblock %}

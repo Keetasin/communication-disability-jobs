@@ -1,56 +1,664 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Login
+  เข้าสู่ระบบ - Communication Disability Jobs
 {% endblock %}
 
 {% block content %}
-<!-- Include external CSS stylesheet -->
-<link rel="stylesheet" type="text/css" href="../static/style/login_sign-up.css">
-<br><br><br><br><br>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <!-- Login form -->
-        <form method="POST" class="form_">
-          <h3 class="text-center mb-4">Login</h3>
-          
-          <div class="form-border">
-            <!-- Email input -->
-            <div class="form-group">
-              <label for="email">Email Address</label>
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                name="email"
-                placeholder="Enter email"
-              />
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-form-wrapper fade-in">
+                    <!-- Logo Section -->
+                    <div class="auth-logo">
+                        <div class="logo-icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <h2 class="auth-brand">Communication Disability Jobs</h2>
+                        <p class="auth-tagline">เปิดโอกาสสำหรับทุกคน</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form method="POST" class="auth-form" id="loginForm">
+                        <h3 class="form-title">เข้าสู่ระบบ</h3>
+                        <p class="form-subtitle">ยินดีต้อนรับกลับมา! กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
+
+                        <!-- Email Field -->
+                        <div class="form-group input-float-label">
+                            <div class="input-icon-wrapper">
+                                <i class="fa fa-envelope form-icon"></i>
+                                <input
+                                    type="email"
+                                    class="form-control form-focus-effect"
+                                    id="email"
+                                    name="email"
+                                    placeholder=" "
+                                    required
+                                    autocomplete="email"
+                                />
+                                <label for="email">อีเมล</label>
+                            </div>
+                            <div class="input-hint">
+                                <small>กรุณากรอกอีเมลที่ใช้สมัครสมาชิก</small>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group input-float-label">
+                            <div class="input-icon-wrapper">
+                                <i class="fa fa-lock form-icon"></i>
+                                <input
+                                    type="password"
+                                    class="form-control form-focus-effect"
+                                    id="password"
+                                    name="password"
+                                    placeholder=" "
+                                    required
+                                    autocomplete="current-password"
+                                />
+                                <label for="password">รหัสผ่าน</label>
+                                <button type="button" class="password-toggle" id="passwordToggle">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="input-hint">
+                                <small>รหัสผ่านควรมีอย่างน้อย 7 ตัวอักษร</small>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="form-options">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe" name="remember">
+                                <label class="form-check-label" for="rememberMe">
+                                    จดจำการเข้าสู่ระบบ
+                                </label>
+                            </div>
+                            <a href="#forgot-password" class="forgot-link" data-toggle="modal" data-target="#forgotPasswordModal">
+                                ลืมรหัสผ่าน?
+                            </a>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary btn-lg btn-block btn-ripple" id="loginBtn">
+                            <span class="btn-text">
+                                <i class="fa fa-sign-in"></i> เข้าสู่ระบบ
+                            </span>
+                            <div class="loading-spinner-custom" style="display: none;"></div>
+                        </button>
+
+                        <!-- Social Login Divider -->
+                        <div class="divider">
+                            <span>หรือ</span>
+                        </div>
+
+                        <!-- Demo Login Buttons -->
+                        <div class="demo-login">
+                            <p class="demo-text">ทดลองใช้งานด้วยบัญชีตัวอย่าง:</p>
+                            <div class="demo-buttons">
+                                <button type="button" class="btn btn-outline-info btn-demo" data-email="keetasin01@gmail.com" data-password="Kongsee">
+                                    <i class="fa fa-user"></i> ผู้หางาน
+                                </button>
+                                <button type="button" class="btn btn-outline-success btn-demo" data-email="keetasin001@gmail.com" data-password="Kongsee">
+                                    <i class="fa fa-briefcase"></i> นายจ้าง
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Sign Up Link -->
+                        <div class="auth-switch">
+                            <p>ยังไม่มีบัญชี? <a href="/sign-up" class="switch-link">สมัครสมาชิก</a></p>
+                        </div>
+                    </form>
+
+                    <!-- Features Preview -->
+                    <div class="features-preview">
+                        <h4>ทำไมต้องเลือกเรา?</h4>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <i class="fa fa-shield"></i>
+                                <span>ปลอดภัยและเชื่อถือได้</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fa fa-accessibility"></i>
+                                <span>ออกแบบสำหรับทุกคน</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fa fa-support"></i>
+                                <span>ช่วยเหลือตลอด 24 ชั่วโมง</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Password input -->
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                placeholder="Enter password"
-              />
-            </div>
-
-          </div>
-          <br> 
-            <!-- Submit button -->
-            <div class="text-right">
-              <button type="submit" class="btn btn-primary">Login</button>
-            </div>
-          </form>
-
-      </div>
-
+        </div>
     </div>
+</div>
 
-  </div>
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">
+                    <i class="fa fa-key"></i> รีเซ็ตรหัสผ่าน
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>กรุณากรอกอีเมลที่ใช้สมัครสมาชิก เราจะส่งลิงก์สำหรับรีเซ็ตรหัสผ่านให้คุณ</p>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">อีเมล</label>
+                        <input type="email" class="form-control" id="resetEmail" placeholder="กรอกอีเมลของคุณ" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="sendResetBtn">
+                    <i class="fa fa-paper-plane"></i> ส่งลิงก์รีเซ็ต
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const passwordToggle = document.getElementById('passwordToggle');
+    const passwordInput = document.getElementById('password');
+    const emailInput = document.getElementById('email');
+    
+    // Password visibility toggle
+    passwordToggle.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        const icon = this.querySelector('i');
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    });
+
+    // Form validation and animation
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+            this.parentElement.parentElement.classList.add('focused');
+        });
+
+        input.addEventListener('blur', function() {
+            if (!this.value) {
+                this.parentElement.classList.remove('focused');
+                this.parentElement.parentElement.classList.remove('focused');
+            }
+        });
+
+        // Check if input has value on page load
+        if (input.value) {
+            input.parentElement.classList.add('focused');
+            input.parentElement.parentElement.classList.add('focused');
+        }
+    });
+
+    // Demo login buttons
+    const demoButtons = document.querySelectorAll('.btn-demo');
+    demoButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const email = this.getAttribute('data-email');
+            const password = this.getAttribute('data-password');
+            
+            emailInput.value = email;
+            passwordInput.value = password;
+            
+            // Trigger focus events to show labels
+            emailInput.dispatchEvent(new Event('focus'));
+            emailInput.dispatchEvent(new Event('blur'));
+            passwordInput.dispatchEvent(new Event('focus'));
+            passwordInput.dispatchEvent(new Event('blur'));
+            
+            // Add visual feedback
+            this.innerHTML = '<i class="fa fa-check"></i> ใส่ข้อมูลแล้ว';
+            setTimeout(() => {
+                this.innerHTML = this.innerHTML.replace('<i class="fa fa-check"></i> ใส่ข้อมูลแล้ว', 
+                    this.querySelector('i').className.includes('user') ? '<i class="fa fa-user"></i> ผู้หางาน' : '<i class="fa fa-briefcase"></i> นายจ้าง');
+            }, 2000);
+        });
+    });
+
+    // Form submission with loading state
+    loginForm.addEventListener('submit', function(e) {
+        loginBtn.classList.add('js-loading');
+        loginBtn.querySelector('.btn-text').style.opacity = '0.6';
+        loginBtn.querySelector('.loading-spinner-custom').style.display = 'inline-block';
+        loginBtn.disabled = true;
+    });
+
+    // Input validation feedback
+    inputs.forEach(input => {
+        input.addEventListener('input', function() {
+            validateInput(this);
+        });
+    });
+
+    function validateInput(input) {
+        const inputWrapper = input.parentElement.parentElement;
+        const hint = inputWrapper.querySelector('.input-hint small');
+        
+        if (input.type === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (input.value && !emailRegex.test(input.value)) {
+                inputWrapper.classList.add('has-error');
+                hint.textContent = 'รูปแบบอีเมลไม่ถูกต้อง';
+                hint.style.color = 'var(--danger-red)';
+            } else {
+                inputWrapper.classList.remove('has-error');
+                hint.textContent = 'กรุณากรอกอีเมลที่ใช้สมัครสมาชิก';
+                hint.style.color = 'var(--medium-gray)';
+            }
+        }
+        
+        if (input.type === 'password') {
+            if (input.value && input.value.length < 7) {
+                inputWrapper.classList.add('has-error');
+                hint.textContent = 'รหัสผ่านสั้นเกินไป';
+                hint.style.color = 'var(--danger-red)';
+            } else {
+                inputWrapper.classList.remove('has-error');
+                hint.textContent = 'รหัสผ่านควรมีอย่างน้อย 7 ตัวอักษร';
+                hint.style.color = 'var(--medium-gray)';
+            }
+        }
+    }
+
+    // Forgot password modal
+    const sendResetBtn = document.getElementById('sendResetBtn');
+    const resetEmailInput = document.getElementById('resetEmail');
+    const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+
+    sendResetBtn.addEventListener('click', function() {
+        const email = resetEmailInput.value;
+        if (email) {
+            // Simulate sending reset email
+            this.innerHTML = '<i class="fa fa-check"></i> ส่งแล้ว!';
+            this.classList.remove('btn-primary');
+            this.classList.add('btn-success');
+            
+            setTimeout(() => {
+                $('#forgotPasswordModal').modal('hide');
+                // Reset button state when modal is closed
+                setTimeout(() => {
+                    sendResetBtn.innerHTML = '<i class="fa fa-paper-plane"></i> ส่งลิงก์รีเซ็ต';
+                    sendResetBtn.classList.remove('btn-success');
+                    sendResetBtn.classList.add('btn-primary');
+                    resetEmailInput.value = '';
+                }, 300);
+            }, 1500);
+        }
+    });
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+});
+</script>
+
+<style>
+/* Login Page Specific Styles */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-form-wrapper {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-heavy);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    width: 100%;
+    max-width: 450px;
+    animation: fadeInScale 0.8s ease-out;
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.logo-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-round);
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+.auth-brand {
+    color: var(--dark-blue);
+    font-size: 1.3rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 0.5rem;
+}
+
+.auth-tagline {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.form-title {
+    color: var(--dark-blue);
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+    text-align: center;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.input-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon-wrapper .form-control {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    height: 50px;
+    border: 2px solid rgba(0, 123, 255, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.form-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+    z-index: 10;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--medium-gray);
+    cursor: pointer;
+    font-size: 1rem;
+    z-index: 10;
+    transition: var(--transition-fast);
+}
+
+.password-toggle:hover {
+    color: var(--primary-blue);
+}
+
+.input-hint {
+    margin-top: 0.5rem;
+}
+
+.input-hint small {
+    color: var(--medium-gray);
+    font-size: 0.8rem;
+    transition: var(--transition-fast);
+}
+
+.has-error .form-control {
+    border-color: var(--danger-red);
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+    transform: scale(1.2);
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-medium);
+}
+
+.forgot-link:hover {
+    color: var(--dark-blue);
+    text-decoration: underline;
+}
+
+.btn-lg {
+    height: 50px;
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-semibold);
+}
+
+.divider {
+    text-align: center;
+    margin: 2rem 0;
+    position: relative;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--light-gray);
+}
+
+.divider span {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--medium-gray);
+    padding: 0 1rem;
+    font-size: 0.9rem;
+}
+
+.demo-login {
+    margin-bottom: 2rem;
+}
+
+.demo-text {
+    text-align: center;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.demo-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.btn-demo {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    transition: all var(--transition-normal);
+}
+
+.btn-demo:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--light-gray);
+}
+
+.auth-switch p {
+    color: var(--medium-gray);
+    margin: 0;
+}
+
+.switch-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+}
+
+.switch-link:hover {
+    color: var(--dark-blue);
+    text-decoration: underline;
+}
+
+.features-preview {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--light-gray);
+}
+
+.features-preview h4 {
+    color: var(--dark-blue);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+
+.feature-item i {
+    color: var(--primary-blue);
+    width: 20px;
+    text-align: center;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: var(--border-radius-lg);
+    border: none;
+    box-shadow: var(--shadow-heavy);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+}
+
+.modal-title {
+    font-weight: var(--font-weight-semibold);
+}
+
+.modal-header .close {
+    color: var(--pure-white);
+    opacity: 0.8;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+/* Loading state */
+.js-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.js-loading .btn-text {
+    opacity: 0.6 !important;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+    .auth-container {
+        padding: 1rem;
+    }
+    
+    .auth-form-wrapper {
+        padding: 2rem 1.5rem;
+    }
+    
+    .demo-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-options {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-brand {
+        font-size: 1.1rem;
+    }
+    
+    .form-title {
+        font-size: 1.5rem;
+    }
+    
+    .input-icon-wrapper .form-control {
+        height: 45px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+}
+</style>
 {% endblock %}

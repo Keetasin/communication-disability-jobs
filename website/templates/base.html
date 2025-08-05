@@ -7,141 +7,157 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Website icon -->
     <link rel="website icon" type="png" href="../static/images/favicon.png">
-    <!-- ใน base.html -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Title -->
-    <title>{% block title %}Home{% endblock %}</title>
-    <!-- Custom CSS -->
-    <style>
-      body {
-          height: 100%;
-          min-height: 100vh;
-          background: linear-gradient(rgba(0, 123, 255, 0.7), rgba(255, 255, 255, 0.8)), 
-                      url('../static/images/page.jpg') no-repeat center center fixed;
-          background-size: cover;
-      }
-      
-      /* Glassmorphism Navbar */
-      .glassmorphism {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        padding: 15px 20px;
-        border-radius: 12px;
-        margin: 15px auto;
-        max-width: 95%;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      }
-
-      /* Navbar Brand */
-      .navbar-brand {
-        font-size: 22px;
-        font-weight: bold;
-        color: #fff !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-
-      /* Navbar Links */
-      .navbar-nav .nav-item .nav-link {
-        font-size: 16px;
-        font-weight: 500;
-        color: #fff !important;
-        margin: 0 10px;
-        transition: all 0.3s ease-in-out;
-      }
-
-      /* Hover Effect */
-      .navbar-nav .nav-item .nav-link:hover {
-        color: #004ba0 !important;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        padding: 8px 15px;
-      }
-
-      /* Custom Toggler */
-      .custom-toggler {
-        border: none;
-        outline: none;
-        background: none;
-      }
-
-      .custom-toggler .navbar-toggler-icon {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-        width: 28px;
-        height: 28px;
-      }
-
-    </style>
+    
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/components.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/pages.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/animations.css') }}">
+    
+    <title>{% block title %}Communication Disability Jobs{% endblock %}</title>
 </head>
 <body>
-
-  <!-- Navigation bar -->
-  <nav class="navbar navbar-expand-lg navbar-light glassmorphism">
-    <a class="navbar-brand" href="/">
-        <i class="fa fa-book" aria-hidden="true"></i> Communication Disability Jobs
-    </a>
-
-    <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    
-    <div class="collapse navbar-collapse" id="navbar">
-      <ul class="navbar-nav ml-auto">
-        {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="/jobs">Jobs</a></li>
-            
-            {% if user.role == 'employer' %}
-                <li class="nav-item"><a class="nav-link" href="/post-job">Post Job</a></li>
-                <li class="nav-item"><a class="nav-link" href="/employer/jobs">Posted Jobs</a></li>
-            {% endif %}
-            {% if user.role == 'disabled' %}
-                <li class="nav-item"><a class="nav-link" href="/my-applications">apply</a></li>
-                <li class="nav-item"><a class="nav-link" href="/accepted-jobs">accepted</a></li>
-                <li class="nav-item"><a class="nav-link" href="/resume">resume</a></li>
-            {% endif %}
-            
-            <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>
-        {% else %}
-            <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="/sign-up">Sign Up</a></li>
-        {% endif %}
-      </ul>
-
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
     </div>
-  </nav>
+
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand animated-brand" href="/">
+                <i class="fa fa-users brand-icon" aria-hidden="true"></i>
+                <span class="brand-text">Communication Disability Jobs</span>
+            </a>
+
+            <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbar">
+                <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/home">
+                                <i class="fa fa-home"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/jobs">
+                                <i class="fa fa-briefcase"></i> Jobs
+                            </a>
+                        </li>
+                        
+                        {% if user.role == 'employer' %}
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" href="/post-job">
+                                    <i class="fa fa-plus-circle"></i> Post Job
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" href="/employer/jobs">
+                                    <i class="fa fa-list"></i> My Jobs
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% if user.role == 'disabled' %}
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" href="/my-applications">
+                                    <i class="fa fa-send"></i> Applications
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" href="/accepted-jobs">
+                                    <i class="fa fa-check-circle"></i> Accepted
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-custom" href="/resume">
+                                    <i class="fa fa-file-text"></i> Resume
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-link-custom dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user-circle"></i> {{ user.first_name or 'Account' }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-custom" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="/account">
+                                    <i class="fa fa-cog"></i> Account Settings
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                    <i class="fa fa-sign-out"></i> Logout
+                                </a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom" href="/login">
+                                <i class="fa fa-sign-in"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-custom btn-signup" href="/sign-up">
+                                <i class="fa fa-user-plus"></i> Sign Up
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %} 
-      {% if messages %}
-        {% for category, message in messages %}
-          {% if category == 'error' %}
-            <!-- Display error messages with a close button -->
-            <div class="alert alert-danger alter-dismissable fade show" role="alert">
-              {{ message }}
-              <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          {% else %}
-            <!-- Display success messages with a close button -->
-            <div class="alert alert-success alter-dismissable fade show" role="alert">
-              {{ message }}
-              <button type="button" class="close" data-dismiss="alert">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endif %} 
-    {% endwith %}
-    
-    <!-- Content area -->
-    <div class="container">
-      {% block content %} {% endblock %}
+    <div class="flash-container">
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-message" role="alert">
+                        <i class="fa fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }}"></i>
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %} 
+        {% endwith %}
     </div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+            {% block content %} {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-custom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>&copy; 2025 Communication Disability Jobs. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-right">
+                    <p>Empowering opportunities for everyone</p>
+                </div>
+            </div>
+        </div>
+    </footer>
     
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" 
@@ -155,5 +171,64 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" 
     crossorigin="anonymous"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Loading overlay
+        window.addEventListener('load', function() {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    loadingOverlay.style.display = 'none';
+                }, 300);
+            }, 500);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('mainNavbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        });
+
+        // Auto-hide flash messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu animation
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        if (navbarToggler) {
+            navbarToggler.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        }
+    </script>
 </body>
 </html>

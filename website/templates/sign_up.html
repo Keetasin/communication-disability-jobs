@@ -1,110 +1,1081 @@
 {% extends "base.html" %}
-{% block title %}Sign Up{% endblock %}
+
+{% block title %}
+    สมัครสมาชิก - Communication Disability Jobs
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="../static/style/login_sign-up.css">
-<br><br><br>
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <form method="POST" class="form_">
-        <h3 class="text-center mb-4">Sign Up</h3>
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <div class="auth-form-wrapper fade-in">
+                    <!-- Logo Section -->
+                    <div class="auth-logo">
+                        <div class="logo-icon">
+                            <i class="fa fa-user-plus"></i>
+                        </div>
+                        <h2 class="auth-brand">สมัครสมาชิกใหม่</h2>
+                        <p class="auth-tagline">เริ่มต้นการเดินทางสู่อาชีพที่ใช่</p>
+                    </div>
 
-        <!-- ข้อมูลทั่วไป -->
-        <div class="form-border">
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" class="form-control" name="email" placeholder="Enter email" required>
-          </div>
+                    <!-- Multi-step Progress -->
+                    <div class="signup-progress">
+                        <div class="progress-steps">
+                            <div class="step active" data-step="1">
+                                <div class="step-number">1</div>
+                                <div class="step-label">ข้อมูลพื้นฐาน</div>
+                            </div>
+                            <div class="step" data-step="2">
+                                <div class="step-number">2</div>
+                                <div class="step-label">ประเภทผู้ใช้</div>
+                            </div>
+                            <div class="step" data-step="3">
+                                <div class="step-number">3</div>
+                                <div class="step-label">ข้อมูลเพิ่มเติม</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33.33%"></div>
+                        </div>
+                    </div>
 
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" class="form-control" name="firstName" placeholder="Enter first name" required>
-          </div>
+                    <!-- Registration Form -->
+                    <form method="POST" class="auth-form" id="signupForm">
+                        <!-- Step 1: Basic Information -->
+                        <div class="form-step active" id="step1">
+                            <h3 class="step-title">ข้อมูลพื้นฐาน</h3>
+                            <p class="step-subtitle">กรุณากรอกข้อมูลพื้นฐานสำหรับการสมัครสมาชิก</p>
 
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" class="form-control" name="lastName" placeholder="Enter last name">
-          </div>
+                            <!-- Email Field -->
+                            <div class="form-group input-float-label">
+                                <div class="input-icon-wrapper">
+                                    <i class="fa fa-envelope form-icon"></i>
+                                    <input
+                                        type="email"
+                                        class="form-control form-focus-effect"
+                                        id="email"
+                                        name="email"
+                                        placeholder=" "
+                                        required
+                                        autocomplete="email"
+                                    />
+                                    <label for="email">อีเมล *</label>
+                                </div>
+                                <div class="input-hint">
+                                    <small>ใช้สำหรับเข้าสู่ระบบและรับการแจ้งเตือน</small>
+                                </div>
+                            </div>
 
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" class="form-control" name="password1" placeholder="Enter password" required>
-          </div>
+                            <!-- Name Fields -->
+                            <div class="form-row">
+                                <div class="form-group input-float-label">
+                                    <div class="input-icon-wrapper">
+                                        <i class="fa fa-user form-icon"></i>
+                                        <input
+                                            type="text"
+                                            class="form-control form-focus-effect"
+                                            id="firstName"
+                                            name="firstName"
+                                            placeholder=" "
+                                            required
+                                            autocomplete="given-name"
+                                        />
+                                        <label for="firstName">ชื่อ *</label>
+                                    </div>
+                                </div>
 
-          <div class="form-group">
-            <label>Confirm Password</label>
-            <input type="password" class="form-control" name="password2" placeholder="Confirm password" required>
-          </div>
+                                <div class="form-group input-float-label">
+                                    <div class="input-icon-wrapper">
+                                        <i class="fa fa-user form-icon"></i>
+                                        <input
+                                            type="text"
+                                            class="form-control form-focus-effect"
+                                            id="lastName"
+                                            name="lastName"
+                                            placeholder=" "
+                                            autocomplete="family-name"
+                                        />
+                                        <label for="lastName">นามสกุล</label>
+                                    </div>
+                                </div>
+                            </div>
 
-          <!-- เลือกประเภทผู้ใช้งาน -->
-          <div class="form-group">
-            <label>Register as</label>
-            <select class="form-control" name="role" id="role" onchange="toggleRoleFields()" required>
-              <option value="">-- Select Role --</option>
-              <option value="disabled">ผู้พิการทางการสื่อสาร</option>
-              <option value="employer">ผู้ว่าจ้าง</option>
-            </select>
-          </div>
+                            <!-- Password Fields -->
+                            <div class="form-group input-float-label">
+                                <div class="input-icon-wrapper">
+                                    <i class="fa fa-lock form-icon"></i>
+                                    <input
+                                        type="password"
+                                        class="form-control form-focus-effect"
+                                        id="password1"
+                                        name="password1"
+                                        placeholder=" "
+                                        required
+                                        autocomplete="new-password"
+                                    />
+                                    <label for="password1">รหัสผ่าน *</label>
+                                    <button type="button" class="password-toggle">
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar">
+                                        <div class="strength-fill"></div>
+                                    </div>
+                                    <div class="strength-text">กำลังรหัสผ่าน</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group input-float-label">
+                                <div class="input-icon-wrapper">
+                                    <i class="fa fa-lock form-icon"></i>
+                                    <input
+                                        type="password"
+                                        class="form-control form-focus-effect"
+                                        id="password2"
+                                        name="password2"
+                                        placeholder=" "
+                                        required
+                                        autocomplete="new-password"
+                                    />
+                                    <label for="password2">ยืนยันรหัสผ่าน *</label>
+                                    <div class="password-match-indicator">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                </div>
+                                <div class="input-hint">
+                                    <small>กรุณากรอกรหัสผ่านอีกครั้งเพื่อยืนยัน</small>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-primary btn-lg btn-block btn-next">
+                                ถัดไป <i class="fa fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: User Type Selection -->
+                        <div class="form-step" id="step2">
+                            <h3 class="step-title">ประเภทผู้ใช้งาน</h3>
+                            <p class="step-subtitle">เลือกประเภทการใช้งานที่เหมาะกับคุณ</p>
+
+                            <div class="user-type-selection">
+                                <div class="user-type-card" data-role="disabled">
+                                    <div class="card-icon">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <h4>ผู้หางาน</h4>
+                                    <p>สำหรับผู้พิการทางการสื่อสารหรือการได้ยินที่กำลังหางาน</p>
+                                    <ul class="card-features">
+                                        <li><i class="fa fa-check"></i> สร้างเรซูเม่และโปรไฟล์</li>
+                                        <li><i class="fa fa-check"></i> ค้นหาและสมัครงาน</li>
+                                        <li><i class="fa fa-check"></i> อัปโหลดวิดีโอแนะนำตัว</li>
+                                        <li><i class="fa fa-check"></i> สื่อสารกับนายจ้าง</li>
+                                    </ul>
+                                    <div class="card-select">
+                                        <i class="fa fa-check-circle"></i>
+                                    </div>
+                                </div>
+
+                                <div class="user-type-card" data-role="employer">
+                                    <div class="card-icon">
+                                        <i class="fa fa-briefcase"></i>
+                                    </div>
+                                    <h4>นายจ้าง</h4>
+                                    <p>สำหรับบริษัทและองค์กรที่ต้องการจ้างงานผู้พิการ</p>
+                                    <ul class="card-features">
+                                        <li><i class="fa fa-check"></i> โพสต์ประกาศรับสมัครงาน</li>
+                                        <li><i class="fa fa-check"></i> ค้นหาและดูโปรไฟล์</li>
+                                        <li><i class="fa fa-check"></i> จัดการใบสมัครงาน</li>
+                                        <li><i class="fa fa-check"></i> สื่อสารกับผู้สมัคร</li>
+                                    </ul>
+                                    <div class="card-select">
+                                        <i class="fa fa-check-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="role" id="selectedRole" required>
+
+                            <div class="step-buttons">
+                                <button type="button" class="btn btn-secondary btn-prev">
+                                    <i class="fa fa-arrow-left"></i> ก่อนหน้า
+                                </button>
+                                <button type="button" class="btn btn-primary btn-next" disabled>
+                                    ถัดไป <i class="fa fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Additional Information -->
+                        <div class="form-step" id="step3">
+                            <h3 class="step-title">ข้อมูลเพิ่มเติม</h3>
+                            <p class="step-subtitle">กรอกข้อมูลเพิ่มเติมตามประเภทผู้ใช้ที่เลือก</p>
+
+                            <!-- Fields for Job Seekers -->
+                            <div id="disabledFields" style="display: none;">
+                                <div class="field-section">
+                                    <h5><i class="fa fa-user-circle"></i> ข้อมูลผู้หางาน</h5>
+                                    
+                                    <div class="form-group">
+                                        <label for="disability_type">ประเภทความพิการ</label>
+                                        <select class="form-control" name="disability_type" id="disability_type">
+                                            <option value="">-- เลือกประเภทความพิการ --</option>
+                                            <option value="hearing">ผู้พิการทางการได้ยิน</option>
+                                            <option value="communication">ผู้พิการทางการสื่อสาร</option>
+                                            <option value="both">ผู้พิการทางการสื่อสารและการได้ยิน</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="skills">ทักษะพิเศษ</label>
+                                        <textarea class="form-control" name="skills" id="skills" rows="3" 
+                                            placeholder="เช่น: ภาษามือ, การใช้คอมพิวเตอร์, การออกแบบกราฟิก..."></textarea>
+                                        <small class="form-text text-muted">ระบุทักษะที่คุณมีเพื่อให้นายจ้างเข้าใจความสามารถของคุณ</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="location">จังหวัด/พื้นที่</label>
+                                        <input type="text" class="form-control" name="location" id="location" 
+                                            placeholder="เช่น: กรุงเทพมหานคร, เชียงใหม่...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fields for Employers -->
+                            <div id="employerFields" style="display: none;">
+                                <div class="field-section">
+                                    <h5><i class="fa fa-building"></i> ข้อมูลบริษัท/องค์กร</h5>
+                                    
+                                    <div class="form-group">
+                                        <label for="company_name">ชื่อบริษัท/องค์กร *</label>
+                                        <input type="text" class="form-control" name="company_name" id="company_name" 
+                                            placeholder="ชื่อบริษัทหรือองค์กรของคุณ">
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="contact_person">ชื่อผู้ติดต่อ</label>
+                                            <input type="text" class="form-control" name="contact_person" id="contact_person" 
+                                                placeholder="ชื่อ-นามสกุลของผู้ติดต่อ">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="contact_phone">เบอร์โทรติดต่อ</label>
+                                            <input type="tel" class="form-control" name="contact_phone" id="contact_phone" 
+                                                placeholder="0x-xxxx-xxxx">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="contact_email">อีเมลติดต่อ</label>
+                                        <input type="email" class="form-control" name="contact_email" id="contact_email" 
+                                            placeholder="อีเมลสำหรับติดต่อธุรกิจ">
+                                        <small class="form-text text-muted">สามารถใช้อีเมลเดียวกับการเข้าสู่ระบบได้</small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address">ที่อยู่บริษัท</label>
+                                        <textarea class="form-control" name="address" id="address" rows="3" 
+                                            placeholder="ที่อยู่ของบริษัทหรือสำนักงาน"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Privacy -->
+                            <div class="terms-section">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        ฉันยอมรับ <a href="#terms-modal" data-toggle="modal">ข้อกำหนดการใช้งาน</a> 
+                                        และ <a href="#privacy-modal" data-toggle="modal">นโยบายความเป็นส่วนตัว</a> *
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="newsletter">
+                                    <label class="form-check-label" for="newsletter">
+                                        ฉันต้องการรับข่าวสารและข้อมูลงานใหม่ทางอีเมล
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="step-buttons">
+                                <button type="button" class="btn btn-secondary btn-prev">
+                                    <i class="fa fa-arrow-left"></i> ก่อนหน้า
+                                </button>
+                                <button type="submit" class="btn btn-success btn-lg btn-submit">
+                                    <span class="btn-text">
+                                        <i class="fa fa-user-plus"></i> สมัครสมาชิก
+                                    </span>
+                                    <div class="loading-spinner-custom" style="display: none;"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Sign In Link -->
+                    <div class="auth-switch">
+                        <p>มีบัญชีอยู่แล้ว? <a href="/login" class="switch-link">เข้าสู่ระบบ</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <!-- ✅ ฟิลด์ disabled -->
-        <div id="disabledFields" style="display: none;" class="form-border mt-3">
-          <h5>ข้อมูลผู้พิการทางการสื่อสาร</h5>
-          <div class="form-group">
-            <label>ประเภทความพิการ</label>
-            <select class="form-control" name="disability_type">
-              <option value="">-- เลือกประเภทความพิการ --</option>
-              <option value="hearing">การได้ยิน</option>
-              <option value="communication">การสื่อสาร</option>
-              <option value="both">การสื่อสารและการได้ยิน</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- ✅ ฟิลด์ employer -->
-        <div id="employerFields" style="display: none;" class="form-border mt-3">
-          <h5>ข้อมูลผู้ว่าจ้าง</h5>
-          <div class="form-group">
-            <label>ชื่อบริษัท</label>
-            <input type="text" class="form-control" name="company_name">
-          </div>
-
-          <div class="form-group">
-            <label>ชื่อผู้ติดต่อ</label>
-            <input type="text" class="form-control" name="contact_person">
-          </div>
-
-          <div class="form-group">
-            <label>เบอร์โทรติดต่อ</label>
-            <input type="text" class="form-control" name="contact_phone">
-          </div>
-
-          <div class="form-group">
-            <label>อีเมลติดต่อ</label>
-            <input type="email" class="form-control" name="contact_email">
-          </div>
-
-          <div class="form-group">
-            <label>ที่อยู่บริษัท</label>
-            <input type="text" class="form-control" name="address">
-          </div>
-        </div>
-
-        <!-- ปุ่ม submit -->
-        <div class="text-right mt-4">
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-        </div>
-      </form>
     </div>
-  </div>
+</div>
+
+<!-- Terms Modal -->
+<div class="modal fade" id="terms-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ข้อกำหนดการใช้งาน</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>1. การยอมรับข้อกำหนด</h6>
+                <p>การใช้บริการของเราถือว่าคุณยอมรับข้อกำหนดและเงื่อนไขทั้งหมด</p>
+                
+                <h6>2. การใช้งานที่เหมาะสม</h6>
+                <p>ผู้ใช้ต้องใช้บริการด้วยความสุภาพและเคารพสิทธิของผู้อื่น</p>
+                
+                <h6>3. ความปลอดภัยของข้อมูล</h6>
+                <p>เราจะปกป้องข้อมูลส่วนบุคคลของคุณตามนโยบายความเป็นส่วนตัว</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Modal -->
+<div class="modal fade" id="privacy-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">นโยบายความเป็นส่วนตัว</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>การเก็บรวบรวมข้อมูล</h6>
+                <p>เราเก็บรวบรวมข้อมูลที่จำเป็นสำหรับการให้บริการเท่านั้น</p>
+                
+                <h6>การใช้ข้อมูล</h6>
+                <p>ข้อมูลของคุณจะใช้สำหรับการจับคู่งานและการติดต่อสื่อสารเท่านั้น</p>
+                
+                <h6>การปกป้องข้อมูล</h6>
+                <p>เราใช้เทคโนโลยีการเข้ารหัสและมาตรการรักษาความปลอดภัยขั้นสูง</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-  function toggleRoleFields() {
-    const role = document.getElementById('role').value;
-    document.getElementById('disabledFields').style.display = role === 'disabled' ? 'block' : 'none';
-    document.getElementById('employerFields').style.display = role === 'employer' ? 'block' : 'none';
-  }
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('signupForm');
+    const steps = document.querySelectorAll('.form-step');
+    const progressSteps = document.querySelectorAll('.progress-steps .step');
+    const progressFill = document.querySelector('.progress-fill');
+    const nextBtns = document.querySelectorAll('.btn-next');
+    const prevBtns = document.querySelectorAll('.btn-prev');
+    
+    let currentStep = 1;
+
+    // Initialize form
+    initializeForm();
+
+    function initializeForm() {
+        // Password strength checker
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+        
+        password1.addEventListener('input', checkPasswordStrength);
+        password2.addEventListener('input', checkPasswordMatch);
+
+        // Password toggles
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const input = this.parentElement.querySelector('input');
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        });
+
+        // User type selection
+        document.querySelectorAll('.user-type-card').forEach(card => {
+            card.addEventListener('click', function() {
+                selectUserType(this);
+            });
+        });
+
+        // Next/Previous buttons
+        nextBtns.forEach(btn => {
+            btn.addEventListener('click', nextStep);
+        });
+
+        prevBtns.forEach(btn => {
+            btn.addEventListener('click', prevStep);
+        });
+
+        // Floating labels
+        initializeFloatingLabels();
+
+        // Form submission
+        form.addEventListener('submit', handleSubmit);
+    }
+
+    function checkPasswordStrength() {
+        const password = this.value;
+        const strengthBar = document.querySelector('.strength-fill');
+        const strengthText = document.querySelector('.strength-text');
+        
+        let strength = 0;
+        let strengthLabel = 'อ่อน';
+        let strengthColor = '#dc3545';
+
+        if (password.length >= 8) strength += 25;
+        if (/[a-z]/.test(password)) strength += 25;
+        if (/[A-Z]/.test(password)) strength += 25;
+        if (/[0-9]/.test(password) || /[^A-Za-z0-9]/.test(password)) strength += 25;
+
+        if (strength >= 50) {
+            strengthLabel = 'ปานกลาง';
+            strengthColor = '#ffc107';
+        }
+        if (strength >= 75) {
+            strengthLabel = 'ดี';
+            strengthColor = '#28a745';
+        }
+        if (strength === 100) {
+            strengthLabel = 'แข็งแกร่ง';
+            strengthColor = '#007bff';
+        }
+
+        strengthBar.style.width = strength + '%';
+        strengthBar.style.backgroundColor = strengthColor;
+        strengthText.textContent = strengthLabel;
+    }
+
+    function checkPasswordMatch() {
+        const password1 = document.getElementById('password1').value;
+        const password2 = this.value;
+        const indicator = document.querySelector('.password-match-indicator');
+        
+        if (password2 && password1 === password2) {
+            indicator.style.display = 'flex';
+            indicator.style.color = '#28a745';
+            this.style.borderColor = '#28a745';
+        } else if (password2) {
+            indicator.style.display = 'none';
+            this.style.borderColor = '#dc3545';
+        } else {
+            indicator.style.display = 'none';
+            this.style.borderColor = '';
+        }
+    }
+
+    function selectUserType(card) {
+        // Remove active class from all cards
+        document.querySelectorAll('.user-type-card').forEach(c => {
+            c.classList.remove('selected');
+        });
+        
+        // Add active class to selected card
+        card.classList.add('selected');
+        
+        // Set the role value
+        const role = card.getAttribute('data-role');
+        document.getElementById('selectedRole').value = role;
+        
+        // Enable next button
+        document.querySelector('#step2 .btn-next').disabled = false;
+        
+        // Update step 3 fields
+        updateStep3Fields(role);
+    }
+
+    function updateStep3Fields(role) {
+        const disabledFields = document.getElementById('disabledFields');
+        const employerFields = document.getElementById('employerFields');
+        
+        if (role === 'disabled') {
+            disabledFields.style.display = 'block';
+            employerFields.style.display = 'none';
+        } else if (role === 'employer') {
+            disabledFields.style.display = 'none';
+            employerFields.style.display = 'block';
+        }
+    }
+
+    function nextStep() {
+        if (validateCurrentStep()) {
+            if (currentStep < 3) {
+                currentStep++;
+                updateStepDisplay();
+            }
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStepDisplay();
+        }
+    }
+
+    function updateStepDisplay() {
+        // Update steps
+        steps.forEach((step, index) => {
+            step.classList.toggle('active', index + 1 === currentStep);
+        });
+
+        // Update progress
+        progressSteps.forEach((step, index) => {
+            step.classList.toggle('active', index + 1 <= currentStep);
+        });
+
+        // Update progress bar
+        const progressWidth = (currentStep / 3) * 100;
+        progressFill.style.width = progressWidth + '%';
+    }
+
+    function validateCurrentStep() {
+        const currentStepElement = document.getElementById(`step${currentStep}`);
+        const requiredInputs = currentStepElement.querySelectorAll('input[required], select[required]');
+        let isValid = true;
+
+        requiredInputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                input.classList.remove('is-invalid');
+            }
+        });
+
+        // Additional validation for step 1
+        if (currentStep === 1) {
+            const password1 = document.getElementById('password1').value;
+            const password2 = document.getElementById('password2').value;
+            
+            if (password1 !== password2) {
+                document.getElementById('password2').classList.add('is-invalid');
+                isValid = false;
+            }
+            
+            if (password1.length < 7) {
+                document.getElementById('password1').classList.add('is-invalid');
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
+
+    function initializeFloatingLabels() {
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+                this.parentElement.parentElement.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                    this.parentElement.parentElement.classList.remove('focused');
+                }
+            });
+
+            // Check if input has value on page load
+            if (input.value) {
+                input.parentElement.classList.add('focused');
+                input.parentElement.parentElement.classList.add('focused');
+            }
+        });
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        
+        if (validateCurrentStep()) {
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.classList.add('js-loading');
+            submitBtn.disabled = true;
+            
+            // Simulate loading and then submit
+            setTimeout(() => {
+                form.submit();
+            }, 1000);
+        }
+    }
+
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+});
 </script>
+
+<style>
+/* Sign Up Page Specific Styles */
+.signup-progress {
+    margin-bottom: 2rem;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    opacity: 0.5;
+    transition: var(--transition-normal);
+}
+
+.step.active {
+    opacity: 1;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-round);
+    background: var(--light-gray);
+    color: var(--medium-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 0.5rem;
+    transition: var(--transition-normal);
+}
+
+.step.active .step-number {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+}
+
+.step-label {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+    text-align: center;
+    font-weight: var(--font-weight-medium);
+}
+
+.step.active .step-label {
+    color: var(--dark-blue);
+}
+
+.progress-bar {
+    height: 4px;
+    background: var(--light-gray);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    transition: width 0.5s ease;
+    border-radius: 2px;
+}
+
+/* Form Steps */
+.form-step {
+    display: none;
+    animation: fadeInScale 0.5s ease-out;
+}
+
+.form-step.active {
+    display: block;
+}
+
+.step-title {
+    color: var(--dark-blue);
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.step-subtitle {
+    text-align: center;
+    color: var(--medium-gray);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+/* Password Strength */
+.password-strength {
+    margin-top: 0.5rem;
+}
+
+.strength-bar {
+    height: 4px;
+    background: var(--light-gray);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 0.25rem;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: all var(--transition-normal);
+    border-radius: 2px;
+}
+
+.strength-text {
+    font-size: 0.8rem;
+    color: var(--medium-gray);
+    font-weight: var(--font-weight-medium);
+}
+
+.password-match-indicator {
+    position: absolute;
+    right: 3rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--success-green);
+    border-radius: var(--border-radius-round);
+    color: var(--pure-white);
+    font-size: 0.8rem;
+}
+
+/* User Type Selection */
+.user-type-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.user-type-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    text-align: center;
+}
+
+.user-type-card:hover {
+    border-color: var(--primary-blue);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.user-type-card.selected {
+    border-color: var(--primary-blue);
+    background: rgba(0, 123, 255, 0.05);
+    box-shadow: var(--shadow-medium);
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-round);
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+}
+
+.user-type-card h4 {
+    color: var(--dark-blue);
+    font-size: 1.3rem;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 1rem;
+}
+
+.user-type-card p {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.card-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+    text-align: left;
+}
+
+.card-features li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--dark-gray);
+}
+
+.card-features li i {
+    color: var(--success-green);
+    margin-right: 0.5rem;
+    width: 16px;
+}
+
+.card-select {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--border-radius-round);
+    background: var(--success-green);
+    color: var(--pure-white);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.user-type-card.selected .card-select {
+    display: flex;
+}
+
+/* Field Sections */
+.field-section {
+    background: rgba(0, 123, 255, 0.02);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.field-section h5 {
+    color: var(--dark-blue);
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.field-section h5 i {
+    color: var(--primary-blue);
+}
+
+/* Terms Section */
+.terms-section {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--light-gray);
+    border-radius: var(--border-radius-md);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.terms-section .form-check {
+    margin-bottom: 1rem;
+}
+
+.terms-section .form-check:last-child {
+    margin-bottom: 0;
+}
+
+.terms-section a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+}
+
+.terms-section a:hover {
+    text-decoration: underline;
+}
+
+/* Step Buttons */
+.step-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.step-buttons .btn {
+    flex: 1;
+    max-width: 200px;
+}
+
+.step-buttons .btn-prev {
+    margin-right: auto;
+}
+
+.step-buttons .btn-next,
+.step-buttons .btn-submit {
+    margin-left: auto;
+}
+
+/* Form Validation */
+.form-control.is-invalid {
+    border-color: var(--danger-red);
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-control.is-valid {
+    border-color: var(--success-green);
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+/* Modal Customization */
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+}
+
+.modal-content {
+    border-radius: var(--border-radius-lg);
+    border: none;
+    box-shadow: var(--shadow-heavy);
+}
+
+.modal-body h6 {
+    color: var(--dark-blue);
+    font-weight: var(--font-weight-semibold);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-body h6:first-child {
+    margin-top: 0;
+}
+
+/* Loading States */
+.js-loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.js-loading .btn-text {
+    opacity: 0.6;
+}
+
+.js-loading .loading-spinner-custom {
+    display: inline-block !important;
+    margin-left: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .auth-form-wrapper {
+        padding: 2rem 1.5rem;
+    }
+    
+    .progress-steps {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .step {
+        flex-direction: row;
+        justify-content: flex-start;
+        text-align: left;
+    }
+    
+    .step-number {
+        margin-bottom: 0;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .user-type-selection {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-type-card {
+        padding: 1.5rem;
+    }
+    
+    .step-buttons {
+        flex-direction: column;
+    }
+    
+    .step-buttons .btn {
+        max-width: none;
+    }
+    
+    .field-section {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .step-title {
+        font-size: 1.3rem;
+    }
+    
+    .step-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .user-type-card {
+        padding: 1rem;
+    }
+    
+    .card-features {
+        font-size: 0.8rem;
+    }
+    
+    .form-row {
+        display: block;
+    }
+    
+    .form-row .form-group {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-icon-wrapper .form-control {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .progress-steps {
+        padding: 0 1rem;
+    }
+    
+    .step-label {
+        font-size: 0.8rem;
+    }
+}
+</style>
 {% endblock %}

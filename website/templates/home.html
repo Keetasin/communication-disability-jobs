@@ -1,20 +1,717 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Communication Disability Jobs
+    หน้าหลัก - Communication Disability Jobs
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="../static/style/welcome.css">
-    <br><br><br><br><br>
+<div class="home-dashboard">
+    <div class="container">
+        <!-- Welcome Header -->
+        <div class="dashboard-welcome fade-in">
+            <div class="welcome-content">
+                <h1>สวัสดี คุณ{{ user.first_name }}!</h1>
+                <h2>ยินดีต้อนรับเข้าสู่ระบบหางาน Communication Disability Jobs</h2>
+                <p class="welcome-message">
+                    {% if user.role == 'disabled' %}
+                        วันนี้เป็นวันดีสำหรับการค้นหาโอกาสใหม่ ๆ เริ่มต้นการเดินทางสู่อาชีพที่ใช่กับเรา
+                    {% else %}
+                        วันนี้เป็นวันดีสำหรับการค้นหาผู้สมัครที่เหมาะสม มาสร้างทีมงานที่แข็งแกร่งไปด้วยกัน
+                    {% endif %}
+                </p>
+            </div>
+            <div class="welcome-illustration">
+                <div class="morphing-blob">
+                    <i class="fa fa-users"></i>
+                </div>
+            </div>
+        </div>
 
-    <h1>Hello {{user.first_name}}</h1>
-    <h2>Welcome To Communication Disability Jobs</h2>
-    <br><br>
+        <!-- Quick Stats -->
+        <div class="dashboard-stats">
+            {% if user.role == 'disabled' %}
+                <!-- Stats for Job Seekers -->
+                <div class="stat-card hover-lift scale-in">
+                    <div class="stat-header">
+                        <i class="fa fa-briefcase stat-icon"></i>
+                        <h3>งานที่เปิดรับ</h3>
+                    </div>
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">ตำแหน่งงานใหม่</div>
+                    <div class="stat-progress">
+                        <div class="progress-animated">
+                            <div class="progress-bar-animated" style="width: 75%"></div>
+                        </div>
+                        <small>อัปเดตทุกวัน</small>
+                    </div>
+                    <a href="/jobs" class="btn btn-primary btn-sm mt-2 hover-pulse">
+                        <i class="fa fa-search"></i> ดูงานทั้งหมด
+                    </a>
+                </div>
 
-    <p>
-        xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    </p>
-    <br><br><br>
+                <div class="stat-card hover-lift scale-in">
+                    <div class="stat-header">
+                        <i class="fa fa-send stat-icon"></i>
+                        <h3>ใบสมัครของคุณ</h3>
+                    </div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">งานที่สมัครแล้ว</div>
+                    <div class="stat-progress">
+                        <div class="progress-animated">
+                            <div class="progress-bar-animated" style="width: 0%"></div>
+                        </div>
+                        <small>เริ่มสมัครงานแรกของคุณ</small>
+                    </div>
+                    <a href="/my-applications" class="btn btn-info btn-sm mt-2 hover-pulse">
+                        <i class="fa fa-list"></i> ดูใบสมัคร
+                    </a>
+                </div>
 
+                <div class="stat-card hover-lift scale-in">
+                    <div class="stat-header">
+                        <i class="fa fa-file-text stat-icon"></i>
+                        <h3>เรซูเม่</h3>
+                    </div>
+                    <div class="stat-number">
+                        {% if user.resume %}85%{% else %}0%{% endif %}
+                    </div>
+                    <div class="stat-label">ความสมบูรณ์</div>
+                    <div class="stat-progress">
+                        <div class="progress-animated">
+                            <div class="progress-bar-animated" style="width: {% if user.resume %}85{% else %}0{% endif %}%"></div>
+                        </div>
+                        <small>
+                            {% if user.resume %}เกือบสมบูรณ์แล้ว{% else %}ยังไม่ได้สร้าง{% endif %}
+                        </small>
+                    </div>
+                    <a href="/resume" class="btn btn-warning btn-sm mt-2 hover-pulse">
+                        <i class="fa fa-edit"></i> แก้ไขเรซูเม่
+                    </a>
+                </div>
+
+            {% else %}
+                <!-- Stats for Employers -->
+                <div class="stat-card hover-lift scale-in">
+                    <div class="stat-header">
+                        <i class="fa fa-plus-circle stat-icon"></i>
+                        <h3>โพสต์งานใหม่</h3>
+                    </div>
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">โอกาสไร้ขีดจำกัด</div>
+                    <div class="stat-progress">
+                        <div class="progress-animated">
+                            <div class="progress-bar-animated" style="width: 100%"></div>
+                        </div>
+                        <small>เริ่มต้นได้ทันที</small>
+                    </div>
+                    <a href="/post-job" class="btn btn-success btn-sm mt-2 hover-pulse">
+                        <i class="fa fa-plus"></i> โพสต์งาน
+                    </a>
+                </div>
+
+                <div class="stat-card hover-lift scale-in">
+                    <div class="stat-header">
+                        <i class="fa fa-list stat-icon"></i>
+                        <h3>งานที่โพสต์</h3>
+                    </div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">ตำแหน่งงานของคุณ</div>
+                    <div class="stat-progress">
+                        <div class="progress-animated">
+                            <div class="progress-bar-animated" style="width: 0%"></div>
+                        </div>
+                        <small>โพสต์งานแรกของคุณ</small>
+                    </div>
+                    <a href="/employer/jobs" class="btn btn-info btn-sm mt-2 hover-pulse">
+                        <i class="fa fa-briefcase"></i> จัดการงาน
+                    </a>
+                </div>
+
+                <div class="stat-card hover-lift scale-in">
+                    <div class="stat-header">
+                        <i class="fa fa-users stat-icon"></i>
+                        <h3>ผู้สมัครงาน</h3>
+                    </div>
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">ใบสมัครที่ได้รับ</div>
+                    <div class="stat-progress">
+                        <div class="progress-animated">
+                            <div class="progress-bar-animated" style="width: 0%"></div>
+                        </div>
+                        <small>รอใบสมัครแรก</small>
+                    </div>
+                    <a href="/employer/jobs" class="btn btn-primary btn-sm mt-2 hover-pulse">
+                        <i class="fa fa-eye"></i> ดูผู้สมัคร
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions slide-in-left">
+            <h3><i class="fa fa-bolt"></i> การดำเนินการด่วน</h3>
+            <div class="action-grid">
+                {% if user.role == 'disabled' %}
+                    <div class="action-item hover-scale">
+                        <div class="action-icon">
+                            <i class="fa fa-search"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>ค้นหางาน</h4>
+                            <p>เรียกดูงานที่เหมาะกับคุณ</p>
+                            <a href="/jobs" class="btn btn-outline-primary btn-sm">
+                                ไปดูงาน <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="action-item hover-scale">
+                        <div class="action-icon">
+                            <i class="fa fa-video-camera"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>เรซูเม่วิดีโอ</h4>
+                            <p>เพิ่มวิดีโอแนะนำตัว</p>
+                            <a href="/resume" class="btn btn-outline-success btn-sm">
+                                เพิ่มวิดีโอ <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="action-item hover-scale">
+                        <div class="action-icon">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>งานที่ได้รับ</h4>
+                            <p>ดูงานที่ได้รับการตอบรับ</p>
+                            <a href="/accepted-jobs" class="btn btn-outline-info btn-sm">
+                                ดูงาน <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                {% else %}
+                    <div class="action-item hover-scale">
+                        <div class="action-icon">
+                            <i class="fa fa-pencil"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>สร้างโพสต์งาน</h4>
+                            <p>โพสต์ตำแหน่งงานใหม่</p>
+                            <a href="/post-job" class="btn btn-outline-primary btn-sm">
+                                เริ่มสร้าง <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="action-item hover-scale">
+                        <div class="action-icon">
+                            <i class="fa fa-eye"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>ดูผู้สมัคร</h4>
+                            <p>พิจารณาใบสมัครงาน</p>
+                            <a href="/employer/jobs" class="btn btn-outline-success btn-sm">
+                                ดูผู้สมัคร <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="action-item hover-scale">
+                        <div class="action-icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div class="action-content">
+                            <h4>จัดการทีม</h4>
+                            <p>ติดต่อกับผู้สมัครที่รับเข้าทำงาน</p>
+                            <a href="/employer/jobs" class="btn btn-outline-info btn-sm">
+                                จัดการ <i class="fa fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tips & Resources -->
+        <div class="tips-section slide-in-right">
+            <h3><i class="fa fa-lightbulb-o"></i> เคล็ดลับและแนวทาง</h3>
+            <div class="tips-grid">
+                {% if user.role == 'disabled' %}
+                    <div class="tip-card hover-lift">
+                        <div class="tip-icon">
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <h4>สร้างเรซูเม่ที่โดดเด่น</h4>
+                        <p>เพิ่มวิดีโอแนะนำตัว ระบุทักษะที่มี และแสดงผลงานของคุณให้ครบถ้วน</p>
+                        <a href="/resume" class="tip-link">เริ่มสร้างเรซูเม่ →</a>
+                    </div>
+
+                    <div class="tip-card hover-lift">
+                        <div class="tip-icon">
+                            <i class="fa fa-target"></i>
+                        </div>
+                        <h4>เลือกงานที่เหมาะสม</h4>
+                        <p>อ่านรายละเอียดงานให้ดี ตรวจสอบความต้องการของบริษัท และสมัครงานที่ตรงกับทักษะ</p>
+                        <a href="/jobs" class="tip-link">ดูงานที่เปิดรับ →</a>
+                    </div>
+
+                    <div class="tip-card hover-lift">
+                        <div class="tip-icon">
+                            <i class="fa fa-comments"></i>
+                        </div>
+                        <h4>สื่อสารอย่างมีประสิทธิภาพ</h4>
+                        <p>ใช้ระบบแชทในตัวเพื่อติดต่อกับนายจ้าง แสดงความสนใจและถามคำถามที่เกี่ยวข้อง</p>
+                        <a href="/my-applications" class="tip-link">ดูการสื่อสาร →</a>
+                    </div>
+
+                {% else %}
+                    <div class="tip-card hover-lift">
+                        <div class="tip-icon">
+                            <i class="fa fa-edit"></i>
+                        </div>
+                        <h4>เขียนประกาศงานที่ชัดเจน</h4>
+                        <p>ระบุหน้าที่ความรับผิดชอบ คุณสมบัติที่ต้องการ และสิ่งอำนวยความสะดวกที่มีให้</p>
+                        <a href="/post-job" class="tip-link">เริ่มโพสต์งาน →</a>
+                    </div>
+
+                    <div class="tip-card hover-lift">
+                        <div class="tip-icon">
+                            <i class="fa fa-heart"></i>
+                        </div>
+                        <h4>สร้างสภาพแวดล้อมที่เป็นมิตร</h4>
+                        <p>ออกแบบสถานที่ทำงานที่เข้าถึงได้ง่าย และสนับสนุนความต้องการด้านการสื่อสาร</p>
+                        <a href="/employer/jobs" class="tip-link">จัดการงาน →</a>
+                    </div>
+
+                    <div class="tip-card hover-lift">
+                        <div class="tip-icon">
+                            <i class="fa fa-handshake-o"></i>
+                        </div>
+                        <h4>สื่อสารแบบเปิดใจ</h4>
+                        <p>ให้ข้อมูลป้อนกลับที่สร้างสรรค์ และมีใจที่เปิดกว้างต่อวิธีการสื่อสารที่หลากหลาย</p>
+                        <a href="/employer/jobs" class="tip-link">ดูผู้สมัคร →</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity fade-in">
+            <h3><i class="fa fa-clock-o"></i> กิจกรรมล่าสุด</h3>
+            <div class="activity-timeline">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fa fa-user-plus"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>ขอต้อนรับ!</h4>
+                        <p>คุณได้เข้าร่วม Communication Disability Jobs แล้ว</p>
+                        <small class="activity-time">เมื่อสักครู่</small>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fa fa-info-circle"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>เริ่มต้นการใช้งาน</h4>
+                        {% if user.role == 'disabled' %}
+                            <p>เริ่มต้นด้วยการสร้างเรซูเม่ของคุณให้สมบูรณ์</p>
+                            <a href="/resume" class="btn btn-xs btn-outline-primary mt-1">สร้างเรซูเม่</a>
+                        {% else %}
+                            <p>เริ่มต้นด้วยการโพสต์งานแรกของคุณ</p>
+                            <a href="/post-job" class="btn btn-xs btn-outline-primary mt-1">โพสต์งาน</a>
+                        {% endif %}
+                        <small class="activity-time">วันนี้</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    // Observe animated elements
+    document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Animate numbers counting up
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach(element => {
+        const finalNumber = element.textContent.replace(/[^0-9]/g, '');
+        if (finalNumber) {
+            animateNumber(element, 0, parseInt(finalNumber), 2000);
+        }
+    });
+
+    function animateNumber(element, start, end, duration) {
+        const startTime = performance.now();
+        const originalText = element.textContent;
+        
+        function updateNumber(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const currentNumber = Math.floor(progress * (end - start) + start);
+            
+            element.textContent = originalText.replace(/[0-9]+/, currentNumber);
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateNumber);
+            }
+        }
+        
+        requestAnimationFrame(updateNumber);
+    }
+
+    // Add hover effects to cards
+    const cards = document.querySelectorAll('.stat-card, .action-item, .tip-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Progress bar animation
+    const progressBars = document.querySelectorAll('.progress-bar-animated');
+    progressBars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+            bar.style.width = width;
+        }, 500);
+    });
+});
+</script>
+
+<style>
+/* Home Dashboard Specific Styles */
+.home-dashboard {
+    padding: 2rem 0;
+}
+
+.dashboard-welcome {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    padding: 3rem;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+}
+
+.welcome-content {
+    flex: 1;
+    z-index: 2;
+}
+
+.welcome-content h1 {
+    color: var(--pure-white);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.welcome-content h2 {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.3rem;
+    font-weight: var(--font-weight-regular);
+    margin-bottom: 1.5rem;
+}
+
+.welcome-message {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.welcome-illustration {
+    flex: 0 0 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-medium);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.stat-header h3 {
+    margin: 0 0 0 1rem;
+    color: var(--dark-blue);
+    font-size: 1.1rem;
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--medium-gray);
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 1rem;
+}
+
+.stat-progress {
+    margin-bottom: 1rem;
+}
+
+.stat-progress small {
+    color: var(--medium-gray);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.quick-actions, .tips-section {
+    margin-bottom: 3rem;
+}
+
+.quick-actions h3, .tips-section h3, .recent-activity h3 {
+    color: var(--dark-blue);
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.action-item {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.action-icon {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-round);
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.action-content h4 {
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+}
+
+.action-content p {
+    color: var(--medium-gray);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.tip-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    transition: all var(--transition-normal);
+    text-align: center;
+}
+
+.tip-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-round);
+    background: rgba(0, 123, 255, 0.1);
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+}
+
+.tip-card h4 {
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+}
+
+.tip-card p {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.tip-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+    font-size: 0.9rem;
+}
+
+.tip-link:hover {
+    color: var(--dark-blue);
+}
+
+.recent-activity {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+}
+
+.activity-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.activity-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--primary-blue);
+    opacity: 0.3;
+}
+
+.activity-item {
+    position: relative;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.activity-icon {
+    position: absolute;
+    left: -2.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-round);
+    background: var(--primary-blue);
+    color: var(--pure-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.activity-content h4 {
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.activity-content p {
+    color: var(--medium-gray);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.activity-time {
+    color: var(--medium-gray);
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-welcome {
+        flex-direction: column;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .welcome-illustration {
+        margin-top: 2rem;
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-grid, .tips-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .activity-timeline {
+        padding-left: 1rem;
+    }
+    
+    .activity-icon {
+        left: -1.5rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+}
+</style>
 {% endblock %}

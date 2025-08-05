@@ -1,35 +1,541 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Communication Disability Jobs
+    Welcome - Communication Disability Jobs
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="../static/style/welcome.css">
-    <br><br><br><br><br>
-
+<div class="welcome-hero fade-in">
     {% if user.is_authenticated %}
-        <h1>Hello {{user.first_name}}</h1>
-        <h2>Welcome To Communication Disability Jobs</h2>
-        <br><br>
+        <!-- Authenticated User Welcome -->
+        <div class="container">
+            <div class="welcome-user-section">
+                <div class="user-avatar">
+                    <i class="fa fa-user-circle"></i>
+                </div>
+                <h1 class="typewriter" data-text="ยินดีต้อนรับกลับมา คุณ{{ user.first_name }}!">
+                    ยินดีต้อนรับกลับมา คุณ{{ user.first_name }}!
+                </h1>
+                <h2 class="slide-in-left">พร้อมค้นหาโอกาสใหม่ๆ แล้วหรือยัง?</h2>
+            </div>
 
-        <p>
-            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
-        <br><br><br>
+            <!-- Quick Stats Dashboard -->
+            <div class="quick-stats">
+                <div class="stat-item scale-in">
+                    <div class="stat-icon">
+                        <i class="fa fa-briefcase"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>งานที่เปิดรับ</h3>
+                        <p>ค้นหางานที่เหมาะกับคุณ</p>
+                        <a href="/jobs" class="btn btn-primary hover-lift">
+                            <i class="fa fa-search"></i> ดูงานทั้งหมด
+                        </a>
+                    </div>
+                </div>
+
+                {% if user.role == 'disabled' %}
+                <div class="stat-item scale-in">
+                    <div class="stat-icon">
+                        <i class="fa fa-file-text"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>เรซูเม่ของคุณ</h3>
+                        <p>อัปเดตข้อมูลให้ทันสมัย</p>
+                        <a href="/resume" class="btn btn-info hover-lift">
+                            <i class="fa fa-edit"></i> แก้ไขเรซูเม่
+                        </a>
+                    </div>
+                </div>
+
+                <div class="stat-item scale-in">
+                    <div class="stat-icon">
+                        <i class="fa fa-send"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>ใบสมัครงาน</h3>
+                        <p>ติดตามสถานะการสมัคร</p>
+                        <a href="/my-applications" class="btn btn-success hover-lift">
+                            <i class="fa fa-list"></i> ดูใบสมัคร
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if user.role == 'employer' %}
+                <div class="stat-item scale-in">
+                    <div class="stat-icon">
+                        <i class="fa fa-plus-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>โพสต์งานใหม่</h3>
+                        <p>ค้นหาผู้สมัครที่เหมาะสม</p>
+                        <a href="/post-job" class="btn btn-success hover-lift">
+                            <i class="fa fa-plus"></i> โพสต์งาน
+                        </a>
+                    </div>
+                </div>
+
+                <div class="stat-item scale-in">
+                    <div class="stat-icon">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>งานของคุณ</h3>
+                        <p>จัดการตำแหน่งที่โพสต์</p>
+                        <a href="/employer/jobs" class="btn btn-info hover-lift">
+                            <i class="fa fa-cog"></i> จัดการงาน
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity slide-in-right">
+                <h3><i class="fa fa-clock-o"></i> การดำเนินการด่วน</h3>
+                <div class="action-cards">
+                    <div class="action-card hover-scale">
+                        <i class="fa fa-user"></i>
+                        <h4>โปรไฟล์</h4>
+                        <p>อัปเดตข้อมูลของคุณ</p>
+                        <a href="/account" class="btn btn-outline-primary btn-sm">ดูโปรไฟล์</a>
+                    </div>
+                    <div class="action-card hover-scale">
+                        <i class="fa fa-envelope"></i>
+                        <h4>ข้อความ</h4>
+                        <p>ตรวจสอบการสื่อสาร</p>
+                        {% if user.role == 'disabled' %}
+                            <a href="/accepted-jobs" class="btn btn-outline-primary btn-sm">ดูแชท</a>
+                        {% else %}
+                            <a href="/employer/jobs" class="btn btn-outline-primary btn-sm">ดูแชท</a>
+                        {% endif %}
+                    </div>
+                    <div class="action-card hover-scale">
+                        <i class="fa fa-question-circle"></i>
+                        <h4>ช่วยเหลือ</h4>
+                        <p>ต้องการความช่วยเหลือ?</p>
+                        <a href="#help-modal" class="btn btn-outline-primary btn-sm" data-toggle="modal">ขอความช่วยเหลือ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     {% else %}
-        <h1>Welcome To Communication Disability Jobs</h1>
-        <br><br>
-        <p>
-            xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        </p>
+        <!-- Guest User Welcome -->
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="text-gradient-animated">Communication Disability Jobs</span>
+                </h1>
+                <h2 class="hero-subtitle slide-in-left">
+                    <i class="fa fa-heart"></i> เปิดโอกาสสำหรับทุกคน
+                </h2>
 
-        <br><br><br>
+                <div class="welcome-description">
+                    <p class="lead">
+                        <i class="fa fa-users"></i>
+                        เชื่อมต่อบุคคลที่มีความสามารถพิเศษด้านการสื่อสารเข้าสู่โอกาสการทำงานที่มีความหมาย 
+                        แพลตฟอร์มของเราเป็นสะพานเชื่อมระหว่างผู้เชี่ยวชาญที่มีทักษะกับนายจ้างที่มีวิสัยทัศน์
+                    </p>
+                    
+                    <div class="feature-highlights">
+                        <div class="feature-item fade-in">
+                            <i class="fa fa-accessibility"></i>
+                            <h4>เข้าถึงได้ง่าย</h4>
+                            <p>ออกแบบเฉพาะสำหรับความต้องการด้านการสื่อสาร</p>
+                        </div>
+                        <div class="feature-item fade-in">
+                            <i class="fa fa-video-camera"></i>
+                            <h4>เรซูเม่วิดีโอ</h4>
+                            <p>แสดงทักษะผ่านการสื่อสารด้วยภาพ</p>
+                        </div>
+                        <div class="feature-item fade-in">
+                            <i class="fa fa-handshake-o"></i>
+                            <h4>สื่อสารโดยตรง</h4>
+                            <p>ระบบแชทในตัวสำหรับการติดต่อที่ไร้รอยต่อ</p>
+                        </div>
+                    </div>
+                </div>
 
-        <div class="btn-container">
-            <a href="/login" class="btn">Login</a>
-            <a href="/sign-up" class="btn">Sign Up</a>
+                <div class="welcome-buttons">
+                    <a href="/login" class="welcome-btn welcome-btn-login btn-ripple">
+                        <i class="fa fa-sign-in"></i>
+                        <span>เข้าสู่ระบบ</span>
+                    </a>
+                    <a href="/sign-up" class="welcome-btn welcome-btn-signup btn-ripple">
+                        <i class="fa fa-user-plus"></i>
+                        <span>เริ่มต้นใช้งาน</span>
+                    </a>
+                </div>
+
+                <!-- Trust Indicators -->
+                <div class="trust-indicators slide-in-right">
+                    <div class="trust-item">
+                        <i class="fa fa-shield"></i>
+                        <span>ปลอดภัย เป็นส่วนตัว</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fa fa-check-circle"></i>
+                        <span>นายจ้างที่ได้รับการยืนยัน</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fa fa-support"></i>
+                        <span>สนับสนุน 24/7</span>
+                    </div>
+                </div>
+            </div>
         </div>
     {% endif %}
+</div>
+
+<!-- Help Modal for Authenticated Users -->
+{% if user.is_authenticated %}
+<div class="modal fade" id="help-modal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpModalLabel">
+                    <i class="fa fa-question-circle"></i> เราช่วยอะไรคุณได้บ้าง?
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="help-sections">
+                    {% if user.role == 'disabled' %}
+                    <div class="help-section">
+                        <h6><i class="fa fa-briefcase"></i> การค้นหางาน</h6>
+                        <ul>
+                            <li>เรียกดูตำแหน่งงานที่เปิดรับในส่วน <a href="/jobs">งานทั้งหมด</a></li>
+                            <li>สมัครโดยตรงกับตำแหน่งที่ตรงกับทักษะของคุณ</li>
+                            <li>ติดตามใบสมัครของคุณใน <a href="/my-applications">ใบสมัครของฉัน</a></li>
+                        </ul>
+                    </div>
+                    <div class="help-section">
+                        <h6><i class="fa fa-file-text"></i> การจัดการเรซูเม่</h6>
+                        <ul>
+                            <li>อัปเดต <a href="/resume">เรซูเม่</a> ของคุณด้วยทักษะล่าสุด</li>
+                            <li>เพิ่มวิดีโอเรซูเม่เพื่อแสดงความสามารถ</li>
+                            <li>รวมผลงานและตัวอย่างงาน</li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <div class="help-section">
+                        <h6><i class="fa fa-plus-circle"></i> การโพสต์งาน</h6>
+                        <ul>
+                            <li>สร้างรายละเอียดงานใน <a href="/post-job">โพสต์งาน</a></li>
+                            <li>จัดการรายการของคุณใน <a href="/employer/jobs">งานของคุณ</a></li>
+                            <li>พิจารณาใบสมัครและสื่อสารกับผู้สมัคร</li>
+                        </ul>
+                    </div>
+                    <div class="help-section">
+                        <h6><i class="fa fa-users"></i> การค้นหาผู้สมัคร</h6>
+                        <ul>
+                            <li>พิจารณาโปรไฟล์และเรซูเม่ของผู้สมัคร</li>
+                            <li>ดูการแนะนำตัวผ่านวิดีโอเพื่อเข้าใจผู้สมัครมากขึ้น</li>
+                            <li>ใช้ระบบแชทในตัวสำหรับการสื่อสาร</li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                <a href="/account" class="btn btn-primary">ดูโปรไฟล์</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Floating Action Button for Quick Actions -->
+{% if user.is_authenticated %}
+<div class="fab-container">
+    <div class="fab-main hover-pulse" id="fab-main">
+        <i class="fa fa-plus"></i>
+    </div>
+    <div class="fab-options" id="fab-options">
+        {% if user.role == 'disabled' %}
+        <a href="/jobs" class="fab-option" title="ค้นหางาน">
+            <i class="fa fa-search"></i>
+        </a>
+        <a href="/resume" class="fab-option" title="อัปเดตเรซูเม่">
+            <i class="fa fa-file-text"></i>
+        </a>
+        {% else %}
+        <a href="/post-job" class="fab-option" title="โพสต์งาน">
+            <i class="fa fa-briefcase"></i>
+        </a>
+        <a href="/employer/jobs" class="fab-option" title="จัดการงาน">
+            <i class="fa fa-cog"></i>
+        </a>
+        {% endif %}
+        <a href="/account" class="fab-option" title="โปรไฟล์">
+            <i class="fa fa-user"></i>
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all animated elements
+    document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+        observer.observe(el);
+    });
+
+    // FAB functionality
+    const fabMain = document.getElementById('fab-main');
+    const fabOptions = document.getElementById('fab-options');
+    
+    if (fabMain) {
+        fabMain.addEventListener('click', function() {
+            fabOptions.classList.toggle('active');
+            fabMain.classList.toggle('active');
+        });
+    }
+
+    // Typewriter effect
+    const typewriterElements = document.querySelectorAll('.typewriter');
+    typewriterElements.forEach(element => {
+        const text = element.getAttribute('data-text');
+        element.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
+    });
+});
+</script>
+
+<style>
+/* Welcome Page Specific Styles */
+.welcome-user-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.user-avatar {
+    font-size: 4rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-medium);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    transition: var(--transition-normal);
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.stat-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.feature-highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border-radius-md);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+}
+
+.feature-item i {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.trust-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--pure-white);
+    font-weight: var(--font-weight-medium);
+}
+
+.trust-item i {
+    color: var(--success-green);
+}
+
+.recent-activity {
+    margin-top: 3rem;
+}
+
+.action-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.action-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    transition: var(--transition-normal);
+}
+
+.action-card i {
+    font-size: 2rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+}
+
+.fab-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.fab-main {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-heavy);
+    transition: var(--transition-normal);
+    font-size: 1.5rem;
+}
+
+.fab-main.active {
+    transform: rotate(45deg);
+}
+
+.fab-options {
+    position: absolute;
+    bottom: 70px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-normal);
+}
+
+.fab-options.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.fab-option {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--pure-white);
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: var(--shadow-medium);
+    transition: var(--transition-normal);
+}
+
+.fab-option:hover {
+    background: var(--primary-blue);
+    color: var(--pure-white);
+    transform: scale(1.1);
+}
+
+.help-sections {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.help-section h6 {
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+.help-section ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.help-section li {
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .quick-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .trust-indicators {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .fab-container {
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+</style>
 {% endblock %}

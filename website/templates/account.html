@@ -1,174 +1,399 @@
 {% extends "base.html" %}
 
 {% block title %}
-Account
+    ข้อมูลบัญชี - Communication Disability Jobs
 {% endblock %}
 
 {% block content %}
-<style>
-    body {
-        font-family: 'Poppins', sans-serif;
-        margin: 0;
-        padding: 0;
-        color: #333;
-    }
-
-    #container {
-        background: rgba(255, 255, 255, 0.7);
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(10px);
-        text-align: center;
-        width: 94vw;
-        height: 89vh;
-        margin: 100px 50px;
-        position: absolute;
-        top: 0;
-        left: 0;
-        box-sizing: border-box;
-        overflow-y: auto;
-    }
-
-    .profile-card {
-        background: linear-gradient(135deg, #0056b3, #0094ff);
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-        text-align: left;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .user-info {
-        font-size: 18px;
-        margin: 8px 0;
-        word-wrap: break-word;
-    }
-
-    .logout-btn {
-        display: block;
-        margin-top: 20px;
-        padding: 12px 20px;
-        background: linear-gradient(45deg, #dc3545, #ff6b6b);
-        color: white;
-        text-decoration: none;
-        border-radius: 30px;
-        font-size: 16px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        width: fit-content;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .logout-btn:hover {
-        background: linear-gradient(45deg, #c82333, #ff3b3b);
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-</style>
-
-<div id="container">
-    <div class="profile-card">
-        <h2>👤 Account Information</h2>
-        <p class="user-info">📧 Email: {{ user.email }}</p>
-        <p class="user-info">📝 Name: {{ user.first_name }} {{ user.last_name or '' }}</p>
-        <p class="user-info">🗂️ Role: 
-            {% if user.role == 'disabled' %}
-                ผู้พิการทางการได้ยิน/สื่อความหมาย
-            {% elif user.role == 'employer' %}
-                ผู้ว่าจ้าง
-            {% else %}
-                {{ user.role }}
-            {% endif %}
-        </p>
-
-        {% if user.role == 'disabled' %}
-        <hr style="background:white; opacity:0.3;">
-        <h3>ข้อมูลผู้พิการ</h3>
-        <p class="user-info"><strong>ประเภทความพิการ:</strong> {{ user.disability_type or '-' }}</p>
-        <p class="user-info"><strong>ทักษะที่มี:</strong> {{ user.skills or '-' }}</p>
-        <p class="user-info"><strong>เรซูเม่ (ข้อความ):</strong> <br> {{ user.resume_text or '-' }}</p>
-        <p class="user-info"><strong>ลิงก์วิดีโอแนะนำตัว:</strong> 
-            {% if user.resume_video_url %}
-                <a href="{{ user.resume_video_url }}" target="_blank" rel="noopener noreferrer">{{ user.resume_video_url }}</a>
-            {% else %}
-                -
-            {% endif %}
-        </p>
-        <p class="user-info"><strong>ที่อยู่ (จังหวัด):</strong> {{ user.location or '-' }}</p>
-        <p class="user-info"><strong>ระดับทักษะดิจิทัล:</strong> {{ user.digital_skill_level or '-' }}</p>
-        <p class="user-info"><strong>ผ่านการอบรมแล้ว:</strong> {{ 'ใช่' if user.training_completed else 'ไม่ใช่' }}</p>
-
-        <hr style="background:white; opacity:0.3;">
-        <h3>📄 ข้อมูลเรซูเม่</h3>
-        {% if resume %}
-            <p class="user-info"><strong>ชื่อ-นามสกุล:</strong> {{ resume.first_name }} {{ resume.last_name }}</p>
-            <p class="user-info"><strong>วันเกิด:</strong> {{ resume.birth_date or '-' }}</p>
-            <p class="user-info"><strong>ที่อยู่:</strong> {{ resume.location or '-' }}</p>
-            <p class="user-info"><strong>ประเภทความพิการ:</strong> {{ resume.disability_type or '-' }}</p>
-            <p class="user-info"><strong>ระดับความพิการ:</strong> {{ resume.disability_level or '-' }}</p>
-            <p class="user-info"><strong>เทคโนโลยีช่วยเหลือ:</strong> {{ resume.assistive_technology or '-' }}</p>
-            <p class="user-info"><strong>ความต้องการสนับสนุน:</strong> {{ resume.support_needs or '-' }}</p>
-            <p class="user-info"><strong>การศึกษา:</strong> {{ resume.education or '-' }}</p>
-            <p class="user-info"><strong>ประสบการณ์ทำงาน:</strong> {{ resume.work_experience or '-' }}</p>
-            <p class="user-info"><strong>ทักษะ:</strong> {{ resume.skills or '-' }}</p>
-            <p class="user-info"><strong>ผลงาน:</strong> {{ resume.portfolio or '-' }}</p>
-            <p class="user-info"><strong>วิดีโอแนะนำตัว:</strong>
-                {% if resume.resume_video_url %}
-                    <a href="{{ resume.resume_video_url }}" target="_blank">{{ resume.resume_video_url }}</a>
-                {% else %}
-                    -
-                {% endif %}
-            </p>
-            {% if resume.disability_card_url %}
-            <p class="user-info"><strong>บัตรประจำตัวผู้พิการ:</strong>
-                <a href="{{ resume.disability_card_url }}" target="_blank">ดูไฟล์</a>
-            </p>
-            {% endif %}
-        {% else %}
-            <p class="user-info">ยังไม่มีข้อมูลเรซูเม่</p>
-        {% endif %}
-
-        {% elif user.role == 'employer' %}
-        <hr style="background:white; opacity:0.3;">
-        <h3>ข้อมูลผู้ว่าจ้าง</h3>
-        <p class="user-info"><strong>ชื่อบริษัท:</strong> {{ user.company_name or '-' }}</p>
-        <p class="user-info"><strong>ชื่อผู้ติดต่อ:</strong> {{ user.contact_person or '-' }}</p>
-        <p class="user-info"><strong>เบอร์โทรติดต่อ:</strong> {{ user.contact_phone or '-' }}</p>
-        <p class="user-info"><strong>อีเมลติดต่อ:</strong> {{ user.contact_email or '-' }}</p>
-        <p class="user-info"><strong>ที่อยู่บริษัท:</strong> {{ user.address or '-' }}</p>
-        <p class="user-info"><strong>เว็บไซต์บริษัท:</strong> 
-            {% if user.company_website %}
-                <a href="{{ user.company_website }}" target="_blank" rel="noopener noreferrer">{{ user.company_website }}</a>
-            {% else %}
-                -
-            {% endif %}
-        </p>
-        <p class="user-info"><strong>รายละเอียดบริษัท:</strong> <br> {{ user.company_description or '-' }}</p>
-        <p class="user-info"><strong>สถานะยืนยัน:</strong> {{ 'ยืนยันแล้ว' if user.verified_employer else 'ยังไม่ยืนยัน' }}</p>
-        {% endif %}
-    </div> 
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div style="margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+<div class="container mt-4">
+    <div class="account-container fade-in">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fa fa-user-circle"></i>
             </div>
-        {% endif %}
-    {% endwith %}
+            <div class="profile-info">
+                <h1>{{ user.first_name }} {{ user.last_name or '' }}</h1>
+                <p class="profile-role">
+                    {% if user.role == 'disabled' %}
+                        <i class="fa fa-user"></i> ผู้หางาน
+                    {% else %}
+                        <i class="fa fa-briefcase"></i> นายจ้าง
+                    {% endif %}
+                </p>
+                <p class="profile-email">{{ user.email }}</p>
+            </div>
+            <div class="profile-actions">
+                <a href="{{ url_for('views.edit_profile') }}" class="btn btn-primary">
+                    <i class="fa fa-edit"></i> แก้ไขโปรไฟล์
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-danger">
+                    <i class="fa fa-sign-out"></i> ออกจากระบบ
+                </a>
+            </div>
+        </div>
 
-    <a href="{{ url_for('views.edit_profile') }}" class="btn btn-info">✏️ Edit Profile</a>
-    <a href="{{ url_for('auth.logout') }}" class="logout-btn">🚪 Logout</a>
+        <!-- Info Cards -->
+        <div class="info-grid">
+            <!-- Basic Info -->
+            <div class="info-card hover-lift">
+                <h3><i class="fa fa-info-circle"></i> ข้อมูลพื้นฐาน</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">อีเมล:</span>
+                        <span class="info-value">{{ user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ชื่อ-นามสกุล:</span>
+                        <span class="info-value">{{ user.first_name }} {{ user.last_name or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">บทบาท:</span>
+                        <span class="info-value">
+                            {% if user.role == 'disabled' %}
+                                ผู้หางาน
+                            {% else %}
+                                นายจ้าง
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">วันที่สมัคร:</span>
+                        <span class="info-value">{{ user.date_joined.strftime('%d/%m/%Y') if user.date_joined else '-' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {% if user.role == 'disabled' %}
+            <!-- Job Seeker Info -->
+            <div class="info-card hover-lift">
+                <h3><i class="fa fa-user"></i> ข้อมูลผู้หางาน</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">ประเภทความพิการ:</span>
+                        <span class="info-value">{{ user.disability_type or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ทักษะ:</span>
+                        <span class="info-value">{{ user.skills or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">จังหวัด:</span>
+                        <span class="info-value">{{ user.location or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ระดับทักษะดิจิทัล:</span>
+                        <span class="info-value">{{ user.digital_skill_level or '-' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resume Info -->
+            {% if user.resume %}
+            <div class="info-card hover-lift">
+                <h3><i class="fa fa-file-text"></i> เรซูเม่</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">การศึกษา:</span>
+                        <span class="info-value">{{ user.resume.education or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ประสบการณ์:</span>
+                        <span class="info-value">{{ user.resume.work_experience[:50] + '...' if user.resume.work_experience and user.resume.work_experience|length > 50 else user.resume.work_experience or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">วิดีโอเรซูเม่:</span>
+                        <span class="info-value">
+                            {% if user.resume.resume_video_url %}
+                                <a href="{{ user.resume.resume_video_url }}" target="_blank" class="video-link">
+                                    <i class="fa fa-play-circle"></i> ดูวิดีโอ
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-action">
+                    <a href="/resume" class="btn btn-sm btn-outline-primary">
+                        <i class="fa fa-edit"></i> แก้ไขเรซูเม่
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <!-- Employer Info -->
+            <div class="info-card hover-lift">
+                <h3><i class="fa fa-building"></i> ข้อมูลบริษัท</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">ชื่อบริษัท:</span>
+                        <span class="info-value">{{ user.company_name or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">ผู้ติดต่อ:</span>
+                        <span class="info-value">{{ user.contact_person or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">เบอร์โทร:</span>
+                        <span class="info-value">{{ user.contact_phone or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">อีเมลติดต่อ:</span>
+                        <span class="info-value">{{ user.contact_email or '-' }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-card hover-lift">
+                <h3><i class="fa fa-map-marker"></i> ที่อยู่และรายละเอียด</h3>
+                <div class="info-list">
+                    <div class="info-item">
+                        <span class="info-label">ที่อยู่:</span>
+                        <span class="info-value">{{ user.address or '-' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">เว็บไซต์:</span>
+                        <span class="info-value">
+                            {% if user.company_website %}
+                                <a href="{{ user.company_website }}" target="_blank" class="website-link">
+                                    <i class="fa fa-external-link"></i> {{ user.company_website }}
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">สถานะ:</span>
+                        <span class="info-value">
+                            {% if user.verified_employer %}
+                                <span class="badge badge-success">
+                                    <i class="fa fa-check-circle"></i> ยืนยันแล้ว
+                                </span>
+                            {% else %}
+                                <span class="badge badge-warning">
+                                    <i class="fa fa-clock-o"></i> รอการยืนยัน
+                                </span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Quick Actions -->
+            <div class="info-card hover-lift actions-card">
+                <h3><i class="fa fa-bolt"></i> การดำเนินการด่วน</h3>
+                <div class="action-buttons">
+                    {% if user.role == 'disabled' %}
+                        <a href="/jobs" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-search"></i> หางาน
+                        </a>
+                        <a href="/my-applications" class="btn btn-outline-info btn-sm">
+                            <i class="fa fa-list"></i> ใบสมัคร
+                        </a>
+                        <a href="/accepted-jobs" class="btn btn-outline-success btn-sm">
+                            <i class="fa fa-check"></i> งานที่ได้รับ
+                        </a>
+                    {% else %}
+                        <a href="/post-job" class="btn btn-outline-primary btn-sm">
+                            <i class="fa fa-plus"></i> โพสต์งาน
+                        </a>
+                        <a href="/employer/jobs" class="btn btn-outline-info btn-sm">
+                            <i class="fa fa-briefcase"></i> จัดการงาน
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Intersection Observer for animations
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+});
+</script>
+
+<style>
+/* Account Page Styles */
+.account-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    box-shadow: var(--shadow-medium);
+}
+
+.profile-avatar {
+    font-size: 4rem;
+    opacity: 0.9;
+}
+
+.profile-info h1 {
+    color: var(--pure-white);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.profile-role, .profile-email {
+    margin: 0.25rem 0;
+    opacity: 0.9;
+}
+
+.profile-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 1rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-light);
+    transition: var(--transition-normal);
+}
+
+.info-card h3 {
+    color: var(--dark-blue);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--light-gray);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--dark-blue);
+    min-width: 120px;
+    flex-shrink: 0;
+}
+
+.info-value {
+    color: var(--dark-gray);
+    text-align: right;
+    word-break: break-word;
+}
+
+.video-link, .website-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.video-link:hover, .website-link:hover {
+    color: var(--dark-blue);
+    text-decoration: underline;
+}
+
+.card-action {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--light-gray);
+    text-align: center;
+}
+
+.actions-card .action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+}
+
+.badge-success {
+    background: var(--success-green);
+    color: var(--pure-white);
+}
+
+.badge-warning {
+    background: var(--warning-yellow);
+    color: var(--dark-gray);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .profile-actions {
+        margin-left: 0;
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .info-value {
+        text-align: left;
+    }
+    
+    .actions-card .action-buttons {
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}

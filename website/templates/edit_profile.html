@@ -1,90 +1,341 @@
 {% extends "base.html" %}
-{% block title %}Edit Profile{% endblock %}
+
+{% block title %}
+    แก้ไขโปรไฟล์ - Communication Disability Jobs
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <h2>Edit Profile</h2>
-  <form method="POST">
+<div class="container mt-4">
+    <div class="edit-profile-container fade-in">
+        <!-- Header -->
+        <div class="page-header">
+            <h2><i class="fa fa-edit"></i> แก้ไขโปรไฟล์</h2>
+            <p>อัปเดตข้อมูลของคุณให้เป็นปัจจุบัน</p>
+        </div>
 
-    <div class="form-group">
-      <label>First Name</label>
-      <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
-    </div>
+        <!-- Edit Form -->
+        <form method="POST" class="profile-form">
+            <div class="form-grid">
+                <!-- Basic Info -->
+                <div class="form-section">
+                    <h4><i class="fa fa-user"></i> ข้อมูลพื้นฐาน</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">ชื่อ</label>
+                            <input type="text" name="first_name" id="first_name" 
+                                   class="form-control" value="{{ user.first_name }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">นามสกุล</label>
+                            <input type="text" name="last_name" id="last_name" 
+                                   class="form-control" value="{{ user.last_name }}">
+                        </div>
+                    </div>
+                </div>
 
-    <div class="form-group">
-      <label>Last Name</label>
-      <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
-    </div>
+                {% if user.role == 'disabled' %}
+                <!-- Job Seeker Fields -->
+                <div class="form-section">
+                    <h4><i class="fa fa-user-circle"></i> ข้อมูลผู้หางาน</h4>
+                    
+                    <div class="form-group">
+                        <label for="disability_type">ประเภทความพิการ</label>
+                        <select name="disability_type" id="disability_type" class="form-control">
+                            <option value="">-- เลือกประเภท --</option>
+                            <option value="hearing" {% if user.disability_type == 'hearing' %}selected{% endif %}>
+                                ผู้พิการทางการได้ยิน
+                            </option>
+                            <option value="communication" {% if user.disability_type == 'communication' %}selected{% endif %}>
+                                ผู้พิการทางการสื่อสาร
+                            </option>
+                            <option value="both" {% if user.disability_type == 'both' %}selected{% endif %}>
+                                ทั้งสองประเภท
+                            </option>
+                        </select>
+                    </div>
 
-    {% if user.role == 'disabled' %}
-    <hr>
-    <h4>ข้อมูลผู้พิการ</h4>
-    <div class="form-group">
-      <label>ประเภทความพิการ</label>
-      <input type="text" name="disability_type" class="form-control" value="{{ user.disability_type }}">
-    </div>
-    <div class="form-group">
-      <label>ทักษะ</label>
-      <textarea name="skills" class="form-control">{{ user.skills }}</textarea>
-    </div>
-    <div class="form-group">
-      <label>เรซูเม่ (ข้อความ)</label>
-      <textarea name="resume_text" class="form-control">{{ user.resume_text }}</textarea>
-    </div>
-    <div class="form-group">
-      <label>ลิงก์วิดีโอแนะนำตัว</label>
-      <input type="text" name="resume_video_url" class="form-control" value="{{ user.resume_video_url }}">
-    </div>
-    <div class="form-group">
-      <label>ที่อยู่ (จังหวัด)</label>
-      <input type="text" name="location" class="form-control" value="{{ user.location }}">
-    </div>
-    <div class="form-group">
-      <label>ระดับทักษะดิจิทัล</label>
-      <input type="text" name="digital_skill_level" class="form-control" value="{{ user.digital_skill_level }}">
-    </div>
-    <div class="form-check">
-      <input type="checkbox" name="training_completed" class="form-check-input" id="training_completed" {% if user.training_completed %}checked{% endif %}>
-      <label class="form-check-label" for="training_completed">ผ่านการอบรมแล้ว</label>
-    </div>
+                    <div class="form-group">
+                        <label for="skills">ทักษะ</label>
+                        <textarea name="skills" id="skills" class="form-control" rows="3" 
+                                  placeholder="เช่น: ภาษามือ, คอมพิวเตอร์, การออกแบบ...">{{ user.skills }}</textarea>
+                    </div>
 
-    {% elif user.role == 'employer' %}
-    <hr>
-    <h4>ข้อมูลผู้ว่าจ้าง</h4>
-    <div class="form-group">
-      <label>ชื่อบริษัท</label>
-      <input type="text" name="company_name" class="form-control" value="{{ user.company_name }}">
-    </div>
-    <div class="form-group">
-      <label>ชื่อผู้ติดต่อ</label>
-      <input type="text" name="contact_person" class="form-control" value="{{ user.contact_person }}">
-    </div>
-    <div class="form-group">
-      <label>เบอร์โทรติดต่อ</label>
-      <input type="text" name="contact_phone" class="form-control" value="{{ user.contact_phone }}">
-    </div>
-    <div class="form-group">
-      <label>อีเมลติดต่อ</label>
-      <input type="email" name="contact_email" class="form-control" value="{{ user.contact_email }}">
-    </div>
-    <div class="form-group">
-      <label>ที่อยู่บริษัท</label>
-      <input type="text" name="address" class="form-control" value="{{ user.address }}">
-    </div>
-    <div class="form-group">
-      <label>เว็บไซต์บริษัท</label>
-      <input type="text" name="company_website" class="form-control" value="{{ user.company_website }}">
-    </div>
-    <div class="form-group">
-      <label>รายละเอียดบริษัท</label>
-      <textarea name="company_description" class="form-control">{{ user.company_description }}</textarea>
-    </div>
-    {% endif %}
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">จังหวัด</label>
+                            <input type="text" name="location" id="location" 
+                                   class="form-control" value="{{ user.location }}" placeholder="เช่น: กรุงเทพมหานคร">
+                        </div>
+                        <div class="form-group">
+                            <label for="digital_skill_level">ระดับทักษะดิจิทัล</label>
+                            <select name="digital_skill_level" id="digital_skill_level" class="form-control">
+                                <option value="">-- เลือกระดับ --</option>
+                                <option value="พื้นฐาน" {% if user.digital_skill_level == 'พื้นฐาน' %}selected{% endif %}>พื้นฐาน</option>
+                                <option value="กลาง" {% if user.digital_skill_level == 'กลาง' %}selected{% endif %}>กลาง</option>
+                                <option value="สูง" {% if user.digital_skill_level == 'สูง' %}selected{% endif %}>สูง</option>
+                            </select>
+                        </div>
+                    </div>
 
-    <br>
-    <button type="submit" class="btn btn-success">Save Changes</button>
-    <a href="{{ url_for('views.account') }}" class="btn btn-secondary">Cancel</a>
+                    <div class="form-group">
+                        <label for="resume_text">เรซูเม่ (ข้อความ)</label>
+                        <textarea name="resume_text" id="resume_text" class="form-control" rows="4" 
+                                  placeholder="แนะนำตัวและประสบการณ์ของคุณ...">{{ user.resume_text }}</textarea>
+                    </div>
 
-  </form>
+                    <div class="form-group">
+                        <label for="resume_video_url">ลิงก์วิดีโอแนะนำตัว</label>
+                        <input type="url" name="resume_video_url" id="resume_video_url" 
+                               class="form-control" value="{{ user.resume_video_url }}" 
+                               placeholder="https://www.youtube.com/watch?v=...">
+                        <small class="form-text text-muted">แนะนำ: YouTube, Google Drive หรือ Dropbox</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" name="training_completed" id="training_completed" 
+                                   class="form-check-input" {% if user.training_completed %}checked{% endif %}>
+                            <label class="form-check-label" for="training_completed">
+                                ผ่านการอบรมทักษะการทำงานแล้ว
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif user.role == 'employer' %}
+                <!-- Employer Fields -->
+                <div class="form-section">
+                    <h4><i class="fa fa-building"></i> ข้อมูลบริษัท</h4>
+                    
+                    <div class="form-group">
+                        <label for="company_name">ชื่อบริษัท</label>
+                        <input type="text" name="company_name" id="company_name" 
+                               class="form-control" value="{{ user.company_name }}" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact_person">ชื่อผู้ติดต่อ</label>
+                            <input type="text" name="contact_person" id="contact_person" 
+                                   class="form-control" value="{{ user.contact_person }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_phone">เบอร์โทร</label>
+                            <input type="tel" name="contact_phone" id="contact_phone" 
+                                   class="form-control" value="{{ user.contact_phone }}" 
+                                   placeholder="0x-xxxx-xxxx">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_email">อีเมลติดต่อ</label>
+                        <input type="email" name="contact_email" id="contact_email" 
+                               class="form-control" value="{{ user.contact_email }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">ที่อยู่บริษัท</label>
+                        <textarea name="address" id="address" class="form-control" rows="3">{{ user.address }}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company_website">เว็บไซต์บริษัท</label>
+                        <input type="url" name="company_website" id="company_website" 
+                               class="form-control" value="{{ user.company_website }}" 
+                               placeholder="https://www.company.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="company_description">รายละเอียดบริษัท</label>
+                        <textarea name="company_description" id="company_description" 
+                                  class="form-control" rows="4" 
+                                  placeholder="แนะนำบริษัทและวัฒนธรรมองค์กร...">{{ user.company_description }}</textarea>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa fa-save"></i> บันทึกการเปลี่ยนแปลง
+                </button>
+                <a href="{{ url_for('views.account') }}" class="btn btn-secondary btn-lg">
+                    <i class="fa fa-times"></i> ยกเลิก
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('.profile-form');
+    const requiredFields = form.querySelectorAll('input[required], select[required]');
+    
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('is-invalid');
+                isValid = false;
+            } else {
+                field.classList.remove('is-invalid');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('กรุณากรอกข้อมูลในช่องที่จำเป็น');
+        }
+    });
+
+    // Animation
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+});
+</script>
+
+<style>
+/* Edit Profile Styles */
+.edit-profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg);
+}
+
+.page-header h2 {
+    color: var(--pure-white);
+    margin-bottom: 0.5rem;
+}
+
+.page-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-light);
+}
+
+.form-section h4 {
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(0, 123, 255, 0.2);
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    transition: var(--transition-normal);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-red);
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-check-input {
+    transform: scale(1.2);
+}
+
+.form-text {
+    font-size: 0.85rem;
+    color: var(--medium-gray);
+    margin-top: 0.25rem;
+}
+
+.form-actions {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.form-actions .btn {
+    min-width: 200px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .edit-profile-container {
+        padding: 0.5rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+</style>
 {% endblock %}

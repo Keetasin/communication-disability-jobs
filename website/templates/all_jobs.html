@@ -1,28 +1,449 @@
 {% extends 'base.html' %}
-{% block title %}งานทั้งหมด{% endblock %}
+
+{% block title %}
+    งานทั้งหมด - Communication Disability Jobs
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
-  <h2>📋 รายชื่องานที่เปิดรับ</h2>
-  {% for job in jobs %}
-    <div class="card mb-3">
-      <div class="card-body">
-        <h4>{{ job.title }}</h4>
-        <p><strong>สถานที่:</strong> {{ job.location or '-' }}</p>
-        <p><strong>เงินเดือน:</strong> {{ job.salary or '-' }}</p>
-        <p>{{ job.description }}</p>
-        <p class="text-muted">โพสต์โดย: {{ job.employer.company_name or job.employer.email }} | วันที่: {{ job.posted_at.strftime('%Y-%m-%d') }}</p>
+    <div class="jobs-container fade-in">
+        <!-- Header -->
+        <div class="jobs-header">
+            <h2><i class="fa fa-briefcase"></i> งานที่เปิดรับสมัคร</h2>
+            <p>ค้นหาและสมัครงานที่เหมาะกับคุณ</p>
+            <div class="jobs-count">
+                <span class="badge badge-primary">{{ jobs|length }} ตำแหน่งงาน</span>
+            </div>
+        </div>
 
-        {% if user.is_authenticated %}
-          {% if user.role == 'disabled' %}
-            <form method="POST" action="{{ url_for('views.apply_job', job_id=job.id) }}" style="display:inline;">
-              <button class="btn btn-success btn-sm">✅ สมัครงานนี้</button>
-            </form>
-          {% endif %}
+        {% if jobs %}
+            <!-- Jobs Grid -->
+            <div class="jobs-grid">
+                {% for job in jobs %}
+                <div class="job-card hover-lift" data-job-id="{{ job.id }}">
+                    <!-- Job Header -->
+                    <div class="job-header">
+                        <div class="job-info">
+                            <h4 class="job-title">{{ job.title }}</h4>
+                            <div class="job-company">
+                                <i class="fa fa-building"></i>
+                                {{ job.employer.company_name or job.employer.first_name }}
+                            </div>
+                        </div>
+                        <div class="job-date">
+                            <small class="text-muted">
+                                <i class="fa fa-calendar"></i>
+                                {{ job.posted_at.strftime('%d/%m/%Y') }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Job Details -->
+                    <div class="job-details">
+                        <div class="job-meta">
+                            {% if job.location %}
+                            <span class="meta-item">
+                                <i class="fa fa-map-marker"></i>
+                                {{ job.location }}
+                            </span>
+                            {% endif %}
+                            
+                            {% if job.salary %}
+                            <span class="meta-item">
+                                <i class="fa fa-money"></i>
+                                {{ job.salary }}
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="job-description">
+                            {{ job.description[:150] }}{% if job.description|length > 150 %}...{% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Job Actions -->
+                    <div class="job-actions">
+                        {% if user.is_authenticated and user.role == 'disabled' %}
+                            <!-- Check if already applied -->
+                            {% set applied = false %}
+                            {% for app in user.applications %}
+                                {% if app.job_id == job.id %}
+                                    {% set applied = true %}
+                                    {% break %}
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if applied %}
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    <i class="fa fa-check"></i> สมัครแล้ว
+                                </button>
+                            {% else %}
+                                <form method="POST" action="{{ url_for('views.apply_job', job_id=job.id) }}" 
+                                      style="display: inline;" class="apply-form">
+                                    <button type="submit" class="btn btn-success btn-sm apply-btn">
+                                        <i class="fa fa-send"></i> สมัครงาน
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <a href="/login" class="btn btn-primary btn-sm">
+                                <i class="fa fa-sign-in"></i> เข้าสู่ระบบเพื่อสมัคร
+                            </a>
+                        {% endif %}
+                        
+                        <button class="btn btn-outline-info btn-sm" onclick="showJobModal({{ job.id | tojson }})">
+                            <i class="fa fa-eye"></i> ดูรายละเอียด
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <!-- Empty State -->
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fa fa-briefcase"></i>
+                </div>
+                <h3>ยังไม่มีงานที่เปิดรับ</h3>
+                <p>กลับมาดูใหม่ภายหลัง หรือ 
+                {% if user.is_authenticated and user.role == 'employer' %}
+                    <a href="/post-job">โพสต์งานแรกของคุณ</a>
+                {% else %}
+                    ติดตามเพื่อรับแจ้งเตือนงานใหม่
+                {% endif %}
+                </p>
+            </div>
         {% endif %}
-      </div>
     </div>
-  {% else %}
-    <p>ยังไม่มีการโพสต์งาน</p>
-  {% endfor %}
 </div>
+
+<!-- Job Detail Modal -->
+<div class="modal fade" id="jobModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="jobModalTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="jobModalBody">
+                <!-- Job details will be loaded here -->
+            </div>
+            <div class="modal-footer" id="jobModalFooter">
+                <!-- Apply button will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Job application handling
+    const applyForms = document.querySelectorAll('.apply-form');
+    applyForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const btn = this.querySelector('.apply-btn');
+            btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> กำลังสมัคร...';
+            btn.disabled = true;
+        });
+    });
+
+    // Animation
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in, .job-card').forEach(el => {
+        observer.observe(el);
+    });
+});
+
+// Job Modal Function
+function showJobModal(jobId) {
+    // Job data (in real app, this would come from backend)
+    const jobs = {{ jobs | tojson }};
+    const job = jobs.find(j => j.id === jobId);
+    
+    if (job) {
+        document.getElementById('jobModalTitle').textContent = job.title;
+        document.getElementById('jobModalBody').innerHTML = `
+            <div class="job-detail-content">
+                <div class="company-info">
+                    <h6><i class="fa fa-building"></i> ${job.employer.company_name || job.employer.first_name}</h6>
+                    <p><i class="fa fa-calendar"></i> โพสต์เมื่อ: ${new Date(job.posted_at).toLocaleDateString('th-TH')}</p>
+                </div>
+                
+                <div class="job-meta-detail">
+                    ${job.location ? `<p><i class="fa fa-map-marker"></i> สถานที่: ${job.location}</p>` : ''}
+                    ${job.salary ? `<p><i class="fa fa-money"></i> เงินเดือน: ${job.salary}</p>` : ''}
+                </div>
+                
+                <div class="job-description-full">
+                    <h6>รายละเอียดงาน:</h6>
+                    <p>${job.description}</p>
+                </div>
+            </div>
+        `;
+        
+        // Modal footer with apply button
+        const isLoggedIn = {{ 'true' if user.is_authenticated else 'false' }};
+        const userRole = '{{ user.role if user.is_authenticated else "" }}';
+        let footerContent = '';
+        
+        if (isLoggedIn && userRole === 'disabled') {
+            footerContent = `
+                <form method="POST" action="/apply/${job.id}" style="display: inline;">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa fa-send"></i> สมัครงานนี้
+                    </button>
+                </form>
+            `;
+        } else if (!isLoggedIn) {
+            footerContent = `
+                <a href="/login" class="btn btn-primary">
+                    <i class="fa fa-sign-in"></i> เข้าสู่ระบบเพื่อสมัคร
+                </a>
+            `;
+        }
+        
+        document.getElementById('jobModalFooter').innerHTML = footerContent + `
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+        `;
+        
+        $('#jobModal').modal('show');
+    }
+}
+</script>
+
+<style>
+/* Jobs Page Styles */
+.jobs-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.jobs-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg);
+    position: relative;
+}
+
+.jobs-header h2 {
+    color: var(--pure-white);
+    margin-bottom: 0.5rem;
+}
+
+.jobs-header p {
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.jobs-count {
+    display: inline-block;
+}
+
+.jobs-count .badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+.jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.job-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-light);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.job-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    transform: scaleY(0);
+    transition: var(--transition-normal);
+}
+
+.job-card:hover::before {
+    transform: scaleY(1);
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.job-title {
+    color: var(--dark-blue);
+    font-size: 1.3rem;
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 0.5rem;
+}
+
+.job-company {
+    color: var(--medium-gray);
+    font-size: 0.95rem;
+}
+
+.job-company i {
+    color: var(--primary-blue);
+    margin-right: 0.5rem;
+}
+
+.job-date {
+    text-align: right;
+}
+
+.job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+}
+
+.meta-item i {
+    color: var(--primary-blue);
+    width: 16px;
+}
+
+.job-description {
+    color: var(--dark-gray);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.job-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.job-actions .btn {
+    flex: 1;
+    min-width: 120px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--border-radius-lg);
+    border: 2px dashed rgba(0, 123, 255, 0.3);
+}
+
+.empty-icon {
+    font-size: 4rem;
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--medium-gray);
+    margin: 0;
+}
+
+.empty-state a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: var(--border-radius-lg);
+    border: none;
+    box-shadow: var(--shadow-heavy);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+}
+
+.job-detail-content .company-info {
+    background: rgba(0, 123, 255, 0.05);
+    padding: 1rem;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1rem;
+}
+
+.job-meta-detail {
+    margin-bottom: 1rem;
+}
+
+.job-meta-detail p {
+    margin-bottom: 0.5rem;
+}
+
+.job-meta-detail i {
+    color: var(--primary-blue);
+    width: 16px;
+    margin-right: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .jobs-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .job-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .job-date {
+        text-align: left;
+    }
+    
+    .job-actions {
+        flex-direction: column;
+    }
+    
+    .job-actions .btn {
+        min-width: auto;
+    }
+}
+</style>
 {% endblock %}
