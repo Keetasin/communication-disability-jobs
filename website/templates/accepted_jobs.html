@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}งานที่ได้รับการตอบรับ{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>📝 งานที่คุณได้รับการตอบรับ</h2>
+  {% if applications %}
+    <ul class="list-group">
+      {% for app in applications %}
+        <li class="list-group-item">
+          <strong>{{ app.job.title }}</strong><br>
+          บริษัท: {{ app.job.employer.company_name or '-' }}<br>
+          สมัครเมื่อ: {{ app.applied_at.strftime('%Y-%m-%d %H:%M') }}
+          <a href="{{ url_for('views.chat', application_id=app.id) }}" class="btn btn-sm btn-outline-primary mt-2">💬 ไปที่แชท</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>ยังไม่มีงานที่ได้รับการตอบรับ</p>
+  {% endif %}
+</div>
+{% endblock %}

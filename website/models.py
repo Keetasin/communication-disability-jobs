@@ -61,6 +61,7 @@ class JobApplication(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
     applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default='pending')
 
     # ความสัมพันธ์
     job = db.relationship('Job', backref=db.backref('applications', lazy=True))

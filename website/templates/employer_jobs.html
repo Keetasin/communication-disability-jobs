@@ -24,14 +24,20 @@
         {% if job.applications %}
           <ul>
             {% for app in job.applications %}
-              <li>
+            <li>
                 {{ app.applicant.first_name }} {{ app.applicant.last_name }} ({{ app.applicant.email }}) - สมัครเมื่อ {{ app.applied_at.strftime('%Y-%m-%d %H:%M') }}
                 <a href="{{ url_for('views.view_applicant', application_id=app.id) }}" class="btn btn-sm btn-info ml-2">ดูรายละเอียด</a>
-              </li>
-              <form method="POST" action="{{ url_for('views.accept_applicant', application_id=app.id) }}" style="display:inline;">
+
+                {% if app.status == 'accepted' %}
+                <span class="badge bg-success text-white ml-2">✔️ รับเข้าทำงานแล้ว</span>
+                {% else %}
+                <form method="POST" action="{{ url_for('views.accept_applicant', application_id=app.id) }}" style="display:inline;">
                     <button class="btn btn-success btn-sm ml-2" type="submit">✅ ตอบรับเข้าทำงาน</button>
-              </form>
+                </form>
+                {% endif %}
+            </li>
             {% endfor %}
+
           </ul>
         {% else %}
           <p>ยังไม่มีผู้สมัครงานนี้</p>

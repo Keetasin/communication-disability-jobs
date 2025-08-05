@@ -106,9 +106,14 @@ def post_job(job_id=None):
     return render_template('post_job.html', job=job, user=current_user)
 
 
+from sqlalchemy.orm import joinedload
+
 @views.route('/jobs')
 def all_jobs():
-    jobs = Job.query.order_by(Job.posted_at.desc()).all()
+    jobs = Job.query.options(joinedload(Job.applications)) \
+        .filter(~Job.applications.any(JobApplication.status == 'accepted')) \
+        .order_by(Job.posted_at.desc()) \
+        .all()
     return render_template('all_jobs.html', jobs=jobs, user=current_user)
 
 
@@ -168,11 +173,15 @@ def my_applications():
         flash('หน้านี้สำหรับผู้พิการเท่านั้น', 'error')
         return redirect(url_for('views.home'))
 
+    # กรองเฉพาะที่ applicant_id = current_user.id และ status != 'accepted'
     applications = JobApplication.query \
         .filter_by(applicant_id=current_user.id) \
-        .order_by(JobApplication.applied_at.desc()).all()
+        .filter(JobApplication.status != 'accepted') \
+        .order_by(JobApplication.applied_at.desc()) \
+        .all()
 
     return render_template('my_applications.html', applications=applications, user=current_user)
+
 
 
 @views.route('/chat/<int:application_id>', methods=['GET', 'POST'])
@@ -216,6 +225,9 @@ def delete_job(job_id):
     flash('ลบโพสต์งานเรียบร้อยแล้ว', 'success')
     return redirect(url_for('views.employer_jobs'))
 
+
+from .models import ChatMessage  # ตรวจสอบว่ามี import แล้ว
+
 @views.route('/accept-applicant/<int:application_id>', methods=['POST'])
 @login_required
 def accept_applicant(application_id):
@@ -224,9 +236,39 @@ def accept_applicant(application_id):
     if application.job.employer_id != current_user.id:
         flash('คุณไม่มีสิทธิ์ตอบรับผู้สมัครนี้', 'error')
         return redirect(url_for('views.employer_jobs'))
-    
-    # ✅ ตัวอย่าง: flash แทนระบบจริง
-    flash(f'คุณตอบรับ {application.applicant.first_name} เข้าทำงานแล้ว!', 'success')
 
-    # 👉 คุณสามารถเพิ่มฟิลด์ status เช่น accepted/rejected หรืออีเมลแจ้งเตือนได้
+    if application.status == 'accepted':
+        flash('คุณได้ตอบรับผู้สมัครนี้ไปแล้ว', 'info')
+        return redirect(url_for('views.view_applicant', application_id=application.id))
+
+    # อัปเดตสถานะ
+    application.status = 'accepted'
+    
+    # เพิ่มข้อความอัตโนมัติในแชท
+    auto_msg = ChatMessage(
+        application_id=application.id,
+        sender_id=current_user.id,
+        content=f"สวัสดี {application.applicant.first_name}, ทางเราขอตอบรับคุณเข้าทำงานในตำแหน่ง \"{application.job.title}\" ครับ/ค่ะ 🎉"
+    )
+    db.session.add(auto_msg)
+    
+    # Commit ทั้ง status และข้อความ
+    db.session.commit()
+
+    flash(f'คุณตอบรับ {application.applicant.first_name} เข้าทำงานแล้ว!', 'success')
     return redirect(url_for('views.view_applicant', application_id=application.id))
+
+
+@views.route('/accepted-jobs')
+@login_required
+def accepted_jobs():
+    if current_user.role != 'disabled':
+        flash('หน้านี้สำหรับผู้พิการเท่านั้น', 'error')
+        return redirect(url_for('views.home'))
+
+    accepted_apps = JobApplication.query.filter_by(
+        applicant_id=current_user.id,
+        status='accepted'
+    ).all()
+
+    return render_template('accepted_jobs.html', applications=accepted_apps, user=current_user)
