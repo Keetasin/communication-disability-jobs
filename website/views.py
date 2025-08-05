@@ -161,6 +161,20 @@ def view_applicant(application_id):
     return render_template('view_applicant.html', application=application, user=current_user)
 
 
+@views.route('/my-applications')
+@login_required
+def my_applications():
+    if current_user.role != 'disabled':
+        flash('หน้านี้สำหรับผู้พิการเท่านั้น', 'error')
+        return redirect(url_for('views.home'))
+
+    applications = JobApplication.query \
+        .filter_by(applicant_id=current_user.id) \
+        .order_by(JobApplication.applied_at.desc()).all()
+
+    return render_template('my_applications.html', applications=applications, user=current_user)
+
+
 @views.route('/chat/<int:application_id>', methods=['GET', 'POST'])
 @login_required
 def chat(application_id):

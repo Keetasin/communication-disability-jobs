@@ -104,18 +104,6 @@ Account
         <p class="user-info"><strong>ที่อยู่ (จังหวัด):</strong> {{ user.location or '-' }}</p>
         <p class="user-info"><strong>ระดับทักษะดิจิทัล:</strong> {{ user.digital_skill_level or '-' }}</p>
         <p class="user-info"><strong>ผ่านการอบรมแล้ว:</strong> {{ 'ใช่' if user.training_completed else 'ไม่ใช่' }}</p>
-        <h4>งานที่คุณสมัครไปแล้ว</h4>
-        <ul class="list-group">
-        {% for app in user.applications %}
-            <li class="list-group-item">
-            <strong>{{ app.job.title }}</strong> ที่ {{ app.job.location }}
-            <br>
-            <a href="{{ url_for('views.chat', application_id=app.id) }}" class="btn btn-sm btn-outline-primary mt-2">แชทกับผู้ว่าจ้าง</a>
-            </li>
-        {% else %}
-            <li class="list-group-item">คุณยังไม่ได้สมัครงานใด ๆ</li>
-        {% endfor %}
-        </ul>
 
         {% elif user.role == 'employer' %}
         <hr style="background:white; opacity:0.3;">

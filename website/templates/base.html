@@ -93,7 +93,10 @@
             
             {% if user.role == 'employer' %}
                 <li class="nav-item"><a class="nav-link" href="/post-job">Post Job</a></li>
-                <li class="nav-item"><a class="nav-link" href="/employer/jobs">My Jobs</a></li>
+                <li class="nav-item"><a class="nav-link" href="/employer/jobs">Posted Jobs</a></li>
+            {% endif %}
+            {% if user.role == 'disabled' %}
+                <li class="nav-item"><a class="nav-link" href="/my-applications">My Jobs</a></li>
             {% endif %}
             
             <li class="nav-item"><a class="nav-link" href="/account">Account</a></li>

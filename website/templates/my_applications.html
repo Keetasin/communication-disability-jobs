@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}งานที่ฉันสมัคร{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+  <h3>📄 งานที่ฉันสมัครไปแล้ว</h3>
+  <hr>
+
+  {% if applications %}
+    <ul class="list-group">
+      {% for app in applications %}
+        <li class="list-group-item">
+          <strong>{{ app.job.title }}</strong> <br>
+          <span class="text-muted">{{ app.job.location }} | เงินเดือน: {{ app.job.salary }}</span><br>
+          <span class="text-muted">สมัครเมื่อ: {{ app.applied_at.strftime('%Y-%m-%d %H:%M') }}</span><br>
+          <a href="{{ url_for('views.chat', application_id=app.id) }}" class="btn btn-sm btn-outline-primary mt-2">💬 ไปที่แชท</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>คุณยังไม่ได้สมัครงานใด ๆ</p>
+  {% endif %}
+</div>
+
+{% endblock %}
