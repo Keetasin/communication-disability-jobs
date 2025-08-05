@@ -164,18 +164,23 @@ def view_applicant(application_id):
 def resume():
     if request.method == 'POST':
         try:
-            # อัปเดตข้อมูลผู้ใช้
-            current_user.disability_type = request.form.get('disability_type')
-            current_user.skills = request.form.get('skills')
+            # อัปเดตข้อมูลทั้งหมด
+            current_user.first_name = request.form.get('first_name')
+            current_user.last_name = request.form.get('last_name')
+            current_user.birth_date = request.form.get('birth_date')
             current_user.location = request.form.get('location')
+            current_user.disability_type = request.form.get('disability_type')
+            current_user.assistive_technology = request.form.get('assistive_technology')
+            current_user.education = request.form.get('education')
+            current_user.work_experience = request.form.get('work_experience')
+            current_user.skills = request.form.get('skills')
+            current_user.portfolio = request.form.get('portfolio')
             current_user.digital_skill_level = request.form.get('digital_skill_level')
             current_user.training_completed = request.form.get('training_completed') == 'true'
             current_user.resume_text = request.form.get('resume_text')
             current_user.resume_video_url = request.form.get('resume_video_url')
             
-            # บันทึกลงฐานข้อมูล
             db.session.commit()
-            
             flash('บันทึกข้อมูลเรียบร้อยแล้ว!', 'success')
             return redirect(url_for('views.resume'))
             
