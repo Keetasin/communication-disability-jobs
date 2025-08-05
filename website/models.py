@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     location = db.Column(db.String(100))  # ที่อยู่ เช่น ตำบล อำเภอ จังหวัด
     digital_skill_level = db.Column(db.String(50))  # เช่น "พื้นฐาน", "กลาง", "สูง"
     training_completed = db.Column(db.Boolean, default=False)
+    resume = db.relationship('Resume', back_populates='user', uselist=False)
 
     # ฟิลด์สำหรับผู้ว่าจ้าง (role = 'employer')
     company_name = db.Column(db.String(150))
@@ -61,6 +62,7 @@ class JobApplication(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
     applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(20), default='pending')
 
     # ความสัมพันธ์
     job = db.relationship('Job', backref=db.backref('applications', lazy=True))
@@ -79,24 +81,21 @@ class ChatMessage(db.Model):
 
 class Resume(db.Model):
     __tablename__ = 'resumes'
-
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
-
-    first_name = db.Column(db.String(150))
-    last_name = db.Column(db.String(150))
-    birth_date = db.Column(db.Date())
-    location = db.Column(db.String(100))
-    disability_type = db.Column(db.String(100))
-    disability_card_url = db.Column(db.String(255))  # path หรือ URL ของไฟล์
-    disability_level = db.Column(db.String(50))
-    assistive_technology = db.Column(db.Text)
-    support_needs = db.Column(db.Text)  # บันทึกเป็น string (เช่น: "การเคลื่อนไหว,การสื่อสาร")
+    first_name = db.Column(db.String(150), default='')
+    last_name = db.Column(db.String(150), default='')
+    birth_date = db.Column(db.Date(), nullable=True)
+    location = db.Column(db.String(100), default='')
+    disability_type = db.Column(db.String(100), default='')
+    disability_card_url = db.Column(db.String(255), nullable=True)
+    disability_level = db.Column(db.String(50), default='')
+    assistive_technology = db.Column(db.Text, default='')
+    support_needs = db.Column(db.Text, default='')
     confirmation_checked = db.Column(db.Boolean, default=False)
-    education = db.Column(db.Text)
-    work_experience = db.Column(db.Text)
-    skills = db.Column(db.Text)
-    portfolio = db.Column(db.Text)
-    resume_video_url = db.Column(db.String(255))
-
-    user = db.relationship('User', backref=db.backref('resume', uselist=False))
+    education = db.Column(db.Text, default='')
+    work_experience = db.Column(db.Text, default='')
+    skills = db.Column(db.Text, default='')
+    portfolio = db.Column(db.Text, default='')
+    resume_video_url = db.Column(db.String(255), default='')
+    user = db.relationship('User', back_populates='resume')
