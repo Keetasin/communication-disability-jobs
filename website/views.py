@@ -159,12 +159,31 @@ def view_applicant(application_id):
 
     return render_template('view_applicant.html', application=application, user=current_user)
 
-@views.route('/resume')
+@views.route('/resume', methods=['GET', 'POST'])
 @login_required
 def resume():
+    if request.method == 'POST':
+        try:
+            # อัปเดตข้อมูลผู้ใช้
+            current_user.disability_type = request.form.get('disability_type')
+            current_user.skills = request.form.get('skills')
+            current_user.location = request.form.get('location')
+            current_user.digital_skill_level = request.form.get('digital_skill_level')
+            current_user.training_completed = request.form.get('training_completed') == 'true'
+            current_user.resume_text = request.form.get('resume_text')
+            current_user.resume_video_url = request.form.get('resume_video_url')
+            
+            # บันทึกลงฐานข้อมูล
+            db.session.commit()
+            
+            flash('บันทึกข้อมูลเรียบร้อยแล้ว!', 'success')
+            return redirect(url_for('views.resume'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'เกิดข้อผิดพลาด: {str(e)}', 'error')
+    
     return render_template('resume.html', user=current_user)
-
-
 
 @views.route('/chat/<int:application_id>', methods=['GET', 'POST'])
 @login_required

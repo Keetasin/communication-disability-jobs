@@ -2,21 +2,84 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mt-4">
-    <h2>Resume ของ {{ user.first_name }} {{ user.last_name }}</h2>
+    <h2>Resume ของ {{ current_user.first_name }} {{ current_user.last_name }}</h2>
+    
+    <form method="POST">
+        
+        <div class="form-group mb-3">
+            <label for="disability_type" class="form-label"><strong>ประเภทความพิการ:</strong></label>
+            <select class="form-control" id="disability_type" name="disability_type" required>
+                <option value="">เลือกประเภทความพิการ</option>
+                <option value="ความพิการทางการมองเห็น" {% if current_user.disability_type == 'ความพิการทางการมองเห็น' %}selected{% endif %}>ความพิการทางการมองเห็น</option>
+                <option value="ความพิการทางการได้ยิน" {% if current_user.disability_type == 'ความพิการทางการได้ยิน' %}selected{% endif %}>ความพิการทางการได้ยิน</option>
+                <option value="ความพิการทางการเคลื่อนไหว" {% if current_user.disability_type == 'ความพิการทางการเคลื่อนไหว' %}selected{% endif %}>ความพิการทางการเคลื่อนไหว</option>
+                <option value="ความพิการทางสติปัญญา" {% if current_user.disability_type == 'ความพิการทางสติปัญญา' %}selected{% endif %}>ความพิการทางสติปัญญา</option>
+                <option value="ความพิการทางจิตใจ" {% if current_user.disability_type == 'ความพิการทางจิตใจ' %}selected{% endif %}>ความพิการทางจิตใจ</option>
+                <option value="ความพิการทางการเรียนรู้" {% if current_user.disability_type == 'ความพิการทางการเรียนรู้' %}selected{% endif %}>ความพิการทางการเรียนรู้</option>
+                <option value="ความพิการทางออทิสติก" {% if current_user.disability_type == 'ความพิการทางออทิสติก' %}selected{% endif %}>ความพิการทางออทิสติก</option>
+                <option value="อื่นๆ" {% if current_user.disability_type == 'อื่นๆ' %}selected{% endif %}>อื่นๆ</option>
+            </select>
+        </div>
 
-    <p><strong>ประเภทความพิการ:</strong> {{ user.disability_type }}</p>
-    <p><strong>ทักษะ:</strong> {{ user.skills }}</p>
-    <p><strong>ที่อยู่:</strong> {{ user.location }}</p>
-    <p><strong>ระดับทักษะดิจิทัล:</strong> {{ user.digital_skill_level }}</p>
-    <p><strong>ผ่านการฝึกอบรม:</strong> {{ 'ใช่' if user.training_completed else 'ไม่ใช่' }}</p>
+        <div class="form-group mb-3">
+            <label for="skills" class="form-label"><strong>ทักษะ:</strong></label>
+            <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="กรุณาระบุทักษะของคุณ">{{ current_user.skills or '' }}</textarea>
+        </div>
 
-    <h4 class="mt-4">รายละเอียดเรซูเม่ (Text)</h4>
-    <p>{{ user.resume_text }}</p>
+        <div class="form-group mb-3">
+            <label for="location" class="form-label"><strong>ที่อยู่:</strong></label>
+            <textarea class="form-control" id="location" name="location" rows="2" placeholder="กรุณาระบุที่อยู่ของคุณ">{{ current_user.location or '' }}</textarea>
+        </div>
 
-    {% if user.resume_video_url %}
-        <h4 class="mt-4">วิดีโอเรซูเม่</h4>
+        <div class="form-group mb-3">
+            <label for="digital_skill_level" class="form-label"><strong>ระดับทักษะดิจิทัล:</strong></label>
+            <select class="form-control" id="digital_skill_level" name="digital_skill_level" required>
+                <option value="">เลือกระดับทักษะ</option>
+                <option value="เริ่มต้น" {% if current_user.digital_skill_level == 'เริ่มต้น' %}selected{% endif %}>เริ่มต้น</option>
+                <option value="ปานกลาง" {% if current_user.digital_skill_level == 'ปานกลาง' %}selected{% endif %}>ปานกลาง</option>
+                <option value="ดี" {% if current_user.digital_skill_level == 'ดี' %}selected{% endif %}>ดี</option>
+                <option value="ดีมาก" {% if current_user.digital_skill_level == 'ดีมาก' %}selected{% endif %}>ดีมาก</option>
+                <option value="เชี่ยวชาญ" {% if current_user.digital_skill_level == 'เชี่ยวชาญ' %}selected{% endif %}>เชี่ยวชาญ</option>
+            </select>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label"><strong>ผ่านการฝึกอบรม:</strong></label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="training_completed" id="training_yes" value="true" {% if current_user.training_completed %}checked{% endif %}>
+                <label class="form-check-label" for="training_yes">
+                    ใช่
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="training_completed" id="training_no" value="false" {% if not current_user.training_completed %}checked{% endif %}>
+                <label class="form-check-label" for="training_no">
+                    ไม่ใช่
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="resume_text" class="form-label"><strong>รายละเอียดเรซูเม่ (Text):</strong></label>
+            <textarea class="form-control" id="resume_text" name="resume_text" rows="5" placeholder="กรุณาระบุรายละเอียดเรซูเม่ของคุณ">{{ current_user.resume_text or '' }}</textarea>
+        </div>
+
+        <div class="form-group mb-4">
+            <label for="resume_video_url" class="form-label"><strong>URL วิดีโอเรซูเม่:</strong></label>
+            <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" value="{{ current_user.resume_video_url or '' }}" placeholder="https://www.youtube.com/embed/...">
+            <small class="form-text text-muted">กรุณาใส่ URL ของวิดีโอเรซูเม่ (ถ้ามี)</small>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">บันทึกข้อมูล</button>
+            <a href="{{ url_for('views.home') }}" class="btn btn-secondary btn-lg ml-2">ยกเลิก</a>
+        </div>
+    </form>
+
+    {% if current_user.resume_video_url %}
+        <h4 class="mt-5">ตัวอย่างวิดีโอเรซูเม่</h4>
         <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item" src="{{ user.resume_video_url }}" allowfullscreen></iframe>
+            <iframe class="embed-responsive-item" src="{{ current_user.resume_video_url }}" allowfullscreen></iframe>
         </div>
     {% endif %}
 </div>
