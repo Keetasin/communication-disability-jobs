@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from datetime import datetime
 from . import db
 import pytz
-from .models import Job
+from .models import Job, JobApplication, User
 
 
 views = Blueprint('views', __name__)
@@ -63,11 +63,19 @@ def edit_profile():
 
 
 @views.route('/post-job', methods=['GET', 'POST'])
+@views.route('/post-job/<int:job_id>', methods=['GET', 'POST'])
 @login_required
-def post_job():
-    if current_user.role != 'employer':
-        flash('Only employers can post jobs.', 'error')
-        return redirect(url_for('views.home'))
+def post_job(job_id=None):
+    if current_user.role == 'disabled' and request.method == 'POST':
+        flash('You are not allowed to post jobs.', 'error')
+        return redirect(url_for('views.all_jobs'))
+
+    job = None
+    if job_id:
+        job = Job.query.get_or_404(job_id)
+        if job.employer != current_user:
+            flash('You are not allowed to edit this job.', 'error')
+            return redirect(url_for('views.all_jobs'))
 
     if request.method == 'POST':
         title = request.form.get('title')
@@ -75,25 +83,80 @@ def post_job():
         location = request.form.get('location')
         salary = request.form.get('salary')
 
-        new_job = Job(
-            title=title,
-            description=description,
-            location=location,
-            salary=salary,
-            employer=current_user
-        )
-        db.session.add(new_job)
+        if job:  # แก้ไขงาน
+            job.title = title
+            job.description = description
+            job.location = location
+            job.salary = salary
+            flash('Job updated successfully!', 'success')
+        else:  # เพิ่มงานใหม่
+            job = Job(
+                title=title,
+                description=description,
+                location=location,
+                salary=salary,
+                employer=current_user
+            )
+            db.session.add(job)
+            flash('Job posted successfully!', 'success')
+
         db.session.commit()
-        flash('Job posted successfully!', 'success')
-        return redirect(url_for('job.all_jobs'))
+        return redirect(url_for('views.all_jobs'))
 
-    # ✅ FIX: ส่ง user ไปด้วยเพื่อให้ base.html ไม่ error
-    return render_template('post_job.html', user=current_user)
-
+    return render_template('post_job.html', job=job, user=current_user)
 
 
 @views.route('/jobs')
 def all_jobs():
     jobs = Job.query.order_by(Job.posted_at.desc()).all()
     return render_template('all_jobs.html', jobs=jobs, user=current_user)
+
+
+@views.route('/apply/<int:job_id>', methods=['POST'])
+@login_required
+def apply_job(job_id):
+    if current_user.role != 'disabled':
+        flash('Only users with disabilities can apply for jobs.', 'error')
+        return redirect(url_for('views.all_jobs'))
+
+    job = Job.query.get_or_404(job_id)
+
+    # เช็คว่าผู้ใช้สมัครไปแล้วหรือยัง
+    existing = JobApplication.query.filter_by(job_id=job_id, applicant_id=current_user.id).first()
+    if existing:
+        flash('คุณสมัครงานนี้ไปแล้ว', 'info')
+        return redirect(url_for('views.all_jobs'))
+
+    application = JobApplication(job_id=job_id, applicant_id=current_user.id)
+    db.session.add(application)
+    db.session.commit()
+    flash(f'สมัครงาน "{job.title}" เรียบร้อยแล้ว!', 'success')
+    return redirect(url_for('views.all_jobs'))
+
+@views.route('/employer/jobs')
+@login_required
+def employer_jobs():
+    if current_user.role != 'employer':
+        flash('หน้าสำหรับผู้ว่าจ้างเท่านั้น', 'error')
+        return redirect(url_for('views.home'))
+
+    jobs = Job.query.filter_by(employer_id=current_user.id).order_by(Job.posted_at.desc()).all()
+    return render_template('employer_jobs.html', jobs=jobs, user=current_user)
+
+
+@views.route('/employer/application/<int:application_id>')
+@login_required
+def view_applicant(application_id):
+    if current_user.role != 'employer':
+        flash('หน้าสำหรับผู้ว่าจ้างเท่านั้น', 'error')
+        return redirect(url_for('views.home'))
+
+    application = JobApplication.query.get_or_404(application_id)
+
+    # ตรวจสอบว่า application นี้เป็นของงานผู้ว่าจ้าง
+    if application.job.employer_id != current_user.id:
+        flash('คุณไม่มีสิทธิ์ดูข้อมูลนี้', 'error')
+        return redirect(url_for('views.employer_jobs'))
+
+    return render_template('view_applicant.html', application=application, user=current_user)
 

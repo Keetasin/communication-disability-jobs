@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}งานของฉัน{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2>📋 งานที่คุณโพสต์</h2>
+  {% for job in jobs %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <h4>{{ job.title }}</h4>
+        <p><strong>สถานที่:</strong> {{ job.location or '-' }}</p>
+        <p><strong>เงินเดือน:</strong> {{ job.salary or '-' }}</p>
+        <p>{{ job.description }}</p>
+        <p class="text-muted">วันที่โพสต์: {{ job.posted_at.strftime('%Y-%m-%d') }}</p>
+        {% if user.is_authenticated %}
+            {% if user.id == job.employer.id %}
+                <a class="btn btn-warning btn-sm" href="{{ url_for('views.post_job', job_id=job.id) }}">✏️ แก้ไข</a>
+            {% endif %}
+        {% endif %}
+
+        <h5>ผู้สมัครงาน</h5>
+        {% if job.applications %}
+          <ul>
+            {% for app in job.applications %}
+              <li>
+                {{ app.applicant.first_name }} {{ app.applicant.last_name }} ({{ app.applicant.email }}) - สมัครเมื่อ {{ app.applied_at.strftime('%Y-%m-%d %H:%M') }}
+                <a href="{{ url_for('views.view_applicant', application_id=app.id) }}" class="btn btn-sm btn-info ml-2">ดูรายละเอียด</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>ยังไม่มีผู้สมัครงานนี้</p>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <p>ยังไม่มีงานที่คุณโพสต์</p>
+  {% endfor %}
+</div>
+{% endblock %}

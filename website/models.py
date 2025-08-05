@@ -53,3 +53,15 @@ class Job(db.Model):
     # ความสัมพันธ์กับ User
     employer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     employer = db.relationship('User', backref='jobs')
+
+
+class JobApplication(db.Model):
+    __tablename__ = 'job_applications'
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('jobs.id'), nullable=False)
+    applicant_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    applied_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # ความสัมพันธ์
+    job = db.relationship('Job', backref=db.backref('applications', lazy=True))
+    applicant = db.relationship('User', backref=db.backref('applications', lazy=True))

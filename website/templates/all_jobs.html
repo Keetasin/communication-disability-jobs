@@ -11,6 +11,14 @@
         <p><strong>เงินเดือน:</strong> {{ job.salary or '-' }}</p>
         <p>{{ job.description }}</p>
         <p class="text-muted">โพสต์โดย: {{ job.employer.company_name or job.employer.email }} | วันที่: {{ job.posted_at.strftime('%Y-%m-%d') }}</p>
+
+        {% if user.is_authenticated %}
+          {% if user.role == 'disabled' %}
+            <form method="POST" action="{{ url_for('views.apply_job', job_id=job.id) }}" style="display:inline;">
+              <button class="btn btn-success btn-sm">✅ สมัครงานนี้</button>
+            </form>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   {% else %}
