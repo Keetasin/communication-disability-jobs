@@ -159,36 +159,52 @@ def view_applicant(application_id):
 
     return render_template('view_applicant.html', application=application, user=current_user)
 
+from .models import Resume  # เพิ่ม import Resume เข้ามา
+
 @views.route('/resume', methods=['GET', 'POST'])
 @login_required
 def resume():
+    # หาเรซูเม่ของ current_user ถ้าไม่มีให้สร้างใหม่
+    resume = current_user.resume
+    if not resume:
+        resume = Resume(
+            user_id=current_user.id,
+            first_name=current_user.first_name or '',
+            last_name=current_user.last_name or ''
+        )
+        db.session.add(resume)
+        db.session.commit()
+
     if request.method == 'POST':
         try:
-            # อัปเดตข้อมูลทั้งหมด
-            current_user.first_name = request.form.get('first_name')
-            current_user.last_name = request.form.get('last_name')
-            current_user.birth_date = request.form.get('birth_date')
-            current_user.location = request.form.get('location')
-            current_user.disability_type = request.form.get('disability_type')
-            current_user.assistive_technology = request.form.get('assistive_technology')
-            current_user.education = request.form.get('education')
-            current_user.work_experience = request.form.get('work_experience')
-            current_user.skills = request.form.get('skills')
-            current_user.portfolio = request.form.get('portfolio')
-            current_user.digital_skill_level = request.form.get('digital_skill_level')
-            current_user.training_completed = request.form.get('training_completed') == 'true'
-            current_user.resume_text = request.form.get('resume_text')
-            current_user.resume_video_url = request.form.get('resume_video_url')
-            
+            # อัปเดตข้อมูลใน resume
+            resume.first_name = request.form.get('first_name')
+            resume.last_name = request.form.get('last_name')
+            resume.birth_date = request.form.get('birth_date')
+            resume.location = request.form.get('location')
+            resume.disability_type = request.form.get('disability_type')
+            resume.disability_card_url = request.form.get('disability_card')  # path หรือ URL ของไฟล์
+            resume.disability_level = request.form.get('disability_level')
+            resume.assistive_technology = request.form.get('assistive_technology')
+            selected_supports = request.form.getlist('support_needs')  # ได้เป็น list
+            resume.support_needs = ','.join(selected_supports)  # บันทึกเป็น string คั่นด้วย comma
+            resume.confirmation_checked = 'confirm' in request.form
+            resume.education = request.form.get('education')
+            resume.work_experience = request.form.get('work_experience')
+            resume.skills = request.form.get('skills')
+            resume.portfolio = request.form.get('portfolio')
+            resume.resume_video_url = request.form.get('resume_video_url')
+
             db.session.commit()
             flash('บันทึกข้อมูลเรียบร้อยแล้ว!', 'success')
             return redirect(url_for('views.resume'))
-            
+
         except Exception as e:
             db.session.rollback()
             flash(f'เกิดข้อผิดพลาด: {str(e)}', 'error')
-    
-    return render_template('resume.html', user=current_user)
+
+    return render_template('resume.html', user=current_user, resume=resume)
+
 
 @views.route('/chat/<int:application_id>', methods=['GET', 'POST'])
 @login_required

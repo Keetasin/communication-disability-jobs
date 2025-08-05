@@ -316,7 +316,7 @@
             </div>
         </div>
         
-        <form id="mainForm" method="POST">
+        <form id="mainForm" method="POST" enctype="multipart/form-data">
             
             <!-- ข้อมูลส่วนตัว -->
             <div class="card" data-step="1">
@@ -372,9 +372,7 @@
                     <h4 class="d-inline-block">ข้อมูลด้านความพิการและประเภทความพิการ</h4>
                 </div>
                 <div class="card-body">
-                <!--
-
-                     <div class="form-group mb-4">
+                    <div class="form-group mb-4">
                         <label for="disability_type" class="form-label"><i class="fas fa-list me-2 text-success"></i><strong>ประเภทความพิการ:</strong></label>
                         <select class="form-control form-select" id="disability_type" name="disability_type" required>
                             <option value="">เลือกประเภทความพิการ</option>
@@ -389,7 +387,7 @@
                         </select>
                         <div class="invalid-feedback">กรุณาเลือกประเภทความพิการ</div>
                         <small class="form-text text-muted">เลือกประเภทความพิการที่ตรงกับสถานการณ์ของคุณ</small>
-                    </div> -->
+                    </div>
             
                     <!-- อัพโหลดบัตรประจำตัวผู้พิการ -->
                     <div class="form-group mb-4">
