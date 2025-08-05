@@ -1,4 +1,3 @@
-<!-- templates/resume.html -->
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -8,106 +7,376 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --secondary-color: #6b7280;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .container {
+            max-width: 900px;
+        }
+
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-header h1 {
+            background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
         .card {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
         .card-header {
-            border-bottom: 2px solid rgba(255,255,255,0.2);
+            background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+            border: none;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
         }
 
-        .btn-lg {
-            padding: 12px 30px;
-            font-size: 18px;
+        .card-header.bg-success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+        }
+
+        .card-header.bg-warning {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+        }
+
+        .card-header.bg-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #4b5563);
+        }
+
+        .card-header.bg-dark {
+            background: linear-gradient(135deg, #1f2937, #111827);
+        }
+
+        .card-header h4 {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
         }
 
         .upload-area {
-            border: 2px dashed #28a745;
-            border-radius: 8px;
-            padding: 20px;
+            border: 3px dashed var(--success-color);
+            border-radius: 16px;
+            padding: 2rem;
             text-align: center;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+            transition: all 0.3s ease;
+            transform: scale(0);
+        }
+
+        .upload-area:hover::before {
+            transform: scale(1);
+        }
+
         .upload-area:hover {
-            background-color: #e9ecef;
-            border-color: #20c997;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-color: #059669;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
         }
+
         .upload-area.dragover {
-            background-color: #d4edda;
-            border-color: #28a745;
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border-color: var(--success-color);
+            transform: scale(1.02);
         }
+
         .file-preview {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            display: none;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid var(--success-color);
         }
-        .form-label {
+
+        .btn {
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
             font-weight: 600;
-            color: #495057;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            border: none;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #4b5563);
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            transform: translateY(-2px);
+        }
+
+        .btn-lg {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 15px;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .form-check-input:focus {
+            box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+        }
+
+        .is-invalid {
+            border-color: var(--danger-color);
+        }
+
+        .invalid-feedback {
+            color: var(--danger-color);
+            font-weight: 500;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--success-color));
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .floating-icon {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            opacity: 0.3;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .section-icon {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .main-header {
+                padding: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
     <div class="container mt-4">
-        <h2>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h2>
-        <p class="text-muted">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสร้างโปรไฟล์ที่สมบูรณ์</p>
+        <div class="main-header">
+            <h1><i class="fas fa-user-circle me-3"></i>แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h1>
+            <p class="text-muted mb-0">กรุณากรอกข้อมูลให้ครบถ้วนเพื่อสร้างโปรไฟล์ที่สมบูรณ์</p>
+        </div>
         
-        <form method="POST">
+        <div class="progress-indicator">
+            <div class="progress-step active" id="step1">
+                <i class="fas fa-user"></i><br>ข้อมูลส่วนตัว
+            </div>
+            <div class="progress-step" id="step2">
+                <i class="fas fa-wheelchair"></i><br>ข้อมูลความพิการ
+            </div>
+            <div class="progress-step" id="step3">
+                <i class="fas fa-graduation-cap"></i><br>การศึกษา
+            </div>
+            <div class="progress-step" id="step4">
+                <i class="fas fa-tools"></i><br>ทักษะ
+            </div>
+        </div>
+        
+        <form id="mainForm" method="POST">
             
             <!-- ข้อมูลส่วนตัว -->
-            <div class="card mb-4">
+            <div class="card" data-step="1">
                 <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">ข้อมูลส่วนตัว</h4>
+                    <div class="floating-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="section-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h4 class="d-inline-block">ข้อมูลส่วนตัว</h4>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="first_name" class="form-label"><strong>ชื่อ:</strong></label>
+                                <label for="first_name" class="form-label"><i class="fas fa-user me-2 text-primary"></i><strong>ชื่อ:</strong></label>
                                 <input type="text" class="form-control" id="first_name" name="first_name" required>
+                                <div class="invalid-feedback">กรุณากรอกชื่อ</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group mb-3">
-                                <label for="last_name" class="form-label"><strong>นามสกุล:</strong></label>
+                                <label for="last_name" class="form-label"><i class="fas fa-user me-2 text-primary"></i><strong>นามสกุล:</strong></label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" required>
+                                <div class="invalid-feedback">กรุณากรอกนามสกุล</div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="birth_date" class="form-label"><strong>วัน/เดือน/ปีเกิด:</strong></label>
+                        <label for="birth_date" class="form-label"><i class="fas fa-calendar me-2 text-primary"></i><strong>วัน/เดือน/ปีเกิด:</strong></label>
                         <input type="date" class="form-control" id="birth_date" name="birth_date">
                         <small class="form-text text-muted">ข้อมูลนี้จะแสดงในหน้าโปรไฟล์</small>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="location" class="form-label"><strong>ที่อยู่ปัจจุบัน:</strong></label>
+                        <label for="location" class="form-label"><i class="fas fa-map-marker-alt me-2 text-primary"></i><strong>ที่อยู่ปัจจุบัน:</strong></label>
                         <textarea class="form-control" id="location" name="location" rows="2" placeholder="ที่อยู่ปัจจุบันเพื่อพิจารณาตำแหน่งงาน"></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- ข้อมูลด้านความพิการและประเภทความพิการ -->
-            <div class="card mb-4">
+            <div class="card" data-step="2">
                 <div class="card-header bg-success text-white">
-                    <h4 class="mb-0"><i class="fas fa-wheelchair me-2"></i>ข้อมูลด้านความพิการและประเภทความพิการ</h4>
+                    <div class="floating-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="section-icon">
+                        <i class="fas fa-wheelchair"></i>
+                    </div>
+                    <h4 class="d-inline-block">ข้อมูลด้านความพิการและประเภทความพิการ</h4>
                 </div>
                 <div class="card-body">
-                    <!-- ประเภทความพิการ -->
-                    <div class="form-group mb-4">
-                        <label for="disability_type" class="form-label"><strong>ประเภทความพิการ:</strong></label>
-                        <select class="form-control" id="disability_type" name="disability_type" required>
+                <!--
+
+                     <div class="form-group mb-4">
+                        <label for="disability_type" class="form-label"><i class="fas fa-list me-2 text-success"></i><strong>ประเภทความพิการ:</strong></label>
+                        <select class="form-control form-select" id="disability_type" name="disability_type" required>
                             <option value="">เลือกประเภทความพิการ</option>
                             <option value="ความพิการทางการเคลื่อนไหว">ความพิการทางการเคลื่อนไหว</option>
                             <option value="ความพิการทางการมองเห็น">ความพิการทางการมองเห็น</option>
@@ -118,12 +387,13 @@
                             <option value="ความพิการทางออทิสติก">ความพิการทางออทิสติก</option>
                             <option value="ความพิการหลายประเภท">ความพิการหลายประเภท</option>
                         </select>
+                        <div class="invalid-feedback">กรุณาเลือกประเภทความพิการ</div>
                         <small class="form-text text-muted">เลือกประเภทความพิการที่ตรงกับสถานการณ์ของคุณ</small>
-                    </div>
-
+                    </div> -->
+            
                     <!-- อัพโหลดบัตรประจำตัวผู้พิการ -->
                     <div class="form-group mb-4">
-                        <label class="form-label"><strong>บัตรประจำตัวผู้พิการ:</strong></label>
+                        <label class="form-label"><i class="fas fa-id-card me-2 text-success"></i><strong>บัตรประจำตัวผู้พิการ:</strong></label>
                         <div class="upload-area" id="uploadArea">
                             <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
                             <h5 class="text-muted">อัพโหลดภาพบัตรประจำตัวผู้พิการ</h5>
@@ -131,7 +401,7 @@
                             <input type="file" id="disabilityCard" name="disability_card" accept="image/*,.pdf" class="form-control d-none">
                             <small class="text-muted">รองรับไฟล์: JPG, PNG, PDF (ขนาดไม่เกิน 5MB)</small>
                         </div>
-                        <div class="file-preview" id="filePreview">
+                        <div class="file-preview" id="filePreview" style="display: none;">
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-file-image text-success me-2"></i>
                                 <span id="fileName"></span>
@@ -140,69 +410,67 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="invalid-feedback" id="fileError" style="display: none;">กรุณาอัพโหลดภาพบัตรประจำตัวผู้พิการ</div>
                     </div>
 
                     <!-- ระดับความรุนแรงของความพิการ -->
                     <div class="form-group mb-4">
-                        <label class="form-label"><strong>ระดับความรุนแรงของความพิการ:</strong></label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="disability_level" value="เล็กน้อย" id="level1">
-                            <label class="form-check-label" for="level1">
-                                เล็กน้อย
-                            </label>
+                        <label class="form-label"><i class="fas fa-chart-bar me-2 text-success"></i><strong>ระดับความรุนแรงของความพิการ:</strong></label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="disability_level" value="เล็กน้อย" id="level1">
+                                    <label class="form-check-label" for="level1">เล็กน้อย</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="disability_level" value="ปานกลาง" id="level2">
+                                    <label class="form-check-label" for="level2">ปานกลาง</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="disability_level" value="รุนแรง" id="level3">
+                                    <label class="form-check-label" for="level3">รุนแรง</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="disability_level" value="รุนแรงมาก" id="level4">
+                                    <label class="form-check-label" for="level4">รุนแรงมาก</label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="disability_level" value="ปานกลาง" id="level2">
-                            <label class="form-check-label" for="level2">
-                                ปานกลาง
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="disability_level" value="รุนแรง" id="level3">
-                            <label class="form-check-label" for="level3">
-                                รุนแรง
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="disability_level" value="รุนแรงมาก" id="level4">
-                            <label class="form-check-label" for="level4">
-                                รุนแรงมาก
-                            </label>
-                        </div>
+                        <div class="invalid-feedback" id="levelError" style="display: none;">กรุณาเลือกระดับความรุนแรงของความพิการ</div>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="assistive_technology" class="form-label"><strong>อุปกรณ์ช่วยเหลือที่ใช้:</strong></label>
+                        <label for="assistive_technology" class="form-label"><i class="fas fa-cogs me-2 text-success"></i><strong>อุปกรณ์ช่วยเหลือที่ใช้:</strong></label>
                         <textarea class="form-control" id="assistive_technology" name="assistive_technology" rows="2" placeholder="อุปกรณ์ที่ใช้ช่วยในการทำงาน เช่น แว่นตา เครื่องช่วยฟัง รถเข็น"></textarea>
                         <small class="form-text text-muted">อุปกรณ์ที่ใช้ช่วยในการทำงาน</small>
                     </div>
 
                     <!-- ความต้องการความช่วยเหลือ -->
                     <div class="form-group mb-4">
-                        <label class="form-label"><strong>ความต้องการความช่วยเหลือ:</strong></label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="support_needs" value="การเคลื่อนไหว" id="support1">
-                            <label class="form-check-label" for="support1">
-                                ช่วยเหลือในการเคลื่อนไหว
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="support_needs" value="การสื่อสาร" id="support2">
-                            <label class="form-check-label" for="support2">
-                                ช่วยเหลือในการสื่อสาร
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="support_needs" value="กิจวัตรประจำวัน" id="support3">
-                            <label class="form-check-label" for="support3">
-                                ช่วยเหลือในกิจวัตรประจำวัน
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="support_needs" value="การเรียนรู้" id="support4">
-                            <label class="form-check-label" for="support4">
-                                ช่วยเหลือในการเรียนรู้
-                            </label>
+                        <label class="form-label"><i class="fas fa-hands-helping me-2 text-success"></i><strong>ความต้องการความช่วยเหลือ:</strong></label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="support_needs" value="การเคลื่อนไหว" id="support1">
+                                    <label class="form-check-label" for="support1">ช่วยเหลือในการเคลื่อนไหว</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="support_needs" value="การสื่อสาร" id="support2">
+                                    <label class="form-check-label" for="support2">ช่วยเหลือในการสื่อสาร</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="support_needs" value="กิจวัตรประจำวัน" id="support3">
+                                    <label class="form-check-label" for="support3">ช่วยเหลือในกิจวัตรประจำวัน</label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="support_needs" value="การเรียนรู้" id="support4">
+                                    <label class="form-check-label" for="support4">ช่วยเหลือในการเรียนรู้</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -211,22 +479,29 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="confirm" value="confirm" id="confirm" required>
                             <label class="form-check-label" for="confirm">
-                                <strong>ฉันยืนยันว่าข้อมูลที่กรอกเป็นข้อมูลที่ถูกต้องและเป็นจริง</strong>
+                                <strong><i class="fas fa-check-circle me-2 text-success"></i>ฉันยืนยันว่าข้อมูลที่กรอกเป็นข้อมูลที่ถูกต้องและเป็นจริง</strong>
                             </label>
+                            <div class="invalid-feedback">กรุณายืนยันความถูกต้องของข้อมูล</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- ข้อมูลการศึกษาและประสบการณ์ทำงาน -->
-            <div class="card mb-4">
+            <div class="card" data-step="3">
                 <div class="card-header bg-warning text-dark">
-                    <h4 class="mb-0">ข้อมูลการศึกษาและประสบการณ์ทำงาน</h4>
+                    <div class="floating-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="section-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h4 class="d-inline-block">ข้อมูลการศึกษาและประสบการณ์ทำงาน</h4>
                 </div>
                 <div class="card-body">
                     <div class="form-group mb-3">
-                        <label for="education" class="form-label"><strong>วุฒิการศึกษา:</strong></label>
-                        <select class="form-control" id="education" name="education">
+                        <label for="education" class="form-label"><i class="fas fa-university me-2 text-warning"></i><strong>วุฒิการศึกษา:</strong></label>
+                        <select class="form-control form-select" id="education" name="education">
                             <option value="">เลือกระดับการศึกษา</option>
                             <option value="ประถมศึกษา">ประถมศึกษา</option>
                             <option value="มัธยมศึกษาตอนต้น">มัธยมศึกษาตอนต้น</option>
@@ -241,71 +516,36 @@
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="work_experience" class="form-label"><strong>ประสบการณ์ทำงาน:</strong></label>
+                        <label for="work_experience" class="form-label"><i class="fas fa-briefcase me-2 text-warning"></i><strong>ประสบการณ์ทำงาน:</strong></label>
                         <textarea class="form-control" id="work_experience" name="work_experience" rows="4" placeholder="ตำแหน่ง, ชื่อบริษัท, ระยะเวลา, หน้าที่ความรับผิดชอบ"></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- ทักษะและความสามารถ -->
-            <div class="card mb-4">
+            <div class="card" data-step="4">
                 <div class="card-header bg-secondary text-white">
-                    <h4 class="mb-0">ทักษะและความสามารถ</h4>
+                    <div class="floating-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <div class="section-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h4 class="d-inline-block">ทักษะและความสามารถ</h4>
                 </div>
                 <div class="card-body">
                     <div class="form-group mb-3">
-                        <label for="skills" class="form-label"><strong>ทักษะที่เกี่ยวข้องกับงาน:</strong></label>
+                        <label for="skills" class="form-label"><i class="fas fa-star me-2 text-secondary"></i><strong>ทักษะที่เกี่ยวข้องกับงาน:</strong></label>
                         <textarea class="form-control" id="skills" name="skills" rows="3" placeholder="เช่น การใช้โปรแกรมคอมพิวเตอร์, ภาษาต่างประเทศ, ทักษะเฉพาะทาง"></textarea>
                         <small class="form-text text-muted">ทักษะเฉพาะทาง</small>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="portfolio" class="form-label"><strong>ผลงาน (Portfolio):</strong></label>
+                        <label for="portfolio" class="form-label"><i class="fas fa-folder me-2 text-secondary"></i><strong>ผลงาน (Portfolio):</strong></label>
                         <textarea class="form-control" id="portfolio" name="portfolio" rows="3" placeholder="หากมี กรุณาแนบ URL หรือรายละเอียดผลงานที่ต้องการแสดง"></textarea>
                     </div>
                     
                     <div class="form-group mb-3">
-                        <label for="digital_skill_level" class="form-label"><strong>ระดับทักษะดิจิทัล:</strong></label>
-                        <select class="form-control" id="digital_skill_level" name="digital_skill_level" required>
-                            <option value="">เลือกระดับทักษะ</option>
-                            <option value="เริ่มต้น">เริ่มต้น</option>
-                            <option value="ปานกลาง">ปานกลาง</option>
-                            <option value="ดี">ดี</option>
-                            <option value="ดีมาก">ดีมาก</option>
-                            <option value="เชี่ยวชาญ">เชี่ยวชาญ</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ข้อมูลเพิ่มเติม -->
-            <div class="card mb-4">
-                <div class="card-header bg-dark text-white">
-                    <h4 class="mb-0">ข้อมูลเพิ่มเติม</h4>
-                </div>
-                <div class="card-body">
-                    <div class="form-group mb-3">
-                        <label class="form-label"><strong>ผ่านการฝึกอบรม:</strong></label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="training_completed" id="training_yes" value="true">
-                            <label class="form-check-label" for="training_yes">
-                                ใช่
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="training_completed" id="training_no" value="false">
-                            <label class="form-check-label" for="training_no">
-                                ไม่ใช่
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-4">
-                        <label for="resume_text" class="form-label"><strong>รายละเอียดเรซูเม่เพิ่มเติม:</strong></label>
-                        <textarea class="form-control" id="resume_text" name="resume_text" rows="5" placeholder="กรุณาระบุรายละเอียดเรซูเม่ของคุณ เป้าหมายในการทำงาน หรือข้อมูลอื่นๆ ที่ต้องการแจ้ง"></textarea>
-                    </div>
-
-                    <div class="form-group mb-4">
                         <label for="resume_video_url" class="form-label"><strong>URL วิดีโอเรซูเม่:</strong></label>
                         <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" placeholder="https://www.youtube.com/embed/...">
                         <small class="form-text text-muted">กรุณาใส่ URL ของวิดีโอเรซูเม่ (ถ้ามี)</small>
@@ -319,8 +559,7 @@
             </div>
         </form>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         // File upload functionality
         const uploadArea = document.getElementById('uploadArea');
@@ -390,14 +629,16 @@
         // Form validation
         document.querySelector('.btn-success').addEventListener('click', (e) => {
             e.preventDefault();
-            
+         
+        /* 
             // Check if at least one disability type is selected
             const disabilityTypes = document.querySelectorAll('input[name="disability_type"]:checked');
             if (disabilityTypes.length === 0) {
                 alert('กรุณาเลือกประเภทความพิการอย่างน้อย 1 ประเภท');
                 return;
             }
-
+         */
+            
             // Check if disability level is selected
             const disabilityLevel = document.querySelector('input[name="disability_level"]:checked');
             if (!disabilityLevel) {
