@@ -199,3 +199,34 @@ def chat(application_id):
 
     chat_history = ChatMessage.query.filter_by(application_id=application_id).order_by(ChatMessage.timestamp).all()
     return render_template('chat.html', chat_history=chat_history, application=application, user=current_user)
+
+
+@views.route('/delete-job/<int:job_id>', methods=['POST'])
+@login_required
+def delete_job(job_id):
+    job = Job.query.get_or_404(job_id)
+    if job.employer_id != current_user.id:
+        flash('คุณไม่มีสิทธิ์ลบโพสต์งานนี้', 'error')
+        return redirect(url_for('views.employer_jobs'))
+    
+    # ลบผู้สมัครที่เกี่ยวข้องก่อน
+    JobApplication.query.filter_by(job_id=job.id).delete()
+    db.session.delete(job)
+    db.session.commit()
+    flash('ลบโพสต์งานเรียบร้อยแล้ว', 'success')
+    return redirect(url_for('views.employer_jobs'))
+
+@views.route('/accept-applicant/<int:application_id>', methods=['POST'])
+@login_required
+def accept_applicant(application_id):
+    application = JobApplication.query.get_or_404(application_id)
+    
+    if application.job.employer_id != current_user.id:
+        flash('คุณไม่มีสิทธิ์ตอบรับผู้สมัครนี้', 'error')
+        return redirect(url_for('views.employer_jobs'))
+    
+    # ✅ ตัวอย่าง: flash แทนระบบจริง
+    flash(f'คุณตอบรับ {application.applicant.first_name} เข้าทำงานแล้ว!', 'success')
+
+    # 👉 คุณสามารถเพิ่มฟิลด์ status เช่น accepted/rejected หรืออีเมลแจ้งเตือนได้
+    return redirect(url_for('views.view_applicant', application_id=application.id))

@@ -14,7 +14,10 @@
         {% if user.is_authenticated %}
             {% if user.id == job.employer.id %}
                 <a class="btn btn-warning btn-sm" href="{{ url_for('views.post_job', job_id=job.id) }}">✏️ แก้ไข</a>
-            {% endif %}
+                <form method="POST" action="{{ url_for('views.delete_job', job_id=job.id) }}" style="display:inline;">
+                    <button class="btn btn-danger btn-sm" type="submit" onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบโพสต์งานนี้?')">🗑️ ลบ</button>
+                </form>
+                {% endif %}
         {% endif %}
 
         <h5>ผู้สมัครงาน</h5>
@@ -25,6 +28,9 @@
                 {{ app.applicant.first_name }} {{ app.applicant.last_name }} ({{ app.applicant.email }}) - สมัครเมื่อ {{ app.applied_at.strftime('%Y-%m-%d %H:%M') }}
                 <a href="{{ url_for('views.view_applicant', application_id=app.id) }}" class="btn btn-sm btn-info ml-2">ดูรายละเอียด</a>
               </li>
+              <form method="POST" action="{{ url_for('views.accept_applicant', application_id=app.id) }}" style="display:inline;">
+                    <button class="btn btn-success btn-sm ml-2" type="submit">✅ ตอบรับเข้าทำงาน</button>
+              </form>
             {% endfor %}
           </ul>
         {% else %}
