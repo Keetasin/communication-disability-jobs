@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2>Edit Profile</h2>
+  <form method="POST">
+
+    <div class="form-group">
+      <label>First Name</label>
+      <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+    </div>
+
+    <div class="form-group">
+      <label>Last Name</label>
+      <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+    </div>
+
+    {% if user.role == 'disabled' %}
+    <hr>
+    <h4>ข้อมูลผู้พิการ</h4>
+    <div class="form-group">
+      <label>ประเภทความพิการ</label>
+      <input type="text" name="disability_type" class="form-control" value="{{ user.disability_type }}">
+    </div>
+    <div class="form-group">
+      <label>ทักษะ</label>
+      <textarea name="skills" class="form-control">{{ user.skills }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>เรซูเม่ (ข้อความ)</label>
+      <textarea name="resume_text" class="form-control">{{ user.resume_text }}</textarea>
+    </div>
+    <div class="form-group">
+      <label>ลิงก์วิดีโอแนะนำตัว</label>
+      <input type="text" name="resume_video_url" class="form-control" value="{{ user.resume_video_url }}">
+    </div>
+    <div class="form-group">
+      <label>ที่อยู่ (จังหวัด)</label>
+      <input type="text" name="location" class="form-control" value="{{ user.location }}">
+    </div>
+    <div class="form-group">
+      <label>ระดับทักษะดิจิทัล</label>
+      <input type="text" name="digital_skill_level" class="form-control" value="{{ user.digital_skill_level }}">
+    </div>
+    <div class="form-check">
+      <input type="checkbox" name="training_completed" class="form-check-input" id="training_completed" {% if user.training_completed %}checked{% endif %}>
+      <label class="form-check-label" for="training_completed">ผ่านการอบรมแล้ว</label>
+    </div>
+
+    {% elif user.role == 'employer' %}
+    <hr>
+    <h4>ข้อมูลผู้ว่าจ้าง</h4>
+    <div class="form-group">
+      <label>ชื่อบริษัท</label>
+      <input type="text" name="company_name" class="form-control" value="{{ user.company_name }}">
+    </div>
+    <div class="form-group">
+      <label>ชื่อผู้ติดต่อ</label>
+      <input type="text" name="contact_person" class="form-control" value="{{ user.contact_person }}">
+    </div>
+    <div class="form-group">
+      <label>เบอร์โทรติดต่อ</label>
+      <input type="text" name="contact_phone" class="form-control" value="{{ user.contact_phone }}">
+    </div>
+    <div class="form-group">
+      <label>อีเมลติดต่อ</label>
+      <input type="email" name="contact_email" class="form-control" value="{{ user.contact_email }}">
+    </div>
+    <div class="form-group">
+      <label>ที่อยู่บริษัท</label>
+      <input type="text" name="address" class="form-control" value="{{ user.address }}">
+    </div>
+    <div class="form-group">
+      <label>เว็บไซต์บริษัท</label>
+      <input type="text" name="company_website" class="form-control" value="{{ user.company_website }}">
+    </div>
+    <div class="form-group">
+      <label>รายละเอียดบริษัท</label>
+      <textarea name="company_description" class="form-control">{{ user.company_description }}</textarea>
+    </div>
+    {% endif %}
+
+    <br>
+    <button type="submit" class="btn btn-success">Save Changes</button>
+    <a href="{{ url_for('views.account') }}" class="btn btn-secondary">Cancel</a>
+
+  </form>
+</div>
+{% endblock %}
