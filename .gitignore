@@ -49,3 +49,4 @@ cython_debug/
 
 # data repository
 data/
+website/static/uploads/

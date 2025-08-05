@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     location = db.Column(db.String(100))  # ที่อยู่ เช่น ตำบล อำเภอ จังหวัด
     digital_skill_level = db.Column(db.String(50))  # เช่น "พื้นฐาน", "กลาง", "สูง"
     training_completed = db.Column(db.Boolean, default=False)
+    resume = db.relationship('Resume', back_populates='user', uselist=False)
 
     # ฟิลด์สำหรับผู้ว่าจ้าง (role = 'employer')
     company_name = db.Column(db.String(150))
@@ -78,3 +79,26 @@ class ChatMessage(db.Model):
     sender = db.relationship('User', backref='sent_messages')
     application = db.relationship('JobApplication', backref='chat_messages')
 
+class Resume(db.Model):
+    __tablename__ = 'resumes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
+
+    first_name = db.Column(db.String(150))
+    last_name = db.Column(db.String(150))
+    birth_date = db.Column(db.Date())
+    location = db.Column(db.String(100))
+    disability_type = db.Column(db.String(100))
+    disability_card_url = db.Column(db.String(255))
+    disability_level = db.Column(db.String(50))
+    assistive_technology = db.Column(db.Text)
+    support_needs = db.Column(db.Text)
+    confirmation_checked = db.Column(db.Boolean, default=False)
+    education = db.Column(db.Text)
+    work_experience = db.Column(db.Text)
+    skills = db.Column(db.Text)
+    portfolio = db.Column(db.Text)
+    resume_video_url = db.Column(db.String(255))
+
+    user = db.relationship('User', back_populates='resume')

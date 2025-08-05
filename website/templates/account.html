@@ -12,7 +12,7 @@ Account
         padding: 0;
         color: #333;
     }
-    
+
     #container {
         background: rgba(255, 255, 255, 0.7);
         padding: 30px;
@@ -42,7 +42,7 @@ Account
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .user-info {
         font-size: 18px;
         margin: 8px 0;
@@ -65,7 +65,7 @@ Account
         margin-left: auto;
         margin-right: auto;
     }
-    
+
     .logout-btn:hover {
         background: linear-gradient(45deg, #c82333, #ff3b3b);
         transform: translateY(-3px);
@@ -95,15 +95,45 @@ Account
         <p class="user-info"><strong>ทักษะที่มี:</strong> {{ user.skills or '-' }}</p>
         <p class="user-info"><strong>เรซูเม่ (ข้อความ):</strong> <br> {{ user.resume_text or '-' }}</p>
         <p class="user-info"><strong>ลิงก์วิดีโอแนะนำตัว:</strong> 
-          {% if user.resume_video_url %}
-            <a href="{{ user.resume_video_url }}" target="_blank" rel="noopener noreferrer">{{ user.resume_video_url }}</a>
-          {% else %}
-            -
-          {% endif %}
+            {% if user.resume_video_url %}
+                <a href="{{ user.resume_video_url }}" target="_blank" rel="noopener noreferrer">{{ user.resume_video_url }}</a>
+            {% else %}
+                -
+            {% endif %}
         </p>
         <p class="user-info"><strong>ที่อยู่ (จังหวัด):</strong> {{ user.location or '-' }}</p>
         <p class="user-info"><strong>ระดับทักษะดิจิทัล:</strong> {{ user.digital_skill_level or '-' }}</p>
         <p class="user-info"><strong>ผ่านการอบรมแล้ว:</strong> {{ 'ใช่' if user.training_completed else 'ไม่ใช่' }}</p>
+
+        <hr style="background:white; opacity:0.3;">
+        <h3>📄 ข้อมูลเรซูเม่</h3>
+        {% if resume %}
+            <p class="user-info"><strong>ชื่อ-นามสกุล:</strong> {{ resume.first_name }} {{ resume.last_name }}</p>
+            <p class="user-info"><strong>วันเกิด:</strong> {{ resume.birth_date or '-' }}</p>
+            <p class="user-info"><strong>ที่อยู่:</strong> {{ resume.location or '-' }}</p>
+            <p class="user-info"><strong>ประเภทความพิการ:</strong> {{ resume.disability_type or '-' }}</p>
+            <p class="user-info"><strong>ระดับความพิการ:</strong> {{ resume.disability_level or '-' }}</p>
+            <p class="user-info"><strong>เทคโนโลยีช่วยเหลือ:</strong> {{ resume.assistive_technology or '-' }}</p>
+            <p class="user-info"><strong>ความต้องการสนับสนุน:</strong> {{ resume.support_needs or '-' }}</p>
+            <p class="user-info"><strong>การศึกษา:</strong> {{ resume.education or '-' }}</p>
+            <p class="user-info"><strong>ประสบการณ์ทำงาน:</strong> {{ resume.work_experience or '-' }}</p>
+            <p class="user-info"><strong>ทักษะ:</strong> {{ resume.skills or '-' }}</p>
+            <p class="user-info"><strong>ผลงาน:</strong> {{ resume.portfolio or '-' }}</p>
+            <p class="user-info"><strong>วิดีโอแนะนำตัว:</strong>
+                {% if resume.resume_video_url %}
+                    <a href="{{ resume.resume_video_url }}" target="_blank">{{ resume.resume_video_url }}</a>
+                {% else %}
+                    -
+                {% endif %}
+            </p>
+            {% if resume.disability_card_url %}
+            <p class="user-info"><strong>บัตรประจำตัวผู้พิการ:</strong>
+                <a href="{{ resume.disability_card_url }}" target="_blank">ดูไฟล์</a>
+            </p>
+            {% endif %}
+        {% else %}
+            <p class="user-info">ยังไม่มีข้อมูลเรซูเม่</p>
+        {% endif %}
 
         {% elif user.role == 'employer' %}
         <hr style="background:white; opacity:0.3;">
@@ -114,16 +144,28 @@ Account
         <p class="user-info"><strong>อีเมลติดต่อ:</strong> {{ user.contact_email or '-' }}</p>
         <p class="user-info"><strong>ที่อยู่บริษัท:</strong> {{ user.address or '-' }}</p>
         <p class="user-info"><strong>เว็บไซต์บริษัท:</strong> 
-          {% if user.company_website %}
-            <a href="{{ user.company_website }}" target="_blank" rel="noopener noreferrer">{{ user.company_website }}</a>
-          {% else %}
-            -
-          {% endif %}
+            {% if user.company_website %}
+                <a href="{{ user.company_website }}" target="_blank" rel="noopener noreferrer">{{ user.company_website }}</a>
+            {% else %}
+                -
+            {% endif %}
         </p>
         <p class="user-info"><strong>รายละเอียดบริษัท:</strong> <br> {{ user.company_description or '-' }}</p>
         <p class="user-info"><strong>สถานะยืนยัน:</strong> {{ 'ยืนยันแล้ว' if user.verified_employer else 'ยังไม่ยืนยัน' }}</p>
         {% endif %}
     </div> 
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div style="margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <a href="{{ url_for('views.edit_profile') }}" class="btn btn-info">✏️ Edit Profile</a>
     <a href="{{ url_for('auth.logout') }}" class="logout-btn">🚪 Logout</a>

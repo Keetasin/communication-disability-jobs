@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Resume{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">แบบฟอร์มข้อมูลส่วนตัวและทักษะ</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {{ get_flashed_messages()|join(', ') }}
+
+        <!-- ข้อมูลส่วนตัว -->
+        <div class="mb-3">
+            <label for="first_name" class="form-label">ชื่อ</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ resume.first_name or '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">นามสกุล</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ resume.last_name or '' }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="birth_date" class="form-label">วันเกิด</label>
+            <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ resume.birth_date }}">
+        </div>
+        <div class="mb-3">
+            <label for="location" class="form-label">ที่อยู่</label>
+            <textarea class="form-control" id="location" name="location">{{ resume.location or '' }}</textarea>
+        </div>
+
+        <!-- ข้อมูลความพิการ -->
+        <div class="mb-3">
+            <label for="disability_type" class="form-label">ประเภทความพิการ</label>
+            <select class="form-select" id="disability_type" name="disability_type">
+                <option value="">เลือก</option>
+                {% for option in ['ความพิการทางการเคลื่อนไหว', 'ความพิการทางการมองเห็น', 'ความพิการทางการได้ยิน',
+                                 'ความพิการทางสติปัญญา', 'ความพิการทางจิตใจ', 'ความพิการทางการเรียนรู้',
+                                 'ความพิการทางออทิสติก', 'ความพิการหลายประเภท'] %}
+                    <option value="{{ option }}" {% if resume.disability_type == option %}selected{% endif %}>{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">บัตรประจำตัวผู้พิการ</label>
+            <input type="file" class="form-control" name="disability_card">
+            {% if resume.disability_card_url %}
+                <small>อัปโหลดแล้ว: <a href="{{ resume.disability_card_url }}" target="_blank">ดูไฟล์</a></small>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">ระดับความพิการ</label><br>
+            {% for level in ['เล็กน้อย', 'ปานกลาง', 'รุนแรง', 'รุนแรงมาก'] %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="disability_level" value="{{ level }}" id="level_{{ loop.index }}" {% if resume.disability_level == level %}checked{% endif %}>
+                    <label class="form-check-label" for="level_{{ loop.index }}">{{ level }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            <label for="assistive_technology" class="form-label">อุปกรณ์ช่วยเหลือ</label>
+            <textarea class="form-control" id="assistive_technology" name="assistive_technology">{{ resume.assistive_technology or '' }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">ความต้องการความช่วยเหลือ</label><br>
+            {% for support in ['การเคลื่อนไหว', 'การสื่อสาร', 'กิจวัตรประจำวัน', 'การเรียนรู้'] %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="support_needs" value="{{ support }}" id="support_{{ loop.index }}" {% if support in (resume.support_needs or '').split(',') %}checked{% endif %}>
+                    <label class="form-check-label" for="support_{{ loop.index }}">{{ support }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3 form-check">
+            <input class="form-check-input" type="checkbox" name="confirm" id="confirm" value="confirm" {% if resume.confirmation_checked %}checked{% endif %}>
+            <label class="form-check-label" for="confirm">ฉันยืนยันว่าข้อมูลที่กรอกเป็นจริง</label>
+        </div>
+
+        <!-- การศึกษา -->
+        <div class="mb-3">
+            <label for="education" class="form-label">ระดับการศึกษา</label>
+            <select class="form-select" id="education" name="education">
+                <option value="">เลือก</option>
+                {% for edu in ['ประถมศึกษา', 'มัธยมต้น', 'มัธยมปลาย', 'ปวช.', 'ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก'] %}
+                    <option value="{{ edu }}" {% if resume.education == edu %}selected{% endif %}>{{ edu }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="work_experience" class="form-label">ประสบการณ์ทำงาน</label>
+            <textarea class="form-control" id="work_experience" name="work_experience" rows="4">{{ resume.work_experience or '' }}</textarea>
+        </div>
+
+        <!-- ทักษะและ portfolio -->
+        <div class="mb-3">
+            <label for="skills" class="form-label">ทักษะ</label>
+            <textarea class="form-control" id="skills" name="skills">{{ resume.skills or '' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="portfolio" class="form-label">Portfolio</label>
+            <textarea class="form-control" id="portfolio" name="portfolio">{{ resume.portfolio or '' }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="resume_video_url" class="form-label">URL วิดีโอเรซูเม่</label>
+            <input type="url" class="form-control" id="resume_video_url" name="resume_video_url" value="{{ resume.resume_video_url or '' }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+    </form>
+</div>
+{% endblock %}

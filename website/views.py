@@ -1,9 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from flask_login import login_required, current_user
 from datetime import datetime
 from . import db
 import pytz
 from .models import Job, JobApplication, ChatMessage
+from werkzeug.utils import secure_filename
+import os
 
 
 views = Blueprint('views', __name__)
@@ -21,13 +23,16 @@ def home():
 @login_required
 def account():
     user = current_user
+    resume = user.resume  # ดึง resume ของผู้ใช้ปัจจุบัน
     current_date = datetime.now(pytz.timezone('Asia/Bangkok')).date()
 
     return render_template(
         'account.html', 
         user=user, 
-        current_date=current_date,
+        resume=resume,
+        current_date=current_date
     )
+
 
 @views.route('/edit-profile', methods=['GET', 'POST'])
 @login_required
@@ -114,9 +119,7 @@ def all_jobs():
         .filter(~Job.applications.any(JobApplication.status == 'accepted')) \
         .order_by(Job.posted_at.desc()) \
         .all()
-
     return render_template('all_jobs.html', jobs=jobs, user=current_user)
-
 
 
 @views.route('/apply/<int:job_id>', methods=['POST'])
@@ -235,7 +238,7 @@ def delete_job(job_id):
     return redirect(url_for('views.employer_jobs'))
 
 
-from .models import ChatMessage  # ตรวจสอบว่ามี import แล้ว
+from .models import ChatMessage,Resume  # ตรวจสอบว่ามี import แล้ว
 
 @views.route('/accept-applicant/<int:application_id>', methods=['POST'])
 @login_required
@@ -281,3 +284,56 @@ def accepted_jobs():
     ).all()
 
     return render_template('accepted_jobs.html', applications=accepted_apps, user=current_user)
+
+
+@views.route('/resume', methods=['GET', 'POST'])
+@login_required
+def resume():
+    resume = current_user.resume
+    if not resume:
+        resume = Resume(
+            user_id=current_user.id,
+            first_name=current_user.first_name or '',
+            last_name=current_user.last_name or ''
+        )
+        db.session.add(resume)
+        db.session.commit()
+
+    if request.method == 'POST':
+        try:
+            # อัปโหลดไฟล์บัตรประจำตัวผู้พิการ
+            file = request.files.get('disability_card')
+            if file and file.filename:
+                filename = secure_filename(file.filename)
+                upload_path = os.path.join(current_app.root_path, 'static/uploads', filename)
+                file.save(upload_path)
+                resume.disability_card_url = f'/static/uploads/{filename}'
+
+            # อัปเดตฟิลด์อื่น ๆ
+            resume.first_name = request.form.get('first_name')
+            resume.last_name = request.form.get('last_name')
+            birth_date_str = request.form.get('birth_date')
+            if birth_date_str:
+                resume.birth_date = datetime.strptime(birth_date_str, '%Y-%m-%d').date()
+            resume.location = request.form.get('location')
+            resume.disability_type = request.form.get('disability_type')
+            resume.disability_level = request.form.get('disability_level')
+            resume.assistive_technology = request.form.get('assistive_technology')
+            selected_supports = request.form.getlist('support_needs')
+            resume.support_needs = ','.join(selected_supports)
+            resume.confirmation_checked = 'confirm' in request.form
+            resume.education = request.form.get('education')
+            resume.work_experience = request.form.get('work_experience')
+            resume.skills = request.form.get('skills')
+            resume.portfolio = request.form.get('portfolio')
+            resume.resume_video_url = request.form.get('resume_video_url')
+
+            db.session.commit()
+            flash('✅ บันทึกข้อมูลเรียบร้อยแล้ว!', 'success')
+            return redirect(url_for('views.resume'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'❌ เกิดข้อผิดพลาด: {str(e)}', 'danger')
+
+    return render_template('resume.html', user=current_user, resume=resume)
