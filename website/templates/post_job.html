@@ -1,33 +1,505 @@
 {% extends 'base.html' %}
-{% block title %}{{ 'แก้ไขงาน' if job else 'โพสต์งานใหม่' }}{% endblock %}
+
+{% block title %}
+    {{ 'แก้ไขงาน' if job else 'โพสต์งานใหม่' }} - Communication Disability Jobs
+{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
-  <h2>{{ '✏️ แก้ไขงาน' if job else '📝 โพสต์งานใหม่' }}</h2>
+    <div class="post-job-container fade-in">
+        <!-- Header -->
+        <div class="page-header">
+            <h2>
+                <i class="fa fa-{{ 'edit' if job else 'plus-circle' }}"></i>
+                {{ 'แก้ไขงาน' if job else 'โพสต์งานใหม่' }}
+            </h2>
+            <p>{{ 'อัปเดตรายละเอียดงานของคุณ' if job else 'สร้างประกาศรับสมัครงานใหม่' }}</p>
+        </div>
 
-  <form method="POST">
-    <div class="form-group">
-      <label for="title">ชื่องาน</label>
-      <input type="text" class="form-control" name="title" value="{{ job.title if job else '' }}" required>
-    </div>
-    <div class="form-group">
-      <label for="description">รายละเอียดงาน</label>
-      <textarea class="form-control" name="description" rows="4" required>{{ job.description if job else '' }}</textarea>
-    </div>
-    <div class="form-group">
-      <label for="location">สถานที่ทำงาน</label>
-      <input type="text" class="form-control" name="location" value="{{ job.location if job else '' }}">
-    </div>
-    <div class="form-group">
-      <label for="salary">เงินเดือน</label>
-      <input type="text" class="form-control" name="salary" value="{{ job.salary if job else '' }}">
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">{{ 'บันทึกการแก้ไข' if job else 'โพสต์งาน' }}</button>
-  </form>
+        <!-- Job Form -->
+        <form method="POST" class="job-form">
+            <div class="form-grid">
+                <!-- Basic Job Info -->
+                <div class="form-section">
+                    <h4><i class="fa fa-briefcase"></i> ข้อมูลงาน</h4>
+                    
+                    <div class="form-group">
+                        <label for="title">ชื่อตำแหน่งงาน *</label>
+                        <input type="text" name="title" id="title" 
+                               class="form-control" value="{{ job.title if job else '' }}" 
+                               placeholder="เช่น: นักออกแบบกราฟิก, เจ้าหน้าที่ธุรการ..." required>
+                        <small class="form-text text-muted">ชื่อตำแหน่งที่ชัดเจนจะช่วยให้ผู้สมัครเข้าใจงานได้ดีขึ้น</small>
+                    </div>
 
-  {% if user.role == 'disabled' %}
-    <form method="POST" action="{{ url_for('views.apply_job', job_id=job.id) }}" class="mt-4">
-      <button class="btn btn-success">✅ สมัครงานนี้</button>
-    </form>
-  {% endif %}
+                    <div class="form-group">
+                        <label for="description">รายละเอียดงาน *</label>
+                        <textarea name="description" id="description" 
+                                  class="form-control" rows="6" 
+                                  placeholder="อธิบายหน้าที่ความรับผิดชอบ คุณสมบัติที่ต้องการ สิ่งอำนวยความสะดวก และสิ่งที่น่าสนใจของงานนี้..." 
+                                  required>{{ job.description if job else '' }}</textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span> / 1000 ตัวอักษร
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location">สถานที่ทำงาน</label>
+                            <input type="text" name="location" id="location" 
+                                   class="form-control" value="{{ job.location if job else '' }}" 
+                                   placeholder="เช่น: กรุงเทพมหานคร, ระยอง, รีโมทเวิร์ค...">
+                        </div>
+                        <div class="form-group">
+                            <label for="salary">เงินเดือน</label>
+                            <input type="text" name="salary" id="salary" 
+                                   class="form-control" value="{{ job.salary if job else '' }}" 
+                                   placeholder="เช่น: 25,000-35,000 บาท, ตามตกลง...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Requirements -->
+                <div class="form-section">
+                    <h4><i class="fa fa-list-ul"></i> คุณสมบัติและข้อกำหนด</h4>
+                    
+                    <div class="requirements-section">
+                        <div class="form-group">
+                            <label>ประเภทความพิการที่เหมาะสม</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="suitable_disability" value="hearing">
+                                    <span>ผู้พิการทางการได้ยิน</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="suitable_disability" value="communication">
+                                    <span>ผู้พิการทางการสื่อสาร</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="suitable_disability" value="all">
+                                    <span>ทุกประเภท</span>
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">เลือกประเภทความพิการที่งานนี้เหมาะสม</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>สิ่งอำนวยความสะดวกที่มีให้</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="accessibility" value="sign_language">
+                                    <span>ล่ามภาษามือ</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="accessibility" value="text_communication">
+                                    <span>การสื่อสารผ่านข้อความ</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="accessibility" value="flexible_work">
+                                    <span>เวลาทำงานยืดหยุ่น</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="accessibility" value="assistive_tech">
+                                    <span>เทคโนโลยีช่วยเหลือ</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Preview -->
+                {% if user.company_name %}
+                <div class="form-section">
+                    <h4><i class="fa fa-building"></i> ข้อมูลบริษัท</h4>
+                    
+                    <div class="company-preview">
+                        <div class="company-info">
+                            <h5>{{ user.company_name }}</h5>
+                            {% if user.contact_person %}
+                                <p><i class="fa fa-user"></i> ผู้ติดต่อ: {{ user.contact_person }}</p>
+                            {% endif %}
+                            {% if user.contact_phone %}
+                                <p><i class="fa fa-phone"></i> {{ user.contact_phone }}</p>
+                            {% endif %}
+                            {% if user.address %}
+                                <p><i class="fa fa-map-marker"></i> {{ user.address }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="company-actions">
+                            <a href="{{ url_for('views.edit_profile') }}" class="btn btn-outline-secondary btn-sm">
+                                <i class="fa fa-edit"></i> แก้ไขข้อมูลบริษัท
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa fa-{{ 'save' if job else 'plus' }}"></i>
+                    {{ 'บันทึกการแก้ไข' if job else 'โพสต์งาน' }}
+                </button>
+                
+                {% if job %}
+                    <a href="{{ url_for('views.employer_jobs') }}" class="btn btn-secondary btn-lg">
+                        <i class="fa fa-arrow-left"></i> กลับ
+                    </a>
+                {% else %}
+                    <button type="button" class="btn btn-outline-info btn-lg" onclick="previewJob()">
+                        <i class="fa fa-eye"></i> ดูตัวอย่าง
+                    </button>
+                    <a href="{{ url_for('views.employer_jobs') }}" class="btn btn-secondary btn-lg">
+                        <i class="fa fa-times"></i> ยกเลิก
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
 </div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-eye"></i> ตัวอย่างประกาศงาน
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Preview content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                <button type="button" class="btn btn-primary" onclick="$('#previewModal').modal('hide')">
+                    <i class="fa fa-edit"></i> แก้ไข
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter
+    const description = document.getElementById('description');
+    const charCount = document.getElementById('char-count');
+    
+    function updateCharCount() {
+        const count = description.value.length;
+        charCount.textContent = count;
+        
+        if (count > 1000) {
+            charCount.style.color = 'var(--danger-red)';
+        } else if (count > 800) {
+            charCount.style.color = 'var(--warning-yellow)';
+        } else {
+            charCount.style.color = 'var(--medium-gray)';
+        }
+    }
+    
+    description.addEventListener('input', updateCharCount);
+    updateCharCount(); // Initial count
+
+    // Form validation
+    const form = document.querySelector('.job-form');
+    form.addEventListener('submit', function(e) {
+        const title = document.getElementById('title').value.trim();
+        const desc = document.getElementById('description').value.trim();
+        
+        if (!title || !desc) {
+            e.preventDefault();
+            alert('กรุณากรอกข้อมูลในช่องที่จำเป็น');
+            return;
+        }
+        
+        if (desc.length > 1000) {
+            e.preventDefault();
+            alert('รายละเอียดงานต้องไม่เกิน 1,000 ตัวอักษร');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> กำลังบันทึก...';
+        submitBtn.disabled = true;
+    });
+
+    // Animation
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+        observer.observe(el);
+    });
+});
+
+// Preview function
+function previewJob() {
+    const title = document.getElementById('title').value || 'ชื่อตำแหน่งงาน';
+    const description = document.getElementById('description').value || 'รายละเอียดงาน';
+    const location = document.getElementById('location').value || 'ไม่ระบุ';
+    const salary = document.getElementById('salary').value || 'ตามตกลง';
+    
+    const previewContent = `
+        <div class="job-preview">
+            <div class="preview-header">
+                <h4>${title}</h4>
+                <p><i class="fa fa-building"></i> {{ user.company_name or user.first_name }}</p>
+            </div>
+            
+            <div class="preview-meta">
+                <span class="meta-item">
+                    <i class="fa fa-map-marker"></i> ${location}
+                </span>
+                <span class="meta-item">
+                    <i class="fa fa-money"></i> ${salary}
+                </span>
+            </div>
+            
+            <div class="preview-description">
+                <h6>รายละเอียดงาน:</h6>
+                <p>${description}</p>
+            </div>
+            
+            <div class="preview-footer">
+                <small class="text-muted">
+                    <i class="fa fa-calendar"></i> โพสต์เมื่อ: ${new Date().toLocaleDateString('th-TH')}
+                </small>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('previewContent').innerHTML = previewContent;
+    $('#previewModal').modal('show');
+}
+</script>
+
+<style>
+/* Post Job Styles */
+.post-job-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--pure-white);
+    border-radius: var(--border-radius-lg);
+}
+
+.page-header h2 {
+    color: var(--pure-white);
+    margin-bottom: 0.5rem;
+}
+
+.form-section {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 123, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-light);
+}
+
+.form-section h4 {
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-blue);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: var(--font-weight-semibold);
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid rgba(0, 123, 255, 0.2);
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-normal);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.char-counter {
+    text-align: right;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: normal;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+}
+
+.checkbox-label:hover {
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.checkbox-label input {
+    transform: scale(1.2);
+}
+
+.company-preview {
+    background: rgba(0, 123, 255, 0.05);
+    border: 1px solid rgba(0, 123, 255, 0.2);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.company-info h5 {
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+}
+
+.company-info p {
+    margin: 0.25rem 0;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+
+.company-info i {
+    color: var(--primary-blue);
+    width: 16px;
+    margin-right: 0.5rem;
+}
+
+.form-actions {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn {
+    min-width: 150px;
+}
+
+/* Preview Modal Styles */
+.job-preview {
+    padding: 1rem;
+}
+
+.preview-header h4 {
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+}
+
+.preview-meta {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+}
+
+.meta-item i {
+    color: var(--primary-blue);
+}
+
+.preview-description {
+    margin: 1.5rem 0;
+}
+
+.preview-description h6 {
+    color: var(--dark-blue);
+    margin-bottom: 0.5rem;
+}
+
+.preview-footer {
+    border-top: 1px solid var(--light-gray);
+    padding-top: 1rem;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .company-preview {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .preview-meta {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+</style>
 {% endblock %}

@@ -8,7 +8,7 @@
 <div class="auth-container">
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
+            <div class="col-md-8 col-lg-7">
                 <div class="auth-form-wrapper fade-in">
                     <!-- Logo Section -->
                     <div class="auth-logo">
@@ -26,19 +26,16 @@
 
                         <!-- Email Field -->
                         <div class="form-group input-float-label">
-                            <div class="input-icon-wrapper">
-                                <i class="fa fa-envelope form-icon"></i>
-                                <input
-                                    type="email"
-                                    class="form-control form-focus-effect"
-                                    id="email"
-                                    name="email"
-                                    placeholder=" "
-                                    required
-                                    autocomplete="email"
-                                />
-                                <label for="email">อีเมล</label>
-                            </div>
+                            <input
+                                type="email"
+                                class="form-control form-focus-effect"
+                                id="email"
+                                name="email"
+                                placeholder=" "
+                                required
+                                autocomplete="email"
+                            />
+                            <label for="email">อีเมล</label>
                             <div class="input-hint">
                                 <small>กรุณากรอกอีเมลที่ใช้สมัครสมาชิก</small>
                             </div>
@@ -46,8 +43,7 @@
 
                         <!-- Password Field -->
                         <div class="form-group input-float-label">
-                            <div class="input-icon-wrapper">
-                                <i class="fa fa-lock form-icon"></i>
+                            <div class="password-wrapper">
                                 <input
                                     type="password"
                                     class="form-control form-focus-effect"
@@ -331,12 +327,12 @@ document.addEventListener('DOMContentLoaded', function() {
 .auth-form-wrapper {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    padding: 2.5rem;
+    padding: 3rem;
     border-radius: var(--border-radius-xl);
     box-shadow: var(--shadow-heavy);
     border: 1px solid rgba(255, 255, 255, 0.3);
     width: 100%;
-    max-width: 450px;
+    max-width: 600px;
     animation: fadeInScale 0.8s ease-out;
 }
 
@@ -394,20 +390,17 @@ document.addEventListener('DOMContentLoaded', function() {
     align-items: center;
 }
 
-.input-icon-wrapper .form-control {
-    padding-left: 3rem;
-    padding-right: 3rem;
-    height: 50px;
-    border: 2px solid rgba(0, 123, 255, 0.2);
-    transition: all var(--transition-normal);
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.form-icon {
-    position: absolute;
-    left: 1rem;
-    color: var(--primary-blue);
-    font-size: 1.1rem;
-    z-index: 10;
+.form-control {
+    padding: 1rem;
+    height: 55px;
+    border: 2px solid rgba(0, 123, 255, 0.2);
+    transition: all var(--transition-normal);
 }
 
 .password-toggle {
